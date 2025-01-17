@@ -1,6 +1,6 @@
 # Hobby Dev Hub
 
-### Connect hobby developers for personal projects on volunteer basis.
+### Connect hobby developers for personal projects on a volunteer basis.
 
 **Language:** JavaScript. Front End frameworks like React and Back End libraries like Node.js allow us to build the entire project using a single language. We might also want to use Python, this is something we will clarify as a team during Week 3.
 
