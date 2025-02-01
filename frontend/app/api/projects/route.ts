@@ -31,3 +31,16 @@ const projects: Project[] = [
 export async function GET() {
     return Response.json(projects);
 }
+
+export async function POST(request: Request) {
+    const data = await request.json();
+
+    const project = {
+        id: projects.length + 1,
+        ...data,
+    };
+
+    projects.push(project);
+
+    return Response.json(project);
+}
