@@ -1,4 +1,4 @@
-export default function Home() {
+export default async function Home() {
     return (
         <div className="flex items-center justify-between px-8 py-4">
             <div className="text-2xl font-bold">Hobby Dev Hub</div>
