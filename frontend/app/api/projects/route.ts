@@ -7,7 +7,7 @@ export interface Project {
     githubRepoURL: string;
 }
 
-const projects: Project[] = [
+export const projects: Project[] = [
     {
         id: 1,
         title: "Project 1",

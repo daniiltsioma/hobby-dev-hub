@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Project } from "./api/projects/route";
 import { getUser } from "./lib/dal";
 
@@ -13,7 +14,11 @@ export default async function Home() {
         <div className="grid grid-cols-3 gap-4 px-8 mt-12">
             {projects.map((project) => (
                 <div className="flex flex-col items-start" key={project.id}>
-                    <div className="text-xl font-bold">{project.title}</div>
+                    <div className="text-xl font-bold">
+                        <Link href={`/projects/${project.id}`}>
+                            {project.title}
+                        </Link>
+                    </div>
                     <p>{project.description}</p>
                     <a
                         className="text-blue-900 underline"
