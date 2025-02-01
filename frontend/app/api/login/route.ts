@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
+import { redirect, RedirectType } from "next/navigation";
 
 const GITHUB_APP_CLIENT_ID = process.env.GITHUB_APP_CLIENT_ID || "";
 const GITHUB_APP_CLIENT_SECRET = process.env.GITHUB_APP_CLIENT_SECRET || "";
@@ -40,7 +41,6 @@ export async function GET(request: NextRequest) {
     cookieStore.set({
         name: "accessToken",
         value: tokenData.access_token,
-        expires: new Date(new Date() + tokenData.expires_in),
         httpOnly: true,
         path: "/",
     });
@@ -48,18 +48,11 @@ export async function GET(request: NextRequest) {
     cookieStore.set({
         name: "refreshToken",
         value: tokenData.refresh_token,
-        expires: new Date(new Date() + tokenData.refresh_token_expires_in),
         httpOnly: true,
         path: "/",
     });
 
-    return Response.json(
-        {
-            accessToken: cookieStore.get("accessToken"),
-            refreshToken: cookieStore.get("refreshToken"),
-        },
-        {
-            status: 200,
-        }
-    );
+    console.log(cookieStore);
+
+    redirect("/", RedirectType.push);
 }
