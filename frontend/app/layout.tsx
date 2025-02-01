@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { getUser } from "./lib/dal";
+import Link from "next/link";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -32,7 +33,19 @@ export default async function RootLayout({
             >
                 <div>
                     <div className="flex items-center justify-between px-8 py-4">
-                        <div className="text-2xl font-bold">Hobby Dev Hub</div>
+                        <div className="flex items-center">
+                            <div className="text-2xl font-bold">
+                                Hobby Dev Hub
+                            </div>
+                            {user && (
+                                <Link
+                                    href="/projects/new"
+                                    className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-md ml-4"
+                                >
+                                    Post a Project
+                                </Link>
+                            )}
+                        </div>
                         <div>
                             {user ? (
                                 <div className="flex items-center">

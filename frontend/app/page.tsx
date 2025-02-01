@@ -21,12 +21,6 @@ export default async function Home() {
                     >
                         Github Repo
                     </a>
-                    <a
-                        href="#"
-                        className="py-1 px-4 text-white bg-blue-600 rounded-md mt-2"
-                    >
-                        Apply
-                    </a>
                 </div>
             ))}
         </div>
