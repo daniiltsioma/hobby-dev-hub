@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
     cookieStore.set({
         name: "accessToken",
         value: tokenData.access_token,
+        expires: new Date(Date.now() + Number(tokenData.expires_in)),
         httpOnly: true,
         path: "/",
     });
@@ -48,11 +49,12 @@ export async function GET(request: NextRequest) {
     cookieStore.set({
         name: "refreshToken",
         value: tokenData.refresh_token,
+        expires: new Date(
+            Date.now() + Number(tokenData.refresh_token_expires_in)
+        ),
         httpOnly: true,
         path: "/",
     });
-
-    console.log(cookieStore);
 
     redirect("/", RedirectType.push);
 }
