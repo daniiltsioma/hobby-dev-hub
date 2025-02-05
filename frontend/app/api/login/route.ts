@@ -20,13 +20,13 @@ export async function GET(request: NextRequest) {
     setAuthCookie(cookieStore, {
         name: "accessToken",
         value: tokenData.access_token,
-        expiresIn: tokenData.expires_in,
+        expiresIn: Number(tokenData.expires_in),
     });
 
     setAuthCookie(cookieStore, {
         name: "refreshToken",
         value: tokenData.refresh_token,
-        expiresIn: tokenData.refresh_token_expires_in,
+        expiresIn: Number(tokenData.refresh_token_expires_in),
     });
 
     redirect("/", RedirectType.push);
