@@ -1,4 +1,5 @@
 import { getUser } from "./lib/dal";
+import UserHeader from "./components/header/userHeader";
 
 export default async function Home() {
     const user = await getUser();
@@ -8,15 +9,7 @@ export default async function Home() {
             <div className="text-2xl font-bold">Hobby Dev Hub</div>
             <div>
                 {user ? (
-                    <div className="flex items-center">
-                        Welcome, {user.data.login}
-                        <a
-                            href="/api/logout"
-                            className="border hover:bg-red-100 border-red-600 text-red-600 py-1 px-4 rounded-md ml-4"
-                        >
-                            Logout
-                        </a>
-                    </div>
+                    <UserHeader username={user.data.login} />
                 ) : (
                     <a
                         href={`https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_APP_CLIENT_ID}`}
