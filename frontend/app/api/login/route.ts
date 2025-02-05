@@ -1,15 +1,11 @@
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
-
-const GITHUB_APP_CLIENT_ID = process.env.GITHUB_APP_CLIENT_ID || "";
-const GITHUB_APP_CLIENT_SECRET = process.env.GITHUB_APP_CLIENT_SECRET || "";
+import { generateGitHubTokensFromCode, setAuthCookie } from "@/app/lib/auth";
 
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const githubCode = searchParams.get("code");
-
-    const githubAPIUrl = "https://github.com/login/oauth/access_token";
 
     if (!githubCode) {
         return new Response(`Error: no github code provided.`, {
@@ -17,43 +13,20 @@ export async function GET(request: NextRequest) {
         });
     }
 
-    const githubTokenQueryParams = new URLSearchParams({
-        client_id: GITHUB_APP_CLIENT_ID,
-        client_secret: GITHUB_APP_CLIENT_SECRET,
-        code: githubCode,
-    });
-
-    const response = await fetch(
-        `${githubAPIUrl}?${githubTokenQueryParams.toString()}`
-    );
-
-    const responseText = await response.text();
-
-    const tokenData: any = {};
-
-    responseText.split("&").map((str) => {
-        const [key, value] = str.split("=");
-        tokenData[key] = value;
-    });
+    const tokenData = await generateGitHubTokensFromCode(githubCode);
 
     const cookieStore = await cookies();
 
-    cookieStore.set({
+    setAuthCookie(cookieStore, {
         name: "accessToken",
         value: tokenData.access_token,
-        expires: new Date(Date.now() + Number(tokenData.expires_in)),
-        httpOnly: true,
-        path: "/",
+        expiresIn: tokenData.expires_in,
     });
 
-    cookieStore.set({
+    setAuthCookie(cookieStore, {
         name: "refreshToken",
         value: tokenData.refresh_token,
-        expires: new Date(
-            Date.now() + Number(tokenData.refresh_token_expires_in)
-        ),
-        httpOnly: true,
-        path: "/",
+        expiresIn: tokenData.refresh_token_expires_in,
     });
 
     redirect("/", RedirectType.push);
