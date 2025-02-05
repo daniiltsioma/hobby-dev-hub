@@ -1,31 +1,33 @@
+import Link from "next/link";
+import { Project } from "./api/projects/route";
 import { getUser } from "./lib/dal";
+
+const HOST_URL = process.env.HOST_URL;
 
 export default async function Home() {
     const user = await getUser();
 
+    const response = await fetch(`${HOST_URL}/api/projects`);
+    const projects: Project[] = await response.json();
+
     return (
-        <div className="flex items-center justify-between px-8 py-4">
-            <div className="text-2xl font-bold">Hobby Dev Hub</div>
-            <div>
-                {user ? (
-                    <div className="flex items-center">
-                        Welcome, {user.data.login}
-                        <a
-                            href="/api/logout"
-                            className="border hover:bg-red-100 border-red-600 text-red-600 py-1 px-4 rounded-md ml-4"
-                        >
-                            Logout
-                        </a>
+        <div className="grid grid-cols-3 gap-4 px-8 mt-12">
+            {projects.map((project) => (
+                <div className="flex flex-col items-start" key={project.id}>
+                    <div className="text-xl font-bold">
+                        <Link href={`/projects/${project.id}`}>
+                            {project.title}
+                        </Link>
                     </div>
-                ) : (
+                    <p>{project.description}</p>
                     <a
-                        href={`https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_APP_CLIENT_ID}`}
-                        className="bg-green-600 hover:bg-green-700  text-white py-2 px-4 rounded-md"
+                        className="text-blue-900 underline"
+                        href={project.githubRepoURL}
                     >
-                        Login with Github
+                        Github Repo
                     </a>
-                )}
-            </div>
+                </div>
+            ))}
         </div>
     );
 }
