@@ -9,6 +9,7 @@ export default async function NewProject() {
             title: formData.get("title"),
             description: formData.get("description"),
             githubRepoURL: formData.get("githubRepoURL"),
+            applicants: formData.get("applicants"),
         };
 
         const response = await fetch(`${HOST_URL}/api/projects/`, {

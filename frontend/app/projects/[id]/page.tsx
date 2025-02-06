@@ -1,7 +1,18 @@
 import { Project as ProjectInterface } from "@/app/api/projects/route";
 import { redirect } from "next/navigation";
 
-const HOST_URL = process.env.HOST_URL;
+const HOST_URL = process.env.HOST_URL
+
+async function applyToProject(formData: FormData) {
+    "use server";
+    const  projectId = formData.get("projectId")
+    await fetch(`${HOST_URL}/api/projects/${projectId}/apply`, {
+        method: "POST",
+        credentials: "include",
+    });
+
+    redirect(`/projects/${projectId}`)
+}
 
 export default async function Project({
     params,
@@ -29,6 +40,27 @@ export default async function Project({
             <div>
                 <p>{project.description}</p>
             </div>
+            <div>
+                <h5 className="font-semibold">Applicants:</h5>
+                <ul className="list-disc pl-5">
+                    {project.applicants.length > 0 ? (
+                        project.applicants.map((applicant, index) => (
+                            <li key={index}>{applicant}</li>
+                        ))
+                    ) : (
+                        <p>No applicants yet.</p>
+                    )}
+                </ul>
+            </div>
+            <form action={applyToProject}>
+                <input type="hidden" name="projectId" value={id} />
+                <button
+                    type="submit"
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                    Apply Now
+                </button>
+            </form>
         </div>
     );
 }
