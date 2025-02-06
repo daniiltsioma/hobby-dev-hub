@@ -6,6 +6,7 @@ const GITHUB_APP_CLIENT_ID = process.env.GITHUB_APP_CLIENT_ID || "";
 const GITHUB_APP_CLIENT_SECRET = process.env.GITHUB_APP_CLIENT_SECRET || "";
 
 export async function logout() {
+    "use server";
     const cookieStore = await cookies();
 
     cookieStore.delete("accessToken");
