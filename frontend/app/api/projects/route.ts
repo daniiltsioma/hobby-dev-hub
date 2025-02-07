@@ -31,4 +31,3 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching projects:", error);
   }
-}
