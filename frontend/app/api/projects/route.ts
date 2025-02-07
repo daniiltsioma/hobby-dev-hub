@@ -14,21 +14,21 @@ export const projects: Project[] = [
         title: "Project 1",
         description: "Description of project 1",
         githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
-        applicants: ["There are no applicants1"],
+        applicants: [],
     },
     {
         id: 2,
         title: "Project 2",
         description: "Description of project 2",
         githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
-        applicants: ["There are no applicants2"],
+        applicants: [],
     },
     {
         id: 3,
         title: "Project 3",
         description: "Description of project 3",
         githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
-        applicants: ["There are no applicants3"],
+        applicants: [],
     },
 ];
 

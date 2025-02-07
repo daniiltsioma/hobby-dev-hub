@@ -1,5 +1,6 @@
 import { Project as ProjectInterface } from "@/app/api/projects/route";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 const HOST_URL = process.env.HOST_URL
 
@@ -11,6 +12,8 @@ async function applyToProject(formData: FormData) {
         credentials: "include",
     });
 
+
+
     redirect(`/projects/${projectId}`)
 }
 
@@ -20,7 +23,9 @@ export default async function Project({
     params: Promise<{ id: string }>;
 }) {
     const id = Number((await params).id);
-    const response = await fetch(`${HOST_URL}/api/projects/${id}`);
+    const response = await fetch(`${HOST_URL}/api/projects/${id}`, {
+        cache: "no-store",
+    });
     const project: ProjectInterface = await response.json();
     if (!project) {
         redirect("/");
