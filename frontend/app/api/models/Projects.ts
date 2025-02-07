@@ -5,7 +5,8 @@ export interface IProject extends Document {
   repoURL: String;
   description: String;
   sprintStatus: "Active" | "Completed";
-  users: mongoose.Schema.Types.ObjectId[];
+  approvedUsers: mongoose.Schema.Types.ObjectId[];
+  applicants: mongoose.Schema.Types.ObjectId[];
   startDate: Date;
   endDate: Date;
 }
@@ -19,7 +20,8 @@ const ProjectSchema: Schema = new mongoose.Schema({
     enum: ["Active", "Completed"],
     default: "Active",
   },
-  users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  approvedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   startDate: { type: Date, default: Date.now },
   endDate: { type: Date },
 });
