@@ -1,5 +1,5 @@
 import connectToDatabase from "@/app/lib/mongo/dbConnection";
-import User from "@/app/api/models/Users";
+import User from "@/app/lib/mongo/models/Users";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
