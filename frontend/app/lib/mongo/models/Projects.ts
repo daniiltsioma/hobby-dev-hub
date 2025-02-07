@@ -1,12 +1,13 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { IUser } from "./Users";
 
 export interface IProject extends Document {
   name: String;
   repoURL: String;
   description: String;
   sprintStatus: "Active" | "Completed";
-  approvedUsers: mongoose.Schema.Types.ObjectId[];
-  applicants: mongoose.Schema.Types.ObjectId[];
+  approvedUsers: IUser[];
+  applicants: IUser[];
   startDate: Date;
   endDate: Date;
 }
@@ -20,8 +21,8 @@ const ProjectSchema: Schema = new mongoose.Schema({
     enum: ["Active", "Completed"],
     default: "Active",
   },
-  approvedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-  applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  approvedUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  applicants: [{ type: Schema.Types.ObjectId, ref: "User" }],
   startDate: { type: Date, default: Date.now },
   endDate: { type: Date },
 });

@@ -17,7 +17,7 @@ export default async function Home() {
               Logout
             </a>
             <a
-              href="/api/projects"
+              href="/pages/projects"
               className="bg-gray-100 hover:bg-gray-300 text-black py-2 px-4 rounded-md ml-4"
             >
               Projects
