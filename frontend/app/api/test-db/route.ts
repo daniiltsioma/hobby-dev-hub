@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "../../lib/dbConnection"; // Adjust the path based on your project structure
+import connectToDatabase from "@/app/lib/mongo/dbConnection";
 
 export async function GET(req: NextRequest) {
   try {

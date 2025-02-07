@@ -18,7 +18,7 @@ let cachedConnection = (global as any).mongoose || {
   promise: null,
 };
 
-export async function connectToDatabase() {
+export default async function connectToDatabase() {
   if (cachedConnection.connection) {
     return cachedConnection.connection;
   }

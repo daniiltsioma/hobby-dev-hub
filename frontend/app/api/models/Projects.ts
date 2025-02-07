@@ -19,9 +19,11 @@ const ProjectSchema: Schema = new mongoose.Schema({
     enum: ["Active", "Completed"],
     default: "Active",
   },
-  users: [{ type: mongoose.Schema.Types.ObjectId, ref: "Users" }],
+  users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   startDate: { type: Date, default: Date.now },
   endDate: { type: Date },
 });
 
 const Project = mongoose.model<IProject>("Project", ProjectSchema);
+
+export default Project;
