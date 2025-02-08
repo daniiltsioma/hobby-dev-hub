@@ -1,6 +1,7 @@
 import { Project as ProjectInterface } from "@/app/api/projects/route";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { access } from "fs";
 
 const HOST_URL = process.env.HOST_URL
 
@@ -9,6 +10,11 @@ async function applyToProject(formData: FormData) {
     const  projectId = formData.get("projectId")
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken");
+
+    if (!accessToken){
+        console.error("User not logged in")
+        return
+    }
 
     const response = await fetch(`${HOST_URL}/api/projects/${projectId}`, {
         method: "POST",
