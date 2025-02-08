@@ -7,12 +7,15 @@ const HOST_URL = process.env.HOST_URL
 async function applyToProject(formData: FormData) {
     "use server";
     const  projectId = formData.get("projectId")
-    await fetch(`${HOST_URL}/api/projects/${projectId}/apply`, {
+    const response = await fetch(`${HOST_URL}/api/projects/${projectId}`, {
         method: "POST",
         credentials: "include",
     });
 
-
+    if (!response.ok) {
+        console.error("Failed to apply:", await response.json());
+        return;
+    }
 
     redirect(`/projects/${projectId}`)
 }

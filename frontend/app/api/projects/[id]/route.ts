@@ -1,4 +1,8 @@
 import { projects } from "../route";
+import { cookies } from "next/headers";
+
+import { getUser } from "@/app/lib/dal";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
     request: Request,
@@ -8,4 +12,31 @@ export async function GET(
     const project = projects.find((proj) => proj.id === id);
 
     return Response.json(project);
+}
+
+export async function POST(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const projectId = Number((await params).id);
+    const project = projects.find((p) => p.id === projectId);
+
+    if (!project) {
+        return Response.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    const applicant = await getUser();
+    console.log("Applicant Data:", applicant?.data.login);
+    if (!applicant || !applicant.data?.login) {
+        return Response.json({ error: "User not authenticated" }, { status: 401 });
+    }
+
+    if (project.applicants.includes(applicant.data.login)) {
+        return Response.json({ error: "Already applied" }, { status: 400 });
+    }
+
+    if (!project.applicants.includes(applicant.data.login)) {
+        project.applicants.push(applicant.data.login);
+    }
+    return Response.json(project, { status: 200 });
 }

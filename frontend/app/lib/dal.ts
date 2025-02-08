@@ -18,5 +18,8 @@ export async function getUser() {
             "X-GitHub-Api-Version": "2022-11-28",
         },
     });
+
+    console.log("users", user);
+
     return user;
 }
