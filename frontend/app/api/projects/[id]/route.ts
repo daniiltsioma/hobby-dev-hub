@@ -1,8 +1,6 @@
 import { projects } from "../route";
 import { cookies } from "next/headers";
-
 import { getUser } from "@/app/lib/dal";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
     request: Request,
@@ -25,8 +23,18 @@ export async function POST(
         return Response.json({ error: "Project not found" }, { status: 404 });
     }
 
+    const { cookie } = await request.json();
+    const cookieStore = await cookies();
+    cookieStore.set({
+        name: "accessToken",
+        value: cookie.value,
+        expires: new Date(Date.now() + Number(cookie.expires_in)),
+        httpOnly: true,
+        path: "/",
+    });
+
     const applicant = await getUser();
-    console.log("Applicant Data:", applicant?.data.login);
+
     if (!applicant || !applicant.data?.login) {
         return Response.json({ error: "User not authenticated" }, { status: 401 });
     }

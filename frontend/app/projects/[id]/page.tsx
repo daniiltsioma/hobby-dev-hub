@@ -1,22 +1,25 @@
 import { Project as ProjectInterface } from "@/app/api/projects/route";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 const HOST_URL = process.env.HOST_URL
 
 async function applyToProject(formData: FormData) {
     "use server";
     const  projectId = formData.get("projectId")
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken");
+
     const response = await fetch(`${HOST_URL}/api/projects/${projectId}`, {
         method: "POST",
         credentials: "include",
+        body: JSON.stringify({ cookie: accessToken}) 
     });
 
     if (!response.ok) {
         console.error("Failed to apply:", await response.json());
         return;
     }
-
     redirect(`/projects/${projectId}`)
 }
 
