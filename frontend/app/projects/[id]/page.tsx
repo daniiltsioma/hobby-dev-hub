@@ -21,7 +21,7 @@ export default async function Project({
             <div>
                 <a
                     href={project.githubRepoURL}
-                    className="text-blue-900 underline"
+                    className="text-[#4493f8] underline"
                 >
                     {project.githubRepoURL}
                 </a>

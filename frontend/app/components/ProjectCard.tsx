@@ -13,14 +13,14 @@ export default function ProjectCard({ project }: { project: Project }) {
       <div>
         <div className="px-6 pb-4">
           <a
-            className="text-blue-500 hover:underline"
+            className="text-[#4493f8] hover:underline"
             href={project.githubRepoURL}
           >
             View on GitHub
           </a>
         </div>
         <div className="flex justify-end bg-[#151b23] border-t border-[#3d444d] rounded-b-lg p-4">
-          <button className="bg-blue-800 hover:bg-blue-900 font-medium rounded-md py-2 px-4">
+          <button className="bg-[#212830] hover:bg-[#2f3742] font-medium border border-[#3d444d] rounded-md py-2 px-4">
             Apply
           </button>
         </div>
