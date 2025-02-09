@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { getUser } from "./lib/dal";
 import Link from "next/link";
+import UserHeader from "./components/header/userHeader";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -48,15 +49,7 @@ export default async function RootLayout({
                         </div>
                         <div>
                             {user ? (
-                                <div className="flex items-center">
-                                    Welcome, {user.data.login}
-                                    <a
-                                        href="/api/logout"
-                                        className="border hover:bg-red-100 border-red-600 text-red-600 py-1 px-4 rounded-md ml-4"
-                                    >
-                                        Logout
-                                    </a>
-                                </div>
+                                <UserHeader username={user.data.login}/>
                             ) : (
                                 <a
                                     href={`https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_APP_CLIENT_ID}`}
