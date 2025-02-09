@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { Project } from "./api/projects/route";
+//import { Project } from "./api/projects/route";
 import { getUser } from "./lib/dal";
 import UserHeader from "./components/header/userHeader";
 
 const HOST_URL = process.env.HOST_URL;
 
 export default async function Home() {
-  const user = await getUser();
+  /*const user = await getUser();
 
   return (
     <div className="flex items-center justify-between px-8 py-4">
@@ -21,12 +21,6 @@ export default async function Home() {
             >
               Logout
             </a>
-            <a
-              href="/pages/projects"
-              className="bg-gray-100 hover:bg-gray-300 text-black py-2 px-4 rounded-md ml-4"
-            >
-              Projects
-            </a>
           </div>
         ) : (
           <a
@@ -38,4 +32,6 @@ export default async function Home() {
         )}
       </div>
     </div>
-  );
+  );*/
+  return <div></div>;
+}
