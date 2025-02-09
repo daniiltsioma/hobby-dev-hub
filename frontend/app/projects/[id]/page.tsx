@@ -1,11 +1,11 @@
 import { Project as ProjectInterface } from "@/app/api/projects/route";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { access } from "fs";
+import { getUser } from "@/app/lib/dal"
 
 const HOST_URL = process.env.HOST_URL
 
-async function applyToProject(formData: FormData) {
+async function applyToProject(formData: FormData){
     "use server";
     const  projectId = formData.get("projectId")
     const cookieStore = await cookies();
@@ -13,7 +13,7 @@ async function applyToProject(formData: FormData) {
 
     if (!accessToken){
         console.error("User not logged in")
-        return
+        return;
     }
 
     const response = await fetch(`${HOST_URL}/api/projects/${projectId}`, {
@@ -43,6 +43,7 @@ export default async function Project({
         redirect("/");
     }
 
+    const user = await getUser();
     return (
         <div className="px-8">
             <div className="text-3xl font-bold">{project.title}</div>
@@ -69,15 +70,19 @@ export default async function Project({
                     )}
                 </ul>
             </div>
-            <form action={applyToProject}>
-                <input type="hidden" name="projectId" value={id} />
-                <button
-                    type="submit"
-                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                    Apply Now
-                </button>
-            </form>
+            { user ? (
+                <form action={applyToProject}>
+                    <input type="hidden" name="projectId" value={id} />
+                    <button
+                        type="submit"
+                        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                    >
+                        Apply Now
+                    </button>
+                </form>
+            ) : (
+                <p className="mt-4 text-black">You must be logged in to apply</p>
+                )}
         </div>
     );
 }
