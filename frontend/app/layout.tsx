@@ -54,12 +54,6 @@ export default async function RootLayout({
                   >
                     Logout
                   </a>
-                  <a
-                    href="/pages/projects"
-                    className="bg-gray-100 hover:bg-gray-300 text-black py-2 px-4 rounded-md ml-4"
-                  >
-                    Projects
-                  </a>
                 </div>
               ) : (
                 <a

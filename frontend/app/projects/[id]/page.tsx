@@ -1,4 +1,4 @@
-import { Project as ProjectInterface } from "@/app/api/projects/route";
+/*import { Project as ProjectInterface } from "@/app/api/projects/route";
 import { redirect } from "next/navigation";
 
 const HOST_URL = process.env.HOST_URL;
@@ -29,3 +29,4 @@ export default async function Project({
     </div>
   );
 }
+*/
