@@ -31,14 +31,14 @@ export default async function NewProject() {
                 <input
                     name="title"
                     placeholder="Project name"
-                    className="w-full px-2 py-1 border border-gray-200"
+                    className="w-full bg-[#0d1117] border border-[#3d444d] placeholder-[#9198a1] px-2 py-1"
                 />
             </label>
             <label className="w-full mb-2">
                 <textarea
                     name="description"
                     placeholder="Project description"
-                    className="w-full px-2 py-1 border border-gray-200 mb-0"
+                    className="w-full bg-[#0d1117] border border-[#3d444d] placeholder-[#9198a1] px-2 py-1"
                     rows={6}
                 ></textarea>
             </label>
@@ -46,10 +46,10 @@ export default async function NewProject() {
                 <input
                     name="githubRepoURL"
                     placeholder="Github repo URL"
-                    className="w-full px-2 py-1 border border-gray-200"
+                    className="w-full bg-[#0d1117] border border-[#3d444d] placeholder-[#9198a1] px-2 py-1"
                 ></input>
             </label>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-md mt-2">
+            <button className="bg-blue-600 hover:bg-blue-700 rounded-md mt-2 py-1 px-4">
                 Submit
             </button>
         </form>

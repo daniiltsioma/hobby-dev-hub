@@ -3,12 +3,12 @@ import { Project } from "../api/projects/route";
 
 export default function ProjectCard({ project }: { project: Project }) {
   return (
-    <div className="flex flex-col justify-between bg-[#0d1117] text-white border border-[#3d444d] rounded-lg">
+    <div className="flex flex-col justify-between bg-[#0d1117] border border-[#3d444d] rounded-lg">
       <div className="p-6">
         <h3 className="text-lg font-semibold hover:underline mb-2">
           <Link href={`/projects/${project.id}`}>{project.title}</Link>
         </h3>
-        <p className="text-gray-400">{project.description}</p>
+        <p className="text-[#9198a1]">{project.description}</p>
       </div>
       <div>
         <div className="px-6 pb-4">

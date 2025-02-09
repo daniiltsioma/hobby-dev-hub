@@ -32,7 +32,7 @@ export default async function RootLayout({
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
                 <div>
-                    <div className="flex items-center justify-between px-8 py-4">
+                    <div className="flex items-center justify-between bg-[#010409] border-b border-[#3d444d] px-8 py-4">
                         <div className="flex items-center">
                             <div className="text-2xl font-bold">
                                 Hobby Dev Hub
@@ -40,7 +40,7 @@ export default async function RootLayout({
                             {user && (
                                 <Link
                                     href="/projects/new"
-                                    className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded-md ml-4"
+                                    className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
                                 >
                                     Post a Project
                                 </Link>
@@ -60,7 +60,7 @@ export default async function RootLayout({
                             ) : (
                                 <a
                                     href={`https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_APP_CLIENT_ID}`}
-                                    className="bg-green-600 hover:bg-green-700  text-white py-2 px-4 rounded-md"
+                                    className="bg-green-600 hover:bg-green-700 rounded-md py-2 px-4"
                                 >
                                     Login with Github
                                 </a>
