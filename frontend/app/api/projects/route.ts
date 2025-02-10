@@ -1,46 +1,34 @@
-import { NextRequest } from "next/server";
+import connectToDatabase from "@/app/lib/mongo/dbConnection";
+import { NextRequest, NextResponse } from "next/server";
+import User from "@/app/lib/mongo/models/Users";
 
-export interface Project {
-    id: number;
-    title: string;
-    description: string;
-    githubRepoURL: string;
-}
+export async function GET(request: NextRequest) {
+  try {
+    await connectToDatabase();
 
-export const projects: Project[] = [
-    {
-        id: 1,
-        title: "Project 1",
-        description: "Description of project 1",
-        githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
-    },
-    {
-        id: 2,
-        title: "Project 2",
-        description: "Description of project 2",
-        githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
-    },
-    {
-        id: 3,
-        title: "Project 3",
-        description: "Description of project 3",
-        githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
-    },
-];
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
 
-export async function GET() {
-    return Response.json(projects);
-}
+    if (!userId) {
+      return NextResponse.json(
+        { error: "User ID is required" },
+        { status: 400 }
+      );
+    }
 
-export async function POST(request: Request) {
-    const data = await request.json();
+    const user = await User.findOne({ userId })
+      .populate("activeProjects")
+      .populate("archivedProjects");
 
-    const project = {
-        id: projects.length + 1,
-        ...data,
-    };
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
-    projects.push(project);
-
-    return Response.json(project);
+    return NextResponse.json({
+      activeProjects: user.activeProjects,
+      archivedProjects: user.archivedProjects,
+    });
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+  }
 }
