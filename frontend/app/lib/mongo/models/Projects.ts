@@ -3,7 +3,7 @@ import { IUser } from "./Users";
 
 export interface IProject extends Document {
   name: String;
-  repoURL: String;
+  repoURL: string;
   description: String;
   sprintStatus: "Active" | "Completed";
   approvedUsers: IUser[];

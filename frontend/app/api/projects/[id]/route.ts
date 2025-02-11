@@ -9,7 +9,13 @@ export async function GET(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const id = Number((await params).id);
-    const project = Project.findById(id).populate("applicants", "githubId")
+    const project = Project.findById(id)
+        .populate("applicants", "githubId")
+        .select("name repoURL description applicants");
+    
+    if (!project){
+        return Response.json({ error: "Project not found"}, {status: 404})
+    }
 
     return Response.json(project);
 }
@@ -18,8 +24,6 @@ export async function POST(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    await connectToDatabase();
-
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId");
 
@@ -34,6 +38,7 @@ export async function POST(
     });
 
     const applicant = await getUser();
+
     const project = await Project.findById(projectId).populate("applicants"); 
 
     if (!project) {
