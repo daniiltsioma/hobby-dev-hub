@@ -5,7 +5,7 @@ export interface Project {
     title: string;
     description: string;
     githubRepoURL: string;
-    applicants: [];
+    applicants: string[];
 }
 
 export const projects: Project[] = [
