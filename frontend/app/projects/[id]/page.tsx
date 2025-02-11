@@ -61,13 +61,10 @@ export default async function Project({
             <div>
                 <h5 className="font-semibold">Applicants:</h5>
                 <ul className="list-disc pl-5">
-                    {project.applicants.length > 0 ? (
-                        project.applicants.map((applicant, index) => (
+                    {project.applicants?.map((applicant, index) => (
                             <li key={index}>{applicant}</li>
                         ))
-                    ) : (
-                        <p>No applicants yet.</p>
-                    )}
+                    }
                 </ul>
             </div>
             { user ? (
@@ -76,6 +73,7 @@ export default async function Project({
                     <button
                         type="submit"
                         className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                        disabled={!Array.isArray(project.applicants)}
                     >
                         Apply Now
                     </button>
