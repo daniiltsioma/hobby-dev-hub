@@ -1,10 +1,11 @@
-import Link from "next/link";
-//import { Project } from "./api/projects/route";
-import { getUser } from "./lib/dal";
-import UserHeader from "./components/header/userHeader";
+import { Project } from "./api/dummy-db/route";
+import ProjectGrid from "./components/ProjectGrid";
 
 const HOST_URL = process.env.HOST_URL;
 
 export default async function Home() {
-  return <div></div>;
+  const response = await fetch(`${HOST_URL}/api/dummy-db`);
+  const projects: Project[] = await response.json();
+
+  return <ProjectGrid projects={projects} />;
 }
