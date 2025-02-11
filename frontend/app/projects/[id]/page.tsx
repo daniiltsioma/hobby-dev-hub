@@ -1,4 +1,4 @@
-import { Project as ProjectInterface } from "@/app/api/projects/route";
+import { IProject as ProjectInterface } from "@/app/lib/mongo/models/Projects";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getUser } from "@/app/lib/dal"
@@ -46,13 +46,13 @@ export default async function Project({
     const user = await getUser();
     return (
         <div className="px-8">
-            <div className="text-3xl font-bold">{project.title}</div>
+            <div className="text-3xl font-bold">{project.name}</div>
             <div>
                 <a
-                    href={project.githubRepoURL}
+                    href={project.repoURL}
                     className="text-blue-900 underline"
                 >
-                    {project.githubRepoURL}
+                    {project.repoURL}
                 </a>
             </div>
             <div>
@@ -63,7 +63,7 @@ export default async function Project({
                 <ul className="list-disc pl-5">
                     {project.applicants.length > 0 ? (
                         project.applicants.map((applicant, index) => (
-                            <li key={index}>{applicant}</li>
+                            <li key={index}>{applicant.githubId}</li>
                         ))
                     ) : (
                         <p>No applicants yet.</p>
