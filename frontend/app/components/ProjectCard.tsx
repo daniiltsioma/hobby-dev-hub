@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Project } from "../api/projects/route";
+import { Project } from "../api/dummy-db/route";
 
 export default function ProjectCard({ project }: { project: Project }) {
   return (

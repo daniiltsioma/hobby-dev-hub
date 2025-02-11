@@ -1,4 +1,4 @@
-import { Project } from "../api/projects/route";
+import { Project } from "../api/dummy-db/route";
 import ProjectCard from "./ProjectCard";
 
 export default function ProjectGrid({ projects }: { projects: Project[] }) {
