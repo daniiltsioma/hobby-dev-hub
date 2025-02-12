@@ -38,7 +38,6 @@ export async function generateGitHubTokensFromCode(githubCode: string) {
         const [key, value] = str.split("=");
         tokenData[key] = value;
     });
-
     return tokenData;
 }
 

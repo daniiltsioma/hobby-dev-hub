@@ -4,7 +4,6 @@ import { Octokit } from "octokit";
 export async function getUser() {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken");
-
     if (!accessToken) {
         return null;
     }
