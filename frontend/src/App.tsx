@@ -8,7 +8,7 @@ function App() {
                 <div>
                     <a
                         href={`https://github.com/login/oauth/authorize?client_id=${
-                            import.meta.env.GITHUB_APP_CLIENT_ID
+                            import.meta.env.VITE_GITHUB_APP_CLIENT_ID
                         }`}
                         className="bg-green-600 hover:bg-green-700 rounded-md py-2 px-4"
                     >
