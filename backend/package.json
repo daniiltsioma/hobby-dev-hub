@@ -4,10 +4,10 @@
     "description": "",
     "license": "ISC",
     "author": "",
-    "type": "commonjs",
+    "type": "module",
     "main": "dist/index.js",
     "scripts": {
-        "dev": "nodemon src/index.ts"
+        "dev": "nodemon --exec tsx src/index.ts"
     },
     "dependencies": {
         "dotenv": "^16.4.7",
