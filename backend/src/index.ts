@@ -3,6 +3,7 @@ import "dotenv/config";
 import Auth from "./auth";
 import cors from "cors";
 import GithubAPI from "./githubAPI";
+import connectToDatabase from "./mongo/dbConnection";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -52,6 +53,15 @@ app.get("/logout", (req, res) => {
     res.clearCookie("refreshToken", { path: "/" });
     github.logout();
     res.redirect(frontendUrl);
+});
+
+app.get("/test-db", async (req, res) => {
+    try {
+        await connectToDatabase();
+        res.status(200).send("Connected to MongoDB!");
+    } catch (err) {
+        res.status(400).send("Error connecting to MongoDB");
+    }
 });
 
 app.listen(port, () => {
