@@ -144,6 +144,34 @@ app.post("/projects/:id", async (req, res) => {
     res.status(200).json(project);
 });
 
+app.get("/user/:id/projects", async (req, res) => {
+    try {
+        await connectToDatabase();
+
+        const { searchParams } = new URL(req.url);
+        const userId = searchParams.get("userId");
+
+        if (!userId) {
+            res.status(400).send("User ID is required");
+        }
+
+        const user = await User.findOne({ userId })
+            .populate("activeProjects")
+            .populate("archivedProjects");
+
+        if (!user) {
+            res.status(404).send("User not found");
+        } else {
+            res.json({
+                activeProjects: user.activeProjects,
+                archivedProjects: user.archivedProjects,
+            });
+        }
+    } catch (error) {
+        console.error("Error fetching projects:", error);
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
