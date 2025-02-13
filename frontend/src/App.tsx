@@ -7,7 +7,7 @@ function App() {
     useEffect(() => {
         async function fetchUsername() {
             const user = await getUser();
-            setUsername(user.login);
+            setUsername(user ? user.login : null);
         }
 
         fetchUsername();
@@ -21,7 +21,17 @@ function App() {
                 </div>
                 <div>
                     {username ? (
-                        <>Welcome, {username}</>
+                        <div className="flex items-center">
+                            Welcome, {username}
+                            <a
+                                href={`${
+                                    import.meta.env.VITE_EXPRESS_URL
+                                }/logout`}
+                                className="border hover:bg-red-100 border-red-600 text-red-600 py-1 px-4 rounded-md ml-4 cursor-pointer"
+                            >
+                                Logout
+                            </a>
+                        </div>
                     ) : (
                         <a
                             href={`https://github.com/login/oauth/authorize?client_id=${

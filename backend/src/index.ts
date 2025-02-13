@@ -43,8 +43,15 @@ app.get("/user", async (req, res) => {
         const user = await github.getUser();
         res.send(user);
     } catch (err) {
-        res.status(400).send(err);
+        res.send("Not authorized");
     }
+});
+
+app.get("/logout", (req, res) => {
+    res.clearCookie("accessToken", { path: "/", httpOnly: true });
+    res.clearCookie("refreshToken", { path: "/" });
+    github.logout();
+    res.redirect(frontendUrl);
 });
 
 app.listen(port, () => {

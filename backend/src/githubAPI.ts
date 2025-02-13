@@ -24,6 +24,10 @@ export default class GithubAPI {
         });
     }
 
+    public logout() {
+        this.octokit = null;
+    }
+
     public async getUser(): Promise<Endpoints["GET /user"]["response"]> {
         if (!this.octokit) {
             throw new Error("Not authenticated");
