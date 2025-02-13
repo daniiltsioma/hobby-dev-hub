@@ -23,14 +23,12 @@ app.get("/api/login/", async (req, res) => {
     github.authenticate(tokenData.access_token);
 
     res.cookie("accessToken", tokenData.access_token, {
-        expires: new Date(Date.now() + Number(tokenData.expires_in)),
+        maxAge: Number(tokenData.expires_in),
         httpOnly: true,
     });
 
     res.cookie("refreshToken", tokenData.refresh_token, {
-        expires: new Date(
-            Date.now() + Number(tokenData.refresh_token_expires_in)
-        ),
+        maxAge: Number(tokenData.refresh_token_expires_in),
         httpOnly: true,
     });
 
