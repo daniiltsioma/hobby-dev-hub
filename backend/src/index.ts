@@ -4,6 +4,7 @@ import Auth from "./auth";
 import cors from "cors";
 import GithubAPI from "./githubAPI";
 import connectToDatabase from "./mongo/dbConnection";
+import projects from "./mongo/projects";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -62,6 +63,12 @@ app.get("/test-db", async (req, res) => {
     } catch (err) {
         res.status(400).send("Error connecting to MongoDB");
     }
+});
+
+app.get("/dummy-db/:id", async (req, res) => {
+    const id = Number(req.params.id);
+    const project = projects.find((proj) => proj.id === id);
+    res.json(project);
 });
 
 app.listen(port, () => {
