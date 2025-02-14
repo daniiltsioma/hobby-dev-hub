@@ -6,6 +6,7 @@ import GithubAPI from "./githubAPI";
 import connectToDatabase from "./mongo/dbConnection";
 import projects from "./mongo/projects";
 import User from "./mongo/models/Users";
+import bodyParser from "body-parser";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -13,6 +14,8 @@ const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
 const app = express();
 
 app.use(cors());
+
+const jsonParser = bodyParser.json();
 
 const github = new GithubAPI();
 const auth = new Auth();
@@ -64,6 +67,23 @@ app.get("/test-db", async (req, res) => {
     } catch (err) {
         res.status(400).send("Error connecting to MongoDB");
     }
+});
+
+app.get("/dummy-db", (req, res) => {
+    res.json(projects);
+});
+
+app.post("/dummy-db", jsonParser, (req, res) => {
+    const data = req.body;
+
+    const project = {
+        id: projects.length + 1,
+        ...data,
+    };
+
+    projects.push(project);
+
+    res.json(project);
 });
 
 app.get("/dummy-db/:id", async (req, res) => {
