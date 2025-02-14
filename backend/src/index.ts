@@ -14,8 +14,9 @@ const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
-const jsonParser = bodyParser.json();
+// const jsonParser = bodyParser.json();
 
 const github = new GithubAPI();
 const auth = new Auth();
@@ -73,7 +74,7 @@ app.get("/dummy-db", (req, res) => {
     res.json(projects);
 });
 
-app.post("/dummy-db", jsonParser, (req, res) => {
+app.post("/dummy-db", (req, res) => {
     const data = req.body;
 
     const project = {
