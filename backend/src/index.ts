@@ -150,16 +150,20 @@ app.post("/projects/:id", async (req, res) => {
 
     const applicant = await github.getUser();
 
-    if (!applicant || !applicant.data.login) {
+    console.log({ applicant });
+
+    if (!applicant || !applicant.login) {
         res.status(401).send("User not authenticated");
+        return;
     }
 
-    if (project.applicants.includes(applicant.data.login)) {
+    if (project.applicants.includes(applicant.login)) {
         res.status(400).send("Already applied");
+        return;
     }
 
-    if (!project.applicants.includes(applicant.data.login)) {
-        project.applicants.push(applicant.data.login);
+    if (!project.applicants.includes(applicant.login)) {
+        project.applicants.push(applicant.login);
     }
     res.status(200).json(project);
 });

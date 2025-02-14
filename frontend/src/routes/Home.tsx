@@ -10,7 +10,6 @@ export default function Home() {
                 `${import.meta.env.VITE_EXPRESS_URL}/dummy-db`
             ).then((res) => res.json());
             setProjects(apiProjects);
-            console.log(apiProjects);
         }
 
         fetchProjects();

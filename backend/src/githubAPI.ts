@@ -28,7 +28,9 @@ export default class GithubAPI {
         this.octokit = null;
     }
 
-    public async getUser(): Promise<Endpoints["GET /user"]["response"]> {
+    public async getUser(): Promise<
+        Endpoints["GET /user"]["response"]["data"]
+    > {
         if (!this.octokit) {
             throw new Error("Not authenticated");
         }
