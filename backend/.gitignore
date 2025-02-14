@@ -1,0 +1,40 @@
+# This file was generated using ChatGPT.
+
+# Node.js dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+
+# Build output
+/dist
+/build
+
+# Dependency directories
+jspm_packages/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE/Editor folders
+.vscode/
+.idea/
+
+# Test Coverage
+coverage/
+
+# NPM package lock files (if you don't want to commit them)
+package-lock.json
+yarn.lock
+
+# Optional: if using Docker, you might want to ignore Docker-related files
+.dockerignore
+Dock
