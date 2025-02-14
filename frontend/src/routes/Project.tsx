@@ -11,20 +11,11 @@ export default function Project() {
 
     async function applyToProject(formData: FormData) {
         const projectId = formData.get("projectId");
-        // const cookieStore = await cookies();
-        // const accessToken = cookieStore.get("accessToken");
-
-        // if (!accessToken) {
-        //     console.error("User not logged in");
-        //     return;
-        // }
 
         const response = await fetch(
             `${import.meta.env.VITE_EXPRESS_URL}/projects/${projectId}`,
             {
                 method: "POST",
-                // credentials: "include",
-                // body: JSON.stringify({ cookie: accessToken }),
             }
         );
 
