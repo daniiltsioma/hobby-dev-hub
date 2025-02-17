@@ -60,6 +60,33 @@ export default function Project() {
                 <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
                 <p className="text-lg text-[#9198a1]">{project.description}</p>
             </div>
+
+            {/* Apply Section */}
+            <div className="border border-[#3d444d] rounded-lg p-6 mb-6">
+                <h2 className="text-2xl font-semibold mb-4">
+                    Collaborate on this Project
+                </h2>
+                <p className="text-lg text-[#9198a1] mb-4">
+                    If you're interested in contributing to this project, please
+                    apply below. I'm looking for developers with experience in
+                    the technologies listed above.
+                </p>
+                {isLoggedIn ? (
+                    <form action={applyToProject}>
+                        <input type="hidden" name="projectId" value={id} />
+                        <button
+                            type="submit"
+                            className="bg-[#212830] hover:bg-[#2f3742] font-medium border border-[#3d444d] rounded-md px-6 py-2"
+                        >
+                            Apply
+                        </button>
+                    </form>
+                ) : (
+                    <p className="font-medium">
+                        You must be logged in to apply.
+                    </p>
+                )}
+            </div>
         </div>
     );
 }
