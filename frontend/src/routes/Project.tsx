@@ -54,43 +54,12 @@ export default function Project() {
     }, []);
 
     return (
-        <div className="px-8">
-            <div className="text-3xl font-bold">{project.title}</div>
-            <div>
-                <a
-                    href={project.githubRepoURL}
-                    className="text-blue-900 underline"
-                >
-                    {project.githubRepoURL}
-                </a>
+        <div className="container mx-auto p-8">
+            {/* Title and Description Section */}
+            <div className="border border-[#3d444d] rounded-lg p-6 mb-6">
+                <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
+                <p className="text-lg text-[#9198a1]">{project.description}</p>
             </div>
-            <div>
-                <p>{project.description}</p>
-            </div>
-            <div>
-                <h5 className="font-semibold">Applicants:</h5>
-                <ul className="list-disc pl-5">
-                    {project.applicants?.map((applicant: any, index: any) => (
-                        <li key={index}>{applicant}</li>
-                    ))}
-                </ul>
-            </div>
-            {isLoggedIn ? (
-                <form action={applyToProject}>
-                    <input type="hidden" name="projectId" value={id} />
-                    <button
-                        type="submit"
-                        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded cursor-pointer"
-                        disabled={!Array.isArray(project.applicants)}
-                    >
-                        Apply Now
-                    </button>
-                </form>
-            ) : (
-                <p className="mt-4 text-white">
-                    You must be logged in to apply
-                </p>
-            )}
         </div>
     );
 }
