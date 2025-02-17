@@ -61,6 +61,57 @@ export default function Project() {
                 <p className="text-lg text-[#9198a1]">{project.description}</p>
             </div>
 
+            {/* Project Info and Task Section (Horizontal Split) */}
+            <div className="flex flex-col lg:flex-row border border-[#3d444d] rounded-lg space-y-6 lg:space-y-0 lg:space-x-6 p-6 mb-6">
+                {/* Left Side: Project Info */}
+                <div className="flex-1 lg:border-r border-[#3d444d]">
+                    <div>
+                        <h2 className="text-2xl font-semibold mb-4">
+                            Project Information
+                        </h2>
+                        {project.technologies &&
+                        project.technologies.length > 0 ? (
+                            <div>
+                                <h3 className="font-medium text-[#9198a1] mb-1.5">
+                                    Technologies Used:
+                                </h3>
+                                <ul className="flex flex-wrap space-x-2 mb-3">
+                                    {project.technologies.map(
+                                        (tech: any, idx: any) => (
+                                            <li
+                                                key={idx}
+                                                className="bg-[#2f3742] rounded-full px-3 py-1 mb-2"
+                                            >
+                                                {tech}
+                                            </li>
+                                        )
+                                    )}
+                                </ul>
+                            </div>
+                        ) : null}
+                        <div>
+                            <h3 className="font-medium text-[#9198a1]">
+                                Links:
+                            </h3>
+                            <a
+                                href={project.githubRepoURL}
+                                className="text-[#4493f8] hover:underline"
+                            >
+                                GitHub Repository
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Side: Task */}
+                <div className="flex-1 border-t lg:border-none border-[#3d444d] lg:p-0 pt-6">
+                    <h2 className="text-2xl font-semibold mb-4">
+                        Task Description
+                    </h2>
+                    <p className="text-lg text-[#9198a1]">{project.task}</p>
+                </div>
+            </div>
+
             {/* Apply Section */}
             <div className="border border-[#3d444d] rounded-lg p-6 mb-6">
                 <h2 className="text-2xl font-semibold mb-4">
