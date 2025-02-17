@@ -108,7 +108,11 @@ export default function Project() {
                     <h2 className="text-2xl font-semibold mb-4">
                         Task Description
                     </h2>
-                    <p className="text-lg text-[#9198a1]">{project.task}</p>
+                    <p className="text-lg text-[#9198a1]">
+                        {project.task
+                            ? project.task
+                            : "I’m looking for developers to collaborate on my project. Check out the GitHub repository for more details and to see how you can contribute!"}
+                    </p>
                 </div>
             </div>
 
