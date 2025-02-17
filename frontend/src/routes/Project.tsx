@@ -76,7 +76,7 @@ export default function Project() {
                         <input type="hidden" name="projectId" value={id} />
                         <button
                             type="submit"
-                            className="bg-[#212830] hover:bg-[#2f3742] font-medium border border-[#3d444d] rounded-md px-6 py-2"
+                            className="cursor-pointer bg-[#212830] hover:bg-[#2f3742] font-medium border border-[#3d444d] rounded-md px-6 py-2"
                         >
                             Apply
                         </button>
@@ -84,6 +84,24 @@ export default function Project() {
                 ) : (
                     <p className="font-medium">
                         You must be logged in to apply.
+                    </p>
+                )}
+            </div>
+
+            {/* Applicants Section */}
+            <div className="border border-[#3d444d] rounded-lg p-6">
+                <h2 className="text-2xl font-semibold mb-4">Applicants</h2>
+                {project.applicants && project.applicants.length > 0 ? (
+                    <ul>
+                        {project.applicants.map((applicant: any, idx: any) => (
+                            <li key={idx} className="text-lg text-[#9198a1]">
+                                {applicant}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p className="font-medium text-[#9198a1]">
+                        No applicants yet.
                     </p>
                 )}
             </div>
