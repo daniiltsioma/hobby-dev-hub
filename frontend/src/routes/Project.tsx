@@ -121,7 +121,7 @@ export default function Project() {
                     <p className="text-lg text-[#9198a1]">
                         {project.task
                             ? project.task
-                            : "I'm looking for developers to collaborate on my project. Check out the GitHub repository for more details and to see how you can contribute!"}
+                            : "Check out the GitHub repository for more details and to see how you can contribute!"}
                     </p>
                 </div>
             </div>
@@ -133,8 +133,7 @@ export default function Project() {
                 </h2>
                 <p className="text-lg text-[#9198a1] mb-4">
                     If you're interested in contributing to this project, please
-                    apply below. I'm looking for developers with experience in
-                    the technologies listed above.
+                    apply below.
                 </p>
                 {isLoggedIn ? (
                     <form action={applyToProject}>
