@@ -1,13 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getUser } from "../lib/user";
 import { useEffect, useState } from "react";
-import { Project as ProjectInterface } from "../components/projects/ProjectCard";
 
 export default function Project() {
     const { id } = useParams();
     const [isLoggedIn, setIsLoggedIn] = useState();
     const [project, setProject] = useState({} as any);
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     async function applyToProject(formData: FormData) {
         const projectId = formData.get("projectId");
@@ -34,24 +34,34 @@ export default function Project() {
     }
 
     useEffect(() => {
-        (async function () {
-            setIsLoggedIn(await getUser());
+        const fetchProject = async () => {
+            try {
+                const loggedInStatus = await getUser();
+                setIsLoggedIn(loggedInStatus);
 
-            const response = await fetch(
-                `${import.meta.env.VITE_EXPRESS_URL}/projects/${id}`,
-                {
-                    cache: "no-store",
-                }
-            );
-
-            const proj: ProjectInterface = await response.json();
-            if (!proj) {
-                navigate("/");
-            } else {
-                setProject(proj);
+                const response = await fetch(
+                    `${import.meta.env.VITE_EXPRESS_URL}/projects/${id}`
+                );
+                const data = await response.json();
+                setProject(data);
+            } catch (err) {
+                console.error(err);
+                setError("Error fetching project details.");
+            } finally {
+                setLoading(false);
             }
-        })();
+        };
+
+        fetchProject();
     }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
 
     return (
         <div className="container mx-auto p-8">
