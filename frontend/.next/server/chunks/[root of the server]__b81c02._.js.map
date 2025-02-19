@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 63, "column": 0}, "map": {"version":3,"sources":["file:///Users/loganbrescia/CS554/HobbyDevProj/hobby-dev-hub/frontend/app/api/logout/route.ts"],"sourcesContent":["import { redirect } from \"next/navigation\";\nimport { cookies } from \"next/headers\";\n\nexport async function GET() {\n    const cookieStore = await cookies();\n\n    cookieStore.delete(\"accessToken\");\n    cookieStore.delete(\"refreshToken\");\n\n    redirect(\"/\");\n}\n"],"names":[],"mappings":";;;AAAA;AACA;AADA;;;AAGO,eAAe;IAClB,MAAM,cAAc,MAAM,CAAA,GAAA,iIAAA,CAAA,UAAO,AAAD;IAEhC,YAAY,MAAM,CAAC;IACnB,YAAY,MAAM,CAAC;IAEnB,CAAA,GAAA,uLAAA,CAAA,WAAQ,AAAD,EAAE;AACb"}},
+    {"offset": {"line": 77, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
+}
