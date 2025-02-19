@@ -1,13 +1,13 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getUser } from "../lib/user";
 import { useEffect, useState } from "react";
-import { Project as ProjectInterface } from "../components/projects/ProjectCard";
 
 export default function Project() {
     const { id } = useParams();
     const [isLoggedIn, setIsLoggedIn] = useState();
     const [project, setProject] = useState({} as any);
-    const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     async function applyToProject(formData: FormData) {
         const projectId = formData.get("projectId");
@@ -34,63 +34,141 @@ export default function Project() {
     }
 
     useEffect(() => {
-        (async function () {
-            setIsLoggedIn(await getUser());
+        const fetchProject = async () => {
+            try {
+                const loggedInStatus = await getUser();
+                setIsLoggedIn(loggedInStatus);
 
-            const response = await fetch(
-                `${import.meta.env.VITE_EXPRESS_URL}/projects/${id}`,
-                {
-                    cache: "no-store",
-                }
-            );
-
-            const proj: ProjectInterface = await response.json();
-            if (!proj) {
-                navigate("/");
-            } else {
-                setProject(proj);
+                const response = await fetch(
+                    `${import.meta.env.VITE_EXPRESS_URL}/projects/${id}`
+                );
+                const data = await response.json();
+                setProject(data);
+            } catch (err) {
+                console.error(err);
+                setError("Error fetching project details.");
+            } finally {
+                setLoading(false);
             }
-        })();
+        };
+
+        fetchProject();
     }, []);
 
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
     return (
-        <div className="px-8">
-            <div className="text-3xl font-bold">{project.title}</div>
-            <div>
-                <a
-                    href={project.githubRepoURL}
-                    className="text-blue-900 underline"
-                >
-                    {project.githubRepoURL}
-                </a>
+        <div className="container mx-auto p-8">
+            {/* Title and Description Section */}
+            <div className="border border-[#3d444d] rounded-lg p-6 mb-6">
+                <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
+                <p className="text-lg text-[#9198a1]">{project.description}</p>
             </div>
-            <div>
-                <p>{project.description}</p>
+
+            {/* Project Info and Task Section (Horizontal Split) */}
+            <div className="flex flex-col lg:flex-row border border-[#3d444d] rounded-lg space-y-6 lg:space-y-0 lg:space-x-6 p-6 mb-6">
+                {/* Left Side: Project Info */}
+                <div className="flex-1 lg:border-r border-[#3d444d]">
+                    <div>
+                        <h2 className="text-2xl font-semibold mb-4">
+                            Project Information
+                        </h2>
+                        {project.technologies &&
+                        project.technologies.length > 0 ? (
+                            <div>
+                                <h3 className="font-medium text-[#9198a1] mb-1.5">
+                                    Technologies Used:
+                                </h3>
+                                <ul className="flex flex-wrap space-x-2 mb-3">
+                                    {project.technologies.map(
+                                        (tech: any, idx: any) => (
+                                            <li
+                                                key={idx}
+                                                className="bg-[#2f3742] rounded-full px-3 py-1 mb-2"
+                                            >
+                                                {tech}
+                                            </li>
+                                        )
+                                    )}
+                                </ul>
+                            </div>
+                        ) : null}
+                        <div>
+                            <h3 className="font-medium text-[#9198a1]">
+                                Links:
+                            </h3>
+                            <a
+                                href={project.githubRepoURL}
+                                className="text-[#4493f8] hover:underline"
+                            >
+                                GitHub Repository
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Side: Task */}
+                <div className="flex-1 border-t lg:border-none border-[#3d444d] lg:p-0 pt-6">
+                    <h2 className="text-2xl font-semibold mb-4">
+                        Task Description
+                    </h2>
+                    <p className="text-lg text-[#9198a1]">
+                        {project.task
+                            ? project.task
+                            : "Check out the GitHub repository for more details and to see how you can contribute!"}
+                    </p>
+                </div>
             </div>
-            <div>
-                <h5 className="font-semibold">Applicants:</h5>
-                <ul className="list-disc pl-5">
-                    {project.applicants?.map((applicant: any, index: any) => (
-                        <li key={index}>{applicant}</li>
-                    ))}
-                </ul>
-            </div>
-            {isLoggedIn ? (
-                <form action={applyToProject}>
-                    <input type="hidden" name="projectId" value={id} />
-                    <button
-                        type="submit"
-                        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded cursor-pointer"
-                        disabled={!Array.isArray(project.applicants)}
-                    >
-                        Apply Now
-                    </button>
-                </form>
-            ) : (
-                <p className="mt-4 text-white">
-                    You must be logged in to apply
+
+            {/* Apply Section */}
+            <div className="border border-[#3d444d] rounded-lg p-6 mb-6">
+                <h2 className="text-2xl font-semibold mb-4">
+                    Collaborate on this Project
+                </h2>
+                <p className="text-lg text-[#9198a1] mb-4">
+                    If you're interested in contributing to this project, please
+                    apply below.
                 </p>
-            )}
+                {isLoggedIn ? (
+                    <form action={applyToProject}>
+                        <input type="hidden" name="projectId" value={id} />
+                        <button
+                            type="submit"
+                            className="cursor-pointer bg-[#212830] hover:bg-[#2f3742] font-medium border border-[#3d444d] rounded-md px-6 py-2"
+                        >
+                            Apply
+                        </button>
+                    </form>
+                ) : (
+                    <p className="font-medium">
+                        You must be logged in to apply.
+                    </p>
+                )}
+            </div>
+
+            {/* Applicants Section */}
+            <div className="border border-[#3d444d] rounded-lg p-6">
+                <h2 className="text-2xl font-semibold mb-4">Applicants</h2>
+                {project.applicants && project.applicants.length > 0 ? (
+                    <ul>
+                        {project.applicants.map((applicant: any, idx: any) => (
+                            <li key={idx} className="text-lg text-[#9198a1]">
+                                {applicant}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p className="font-medium text-[#9198a1]">
+                        No applicants yet.
+                    </p>
+                )}
+            </div>
         </div>
     );
 }
