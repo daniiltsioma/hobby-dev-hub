@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Project } from "../../../backend/src/mongo/projects";
+import { Project } from "../../../../backend/src/mongo/projects";
 
 export default function ProjectFilter() {
     const [search, setSearch] = useState("");
@@ -27,12 +27,10 @@ export default function ProjectFilter() {
 
     return (
         <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Search & Filter Projects</h2>
-
             <input
                 type="text"
-                placeholder="Search by name or description..."
-                className="border p-2 rounded w-full mb-4"
+                placeholder="Search by name"
+                className="border p-2 border-[#3d444d] rounded w-full mb-4"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
@@ -43,7 +41,7 @@ export default function ProjectFilter() {
                     {availableTags.map((tag) => (
                         <button
                             key={tag}
-                            className={`px-3 py-1 rounded border ${tags.includes(tag) ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+                            className={`px-3 py-1 rounded border-[#3d444d] ${tags.includes(tag) ? "bg-white text-[#151b23]" : "bg-[#151b23]"}`}
                             onClick={() =>
                                 setTags(tags.includes(tag) ? tags.filter(t => t !== tag) : [...tags, tag])
                             }
@@ -67,6 +65,7 @@ export default function ProjectFilter() {
                     <p>No projects found.</p>
                 )}
             </div>
+            <div className="h-[2px] bg-[#3d444d] w-full my-4"/>
         </div>
     );
 }
