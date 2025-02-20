@@ -74,6 +74,27 @@ app.get("/dummy-db", (req, res) => {
     res.json(projects);
 });
 
+app.get("/dummy-db-search", (req, res) => {
+    let filteredProjects = projects;
+
+    const search = typeof req.query.search === "string" ? req.query.search.toLowerCase() : "";
+    const tags = typeof req.query.tags === "string" ? req.query.tags.split(",") : [];
+
+    if (search) {
+        filteredProjects = filteredProjects.filter(
+            (project) => project.title.toLowerCase().includes(search)
+        );
+    }
+
+    if (tags.length > 0) {
+        filteredProjects = filteredProjects.filter(
+            (project) => tags.some(tag => project.technologies.includes(tag))
+        );
+    }
+
+    res.json(filteredProjects);
+});
+
 app.post("/dummy-db", (req, res) => {
     const data = req.body;
 
@@ -200,3 +221,5 @@ app.get("/user/:id/projects", async (req, res) => {
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
+
+module.exports = app;
