@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Project } from "../../../../backend/src/mongo/projects";
 import ProjectCard from "./ProjectCard";
+import ProjectGrid from "./ProjectGrid";
 
 export default function ProjectFilter() {
     const [search, setSearch] = useState("");
@@ -56,11 +57,7 @@ export default function ProjectFilter() {
 
             <div className="mt-4">
                 {projects.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-8">
-                    {projects.map((project) => (
-                        <ProjectCard project={project} key={project.id} />
-                    ))}
-                    </div>
+                    <ProjectGrid projects={projects}/>
                 ) : (
                     <p>No projects found.</p>
                 )}
