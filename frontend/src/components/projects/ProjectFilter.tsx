@@ -11,11 +11,6 @@ export default function ProjectFilter() {
 
     useEffect(() => {
 
-        if (!search.trim() && tags.length === 0) {
-            setProjects([]);
-            return;
-        }
-
         const fetchProjects = async () => {
             let queryParams = new URLSearchParams();
 
@@ -70,7 +65,6 @@ export default function ProjectFilter() {
                     <p>No projects found.</p>
                 )}
             </div>
-            <div className="h-[2px] bg-[#3d444d] w-full my-4"/>
         </div>
     );
 }
