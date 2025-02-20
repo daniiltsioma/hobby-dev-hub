@@ -10,6 +10,12 @@ export default function ProjectFilter() {
     const availableTags = ["React", "Node.js", "MongoDB", "Python", "NumPy", "C++", "SFML"];
 
     useEffect(() => {
+
+        if (!search.trim() && tags.length === 0) {
+            setProjects([]);
+            return;
+        }
+
         const fetchProjects = async () => {
             let queryParams = new URLSearchParams();
 
