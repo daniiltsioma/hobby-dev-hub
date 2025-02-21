@@ -4,7 +4,7 @@ import { IProject } from "./Projects";
 const UserSchema = new Schema({
   email: { type: String, required: true },
   githubId: { type: String, required: true },
-  userId: { type: Number, required: true },
+  userId: { type: String, required: true },
   activeProjects: [{ type: Types.ObjectId, ref: "Project" }],
   archivedProjects: [{ type: Types.ObjectId, ref: "Project" }],
 });

@@ -6,6 +6,7 @@ import GithubAPI from "./githubAPI";
 import connectToDatabase from "./mongo/dbConnection";
 import projects from "./mongo/projects";
 import User from "./mongo/models/Users";
+import myProjects from "./routes/myProjects";
 import bodyParser from "body-parser";
 
 const port = process.env.PORT || 8000;
@@ -93,6 +94,9 @@ app.get("/dummy-db/:id", async (req, res) => {
   res.json(project);
 });
 
+// Route to get active and archived projects of a specific user if found
+app.use("/myProjects", myProjects);
+
 app.get("/projects/:id", (req, res) => {
   const id = Number(req.params.id);
   const project = projects.find((proj) => proj.id === id);
@@ -172,3 +176,5 @@ app.get("/user/:id/projects", async (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
+
+export default app;

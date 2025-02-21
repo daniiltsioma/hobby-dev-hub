@@ -1,11 +1,12 @@
 import { Request, Response, Router } from "express";
 import User from "../mongo/models/Users";
 import connectToDatabase from "../mongo/dbConnection";
+import Project from "../mongo/models/Projects";
 
 const router = Router();
 
 router.get(
-  "/myprojects",
+  "/myProjects",
   async (req: Request, res: Response): Promise<void> => {
     try {
       await connectToDatabase();
