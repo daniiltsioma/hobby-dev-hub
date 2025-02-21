@@ -1,12 +1,11 @@
 import { Request, Response, Router } from "express";
 import User from "../mongo/models/Users";
 import connectToDatabase from "../mongo/dbConnection";
-import Project from "../mongo/models/Projects";
 
-const router = Router();
+const myProjectRouter = Router();
 
-router.get(
-  "/myProjects",
+myProjectRouter.get(
+  "/api/myProjects",
   async (req: Request, res: Response): Promise<void> => {
     try {
       await connectToDatabase();
@@ -53,4 +52,4 @@ router.get(
   }
 );
 
-export default router;
+export default myProjectRouter;

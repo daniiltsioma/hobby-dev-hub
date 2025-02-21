@@ -6,8 +6,10 @@ import GithubAPI from "./githubAPI";
 import connectToDatabase from "./mongo/dbConnection";
 import projects from "./mongo/projects";
 import User from "./mongo/models/Users";
-import myProjects from "./routes/myProjects";
+import myProjectRouter from "./routes/myProjects";
+import userRouter from "./routes/users";
 import bodyParser from "body-parser";
+import projectRouter from "./routes/projects";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -95,7 +97,13 @@ app.get("/dummy-db/:id", async (req, res) => {
 });
 
 // Route to get active and archived projects of a specific user if found
-app.use("/myProjects", myProjects);
+app.use(myProjectRouter);
+
+// Route to post a new user into the database
+app.use(userRouter);
+
+// Route to post a new project into the database
+app.use(projectRouter);
 
 app.get("/projects/:id", (req, res) => {
   const id = Number(req.params.id);
