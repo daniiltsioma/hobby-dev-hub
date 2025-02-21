@@ -8,7 +8,9 @@ export default function NewProject() {
             title: formData.get("title"),
             description: formData.get("description"),
             githubRepoURL: formData.get("githubRepoURL"),
+            technologies: [],
             applicants: [],
+            task: []
         };
 
         console.log(JSON.stringify(rawFormData));
