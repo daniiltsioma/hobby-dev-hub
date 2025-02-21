@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getUser } from "../lib/user";
 import { Link } from "react-router-dom";
+//import ProjectSearch from "./ProjectSearch"
 
 export default function Header() {
     const [username, setUsername] = useState();
@@ -26,6 +27,7 @@ export default function Header() {
                     </Link>
                 )}
             </div>
+            {/*<ProjectSearch/>*/}
             <div>
                 {username ? (
                     <div className="flex items-center">
