@@ -7,8 +7,8 @@
     "type": "module",
     "main": "dist/index.js",
     "scripts": {
-        "dev": "nodemon --exec tsx src/index.ts",
-        "test": "jest --config jest.config.ts"
+        "dev": "NODE_ENV=development nodemon --exec tsx src/index.ts",
+        "test": "NODE_ENV=test jest"
     },
     "dependencies": {
         "body-parser": "^1.20.3",
