@@ -4,10 +4,15 @@ import { Endpoints } from "@octokit/types";
 export default class GithubAPI {
     private octokit: any;
 
-    public authenticate(accessToken: string): void {
-        this.octokit = new Octokit({
-            auth: accessToken,
-        });
+    public authenticate(accessToken: string, OctokitClient = Octokit): boolean {
+        try {
+            this.octokit = new OctokitClient({
+                auth: accessToken,
+            });
+        } catch {
+            return false;
+        }
+        return true;
     }
 
     public logout() {
