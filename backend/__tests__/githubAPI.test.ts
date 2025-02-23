@@ -10,9 +10,6 @@ jest.mock("@octokit/core", () => {
                 throw new Error("Failed to authorize");
             }
             return {
-                sayHello: async () => {
-                    return "hello";
-                },
                 request: (prompt: string) => {
                     if (prompt === "GET /user") {
                         return {
@@ -44,7 +41,6 @@ describe("GitHub API client", () => {
     test("should return user data when trying to get user while authenticated", async () => {
         githubAPI.authenticate("validToken", MockOctokit);
         expect(githubAPI.isAuthenticated()).toBe(true);
-        expect(await githubAPI.sayHello()).toEqual("hello");
         expect(await githubAPI.getUser()).toEqual({
             id: 123,
             username: "johndoe",

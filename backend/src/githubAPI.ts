@@ -23,10 +23,6 @@ export default class GithubAPI {
         this.octokit = null;
     }
 
-    public async sayHello() {
-        return await this.octokit.sayHello();
-    }
-
     public async getUser(): Promise<
         Endpoints["GET /user"]["response"]["data"] | null
     > {
