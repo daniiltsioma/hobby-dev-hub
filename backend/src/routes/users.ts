@@ -5,7 +5,7 @@ import connectToDatabase from "../mongo/dbConnection";
 const userRouter = Router();
 
 userRouter.post(
-  "/api/users",
+  "/users",
   async (req: Request, res: Response): Promise<void> => {
     try {
       await connectToDatabase();
@@ -15,8 +15,6 @@ userRouter.post(
         res.status(400).send("Missing fields, could not save user");
         return;
       }
-
-      console.log(email + " " + githubId + " " + userId);
 
       const newUser = new User({
         email,

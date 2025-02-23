@@ -19,7 +19,7 @@ interface ICreateProjectRequest {
 }
 
 projectRouter.post(
-  "/api/projects",
+  "/projects",
   async (
     req: Request<{}, {}, ICreateProjectRequest>,
     res: Response

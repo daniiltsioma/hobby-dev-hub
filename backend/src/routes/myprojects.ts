@@ -5,7 +5,7 @@ import connectToDatabase from "../mongo/dbConnection";
 const myProjectRouter = Router();
 
 myProjectRouter.get(
-  "/api/myProjects",
+  "/myProjects",
   async (req: Request, res: Response): Promise<void> => {
     try {
       await connectToDatabase();
