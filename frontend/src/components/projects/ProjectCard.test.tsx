@@ -1,8 +1,8 @@
 import { TextEncoder, TextDecoder } from "util";
 Object.assign(global, { TextDecoder, TextEncoder }); // polyfill before imports and tests
 
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { MemoryRouter, Routes, Route } from "react-router-dom";
 import ProjectCard from "./ProjectCard";
 import "@testing-library/jest-dom";
 
@@ -22,7 +22,7 @@ describe("ProjectCard", () => {
             </MemoryRouter>
         );
 
-        const titleLink = screen.getByText(mockProject.title);
+        const titleLink = screen.getByRole("link", { name: mockProject.title });
 
         expect(titleLink).toBeInTheDocument();
         expect(titleLink).toHaveAttribute(
@@ -39,5 +39,45 @@ describe("ProjectCard", () => {
         );
 
         expect(screen.getByText(mockProject.description)).toBeInTheDocument();
+    });
+
+    it("should render the GitHub link to the project repository", () => {
+        render(
+            <MemoryRouter>
+                <ProjectCard project={mockProject} />
+            </MemoryRouter>
+        );
+
+        const githubLink = screen.getByRole("link", { name: "View on GitHub" });
+
+        expect(githubLink).toBeInTheDocument();
+        expect(githubLink).toHaveAttribute("href", mockProject.githubRepoURL);
+    });
+
+    it("should navigate to the project page when the title is clicked", () => {
+        render(
+            <MemoryRouter>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<ProjectCard project={mockProject} />}
+                    />
+                    <Route
+                        path="/projects/:id"
+                        element={<div>Project Details</div>}
+                    />
+                </Routes>
+            </MemoryRouter>
+        );
+
+        const titleLink = screen.getByRole("link", {
+            name: mockProject.title,
+        });
+
+        expect(screen.getByText(mockProject.description)).toBeInTheDocument(); // before click
+
+        fireEvent.click(titleLink);
+
+        expect(screen.getByText("Project Details")).toBeInTheDocument(); // after click
     });
 });
