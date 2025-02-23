@@ -15,13 +15,29 @@ const mockProject = {
 };
 
 describe("ProjectCard", () => {
-    it("should render the project title", () => {
+    it("should render the project title with link", () => {
         render(
             <MemoryRouter>
                 <ProjectCard project={mockProject} />
             </MemoryRouter>
         );
 
-        expect(screen.getByText("Test Project")).toBeInTheDocument();
+        const titleLink = screen.getByText(mockProject.title);
+
+        expect(titleLink).toBeInTheDocument();
+        expect(titleLink).toHaveAttribute(
+            "href",
+            `/projects/${mockProject.id}`
+        );
+    });
+
+    it("should render the project description", () => {
+        render(
+            <MemoryRouter>
+                <ProjectCard project={mockProject} />
+            </MemoryRouter>
+        );
+
+        expect(screen.getByText(mockProject.description)).toBeInTheDocument();
     });
 });
