@@ -80,4 +80,16 @@ describe("ProjectCard", () => {
 
         expect(screen.getByText("Project Details")).toBeInTheDocument(); // after click
     });
+
+    it("should render Apply button", () => {
+        render(
+            <MemoryRouter>
+                <ProjectCard project={mockProject} />
+            </MemoryRouter>
+        );
+
+        const applyButton = screen.getByRole("button", { name: "Apply" });
+
+        expect(applyButton).toBeInTheDocument();
+    });
 });
