@@ -15,7 +15,7 @@ const mockProject = {
 };
 
 describe("ProjectCard", () => {
-    it("should render the project title with link", () => {
+    it("should render project title with link", () => {
         render(
             <MemoryRouter>
                 <ProjectCard project={mockProject} />
@@ -31,7 +31,7 @@ describe("ProjectCard", () => {
         );
     });
 
-    it("should render the project description", () => {
+    it("should render project description", () => {
         render(
             <MemoryRouter>
                 <ProjectCard project={mockProject} />
@@ -41,7 +41,7 @@ describe("ProjectCard", () => {
         expect(screen.getByText(mockProject.description)).toBeInTheDocument();
     });
 
-    it("should render the GitHub link to the project repository", () => {
+    it("should render GitHub link to project repository", () => {
         render(
             <MemoryRouter>
                 <ProjectCard project={mockProject} />
@@ -54,7 +54,7 @@ describe("ProjectCard", () => {
         expect(githubLink).toHaveAttribute("href", mockProject.githubRepoURL);
     });
 
-    it("should navigate to the project page when the title is clicked", () => {
+    it("should navigate to project page when title is clicked", () => {
         render(
             <MemoryRouter>
                 <Routes>
