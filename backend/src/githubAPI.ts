@@ -23,6 +23,27 @@ export default class GithubAPI {
         this.octokit = null;
     }
 
+    public async createRepo(options: {
+        name: string;
+        makePrivate?: boolean;
+        description?: string;
+    }) {
+        if (!this.isAuthenticated()) {
+            return null;
+        }
+        const response = await this.octokit.request(
+            "POST /user/posts",
+            options
+        );
+        if (response.status === 201) {
+            const repoData = response.data;
+
+            return repoData;
+        } else {
+            return null;
+        }
+    }
+
     public async getUser(): Promise<
         Endpoints["GET /user"]["response"]["data"] | null
     > {

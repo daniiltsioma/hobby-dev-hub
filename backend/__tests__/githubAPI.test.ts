@@ -10,12 +10,29 @@ jest.mock("@octokit/core", () => {
                 throw new Error("Failed to authorize");
             }
             return {
-                request: (prompt: string) => {
-                    if (prompt === "GET /user") {
+                request: (route: string, parameters: any) => {
+                    if (route === "GET /user") {
+                        // get authenticated user
                         return {
+                            status: 200,
                             data: {
                                 id: 123,
                                 username: "johndoe",
+                            },
+                        };
+                    }
+                    if (route === "POST /user/posts") {
+                        // create a repository
+                        if (parameters.name === "Existing repo") {
+                            return {
+                                status: 400,
+                            };
+                        }
+                        return {
+                            status: 201,
+                            data: {
+                                id: 123456,
+                                name: parameters.name,
                             },
                         };
                     }
@@ -45,6 +62,23 @@ describe("GitHub API client", () => {
             id: 123,
             username: "johndoe",
         });
+        githubAPI.logout();
+    });
+    test("should return repo name and id when created successfully", async () => {
+        githubAPI.authenticate("validToken", MockOctokit);
+        expect(githubAPI.isAuthenticated()).toBe(true);
+        expect(await githubAPI.createRepo({ name: "New repo" })).toEqual({
+            id: 123456,
+            name: "New repo",
+        });
+        githubAPI.logout();
+    });
+    test("should return null when the repository already created", async () => {
+        githubAPI.authenticate("validToken", MockOctokit);
+        expect(githubAPI.isAuthenticated()).toBe(true);
+        expect(await githubAPI.createRepo({ name: "Existing repo" })).toEqual(
+            null
+        );
         githubAPI.logout();
     });
 });
