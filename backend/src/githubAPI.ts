@@ -2,7 +2,7 @@ import { Octokit } from "@octokit/core";
 import { Endpoints } from "@octokit/types";
 
 export default class GithubAPI {
-    private octokit: any;
+    private octokit: any = null;
 
     public authenticate(accessToken: string, OctokitClient = Octokit): boolean {
         try {
@@ -15,15 +15,23 @@ export default class GithubAPI {
         return true;
     }
 
+    public isAuthenticated(): boolean {
+        return this.octokit !== null;
+    }
+
     public logout() {
         this.octokit = null;
     }
 
+    public async sayHello() {
+        return await this.octokit.sayHello();
+    }
+
     public async getUser(): Promise<
-        Endpoints["GET /user"]["response"]["data"]
+        Endpoints["GET /user"]["response"]["data"] | null
     > {
         if (!this.octokit) {
-            throw new Error("Not authenticated");
+            return null;
         }
         const response = await this.octokit.request("GET /user");
         const user = response.data;
