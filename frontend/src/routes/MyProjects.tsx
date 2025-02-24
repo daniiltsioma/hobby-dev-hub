@@ -1,69 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
-type Project = {
-    id: string;
-    title: string;
-    status: "owned" | "applied" | "collaborating";
-    description: string;
-};
+import { Project } from "../components/projects/ProjectCard";
 
 export default function MyProjects() {
-    const { username } = useParams();
+    const { username } = useParams<{ username: string }>();
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [expandedSections, setExpandedSections] = useState<string[]>([
         "owned",
         "applied",
         "collaborating",
     ]);
 
-    // Dummy data
-    const projects: Project[] = [
-        {
-            id: "1",
-            title: "Project One",
-            status: "owned",
-            description:
-                "This is a description of Project One, where I am the owner.",
-        },
-        {
-            id: "2",
-            title: "Project Two",
-            status: "owned",
-            description:
-                "This is a description of Project Two, where I am the owner.",
-        },
-        {
-            id: "3",
-            title: "Project Three",
-            status: "applied",
-            description:
-                "This is a description of Project Three, where I have applied.",
-        },
-        {
-            id: "4",
-            title: "Project Four",
-            status: "collaborating",
-            description:
-                "This is a description of Project Four, where I am collaborating.",
-        },
-        {
-            id: "5",
-            title: "Project Five",
-            status: "collaborating",
-            description:
-                "This is a description of Project Five, where I am collaborating.",
-        },
-        {
-            id: "6",
-            title: "Project Six",
-            status: "applied",
-            description:
-                "This is a description of Project Six, where I have applied.",
-        },
-    ];
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const response = await fetch(
+                    `${import.meta.env.VITE_EXPRESS_URL}/dummy-db`
+                );
+                const data = await response.json();
+                setProjects(data);
+            } catch (err) {
+                console.error(err);
+                setError("Error fetching projects.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProjects();
+    }, []);
 
     const filterProjects = (status: "owned" | "applied" | "collaborating") => {
-        return projects.filter((project) => project.status === status);
+        if (!username) return [];
+
+        switch (status) {
+            case "owned":
+                return projects.filter((project) => project.owner === username);
+            case "applied":
+                return projects.filter(
+                    (project) => project.applicants?.includes(username) ?? false
+                );
+            case "collaborating":
+                return projects.filter(
+                    (project) =>
+                        project.collaborators?.includes(username) ?? false
+                );
+            default:
+                return [];
+        }
     };
 
     const toggleExpand = (category: string) => {
@@ -75,8 +61,16 @@ export default function MyProjects() {
         );
     };
 
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
     return (
-        <div className="max-w-4xl mx-auto p-6">
+        <div className="max-w-5xl mx-auto p-8">
             <h1 className="text-3xl font-semibold mb-6">My Projects</h1>
 
             <div className="border border-[#3d444d] rounded-lg">
