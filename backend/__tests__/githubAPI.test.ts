@@ -17,7 +17,7 @@ jest.mock("@octokit/core", () => {
                             status: 200,
                             data: {
                                 id: 123,
-                                username: "johndoe",
+                                login: "johndoe",
                             },
                         };
                     }
@@ -33,6 +33,20 @@ jest.mock("@octokit/core", () => {
                             data: {
                                 id: 123456,
                                 name: parameters.name,
+                            },
+                        };
+                    }
+                    if (
+                        route ===
+                        "PUT /repos/johndoe/validRepoName/collaborators/validCollaborator"
+                    ) {
+                        return {
+                            status: 201,
+                            data: {
+                                repository: "validRepoName",
+                                invitee: {
+                                    login: "validCollaborator",
+                                },
                             },
                         };
                     }
@@ -60,7 +74,7 @@ describe("GitHub API client", () => {
         expect(githubAPI.isAuthenticated()).toBe(true);
         expect(await githubAPI.getUser()).toEqual({
             id: 123,
-            username: "johndoe",
+            login: "johndoe",
         });
         githubAPI.logout();
     });
@@ -81,4 +95,22 @@ describe("GitHub API client", () => {
         );
         githubAPI.logout();
     });
+    test("should return repository name and collaborator username when successfully added collaborator", async () => {
+        githubAPI.authenticate("validToken", MockOctokit);
+        expect(githubAPI.isAuthenticated()).toBe(true);
+        expect(
+            await githubAPI.addCollaborator(
+                "validRepoName",
+                "validCollaborator"
+            )
+        ).toEqual({
+            repository: "validRepoName",
+            invitee: {
+                login: "validCollaborator",
+            },
+        });
+        githubAPI.logout();
+    });
+    // create branch
+    // create issue
 });

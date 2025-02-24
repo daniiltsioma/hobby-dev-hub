@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/core";
 import { Endpoints } from "@octokit/types";
+import { permission } from "process";
 
 export default class GithubAPI {
     private octokit: any = null;
@@ -42,6 +43,28 @@ export default class GithubAPI {
         } else {
             return null;
         }
+    }
+
+    public async addCollaborator(repoName: string, collaborator: string) {
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return null;
+        }
+        const username = userResponse.login;
+        console.log(
+            `PUT /repos/${username}/${repoName}/collaborators/${collaborator}`
+        );
+        const response = await this.octokit.request(
+            `PUT /repos/${username}/${repoName}/collaborators/${collaborator}`,
+            {
+                owner: username,
+                repo: repoName,
+                username: collaborator,
+                permission: "triage",
+            }
+        );
+        console.log(response);
+        return response.data;
     }
 
     public async getUser(): Promise<
