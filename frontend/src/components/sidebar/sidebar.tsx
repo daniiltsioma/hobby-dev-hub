@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { TextEncoder } from "util";
-global.TextEncoder = TextEncoder;
+//import { TextEncoder } from "util";
+//global.TextEncoder = TextEncoder;
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {

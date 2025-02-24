@@ -18,4 +18,8 @@ it("toggle sidebar when button is clicked", () => {
   // Check that the sub-menu appears with the correct options
   expect(screen.getByText("Active Projects")).toBeInTheDocument();
   expect(screen.getByText("Archived Projects")).toBeInTheDocument();
+
+  fireEvent.click(screen.getByText("Active Projects"));
+
+  expect(screen.getByText("Active Projects")).toBeInTheDocument();
 });
