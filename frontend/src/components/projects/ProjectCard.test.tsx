@@ -10,8 +10,12 @@ const mockProject = {
     id: 1,
     title: "Test Project",
     description: "This is a test project description.",
+    technologies: [],
     githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
+    task: "This is a test task description.",
+    owner: "testUser",
     applicants: [],
+    collaborators: [],
 };
 
 describe("ProjectCard", () => {
