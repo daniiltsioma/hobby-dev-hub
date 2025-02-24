@@ -6,7 +6,7 @@ import Project from "../mongo/models/Projects";
 const applyingRouter = Router();
 
 applyingRouter.post(
-  "/project/apply",
+  "/project/apply/:id",
   async (
     req: Request<{ id: string }, {}, { applicantId: string }>,
     res: Response
@@ -16,8 +16,8 @@ applyingRouter.post(
       const { id } = req.params;
       const { applicantId } = req.body;
 
-      if (!Types.ObjectId.isValid(id) || !Types.ObjectId.isValid(applicantId)) {
-        res.status(400).send("Invalid project ID or applicant ID.");
+      if (!id || !Types.ObjectId.isValid(applicantId)) {
+        res.status(400).send("Invalid applicant ID or applicant ID.");
         return;
       }
 
@@ -34,9 +34,10 @@ applyingRouter.post(
         return;
       }
 
-      project.applicants.push(new Types.ObjectId(applicantId));
+      project.applicants.push(applicantObjectId);
       await project.save();
 
+      console.log("Applied successfully!");
       res.status(200).json({ message: "Application submitted successfully!", project });
     } catch (error) {
       console.error("Error applying to project:", error);
@@ -45,3 +46,4 @@ applyingRouter.post(
   }
 );
 
+export default applyingRouter;
