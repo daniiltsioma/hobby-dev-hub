@@ -19,12 +19,20 @@ export default function Header() {
             <div className="flex items-center">
                 <div className="text-2xl font-bold">Hobby Dev Hub</div>
                 {username && (
-                    <Link
-                        to="/projects/new"
-                        className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
-                    >
-                        Post a Project
-                    </Link>
+                    <>
+                        <Link
+                            to="/projects/new"
+                            className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
+                        >
+                            Post a Project
+                        </Link>
+                        <Link
+                            to={`/my-projects/${username}`}
+                            className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
+                        >
+                            My Projects
+                        </Link>
+                    </>
                 )}
             </div>
             {/*<ProjectSearch/>*/}
