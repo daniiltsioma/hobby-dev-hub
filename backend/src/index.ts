@@ -6,10 +6,7 @@ import GithubAPI from "./githubAPI";
 import connectToDatabase from "./mongo/dbConnection";
 import projects from "./mongo/projects";
 import User from "./mongo/models/Users";
-import myProjectRouter from "./routes/myProjects";
-import userRouter from "./routes/users";
 import bodyParser from "body-parser";
-import projectRouter from "./routes/projects";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -33,7 +30,7 @@ app.get("/api/login/", async (req, res) => {
 
   const tokenData: any = await auth.generateGithubTokensAndData(githubCode);
 
-  github.authenticate(tokenData.access_token);
+    github.authenticate(tokenData.access_token);
 
   res.cookie("accessToken", tokenData.access_token, {
     maxAge: Number(tokenData.expires_in) * 1000,
