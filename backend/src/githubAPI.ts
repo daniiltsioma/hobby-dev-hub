@@ -51,9 +51,6 @@ export default class GithubAPI {
             return null;
         }
         const username = userResponse.login;
-        console.log(
-            `PUT /repos/${username}/${repoName}/collaborators/${collaborator}`
-        );
         const response = await this.octokit.request(
             `PUT /repos/${username}/${repoName}/collaborators/${collaborator}`,
             {
@@ -63,7 +60,29 @@ export default class GithubAPI {
                 permission: "triage",
             }
         );
-        console.log(response);
+        return response.data;
+    }
+
+    public async createIssue(options: {
+        repoName: string;
+        title: string;
+        body?: string;
+    }) {
+        const { repoName, title, body } = options;
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return null;
+        }
+        const username = userResponse.login;
+        const response = await this.octokit.request(
+            `POST /repos/${username}/${repoName}/issues`,
+            {
+                owner: username,
+                repo: repoName,
+                title,
+                body,
+            }
+        );
         return response.data;
     }
 

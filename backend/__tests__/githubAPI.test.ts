@@ -50,6 +50,17 @@ jest.mock("@octokit/core", () => {
                             },
                         };
                     }
+                    if (route === "POST /repos/johndoe/validRepoName/issues") {
+                        return {
+                            status: 201,
+                            data: {
+                                repoName: "validRepoName",
+                                id: 15,
+                                title: "New issue",
+                                body: "Description of the new issue",
+                            },
+                        };
+                    }
                 },
             };
         }),
@@ -111,6 +122,22 @@ describe("GitHub API client", () => {
         });
         githubAPI.logout();
     });
-    // create branch
     // create issue
+    test("should return repo name, issue id, name and description when successfully created an issue", async () => {
+        githubAPI.authenticate("validToken", MockOctokit);
+        expect(githubAPI.isAuthenticated()).toBe(true);
+        expect(
+            await githubAPI.createIssue({
+                repoName: "validRepoName",
+                title: "New issue",
+                body: "Description of the new issue",
+            })
+        ).toEqual({
+            repoName: "validRepoName",
+            id: 15,
+            title: "New issue",
+            body: "Description of the new issue",
+        });
+        githubAPI.logout();
+    });
 });
