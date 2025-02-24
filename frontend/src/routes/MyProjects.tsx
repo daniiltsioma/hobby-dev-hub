@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Project } from "../components/projects/ProjectCard";
 
 export default function MyProjects() {
@@ -78,7 +78,7 @@ export default function MyProjects() {
                 <div>
                     <button
                         onClick={() => toggleExpand("owned")}
-                        className="text-xl font-bold w-full text-left bg-[#151b23] p-3 hover:bg-[#212830] border-b border-[#3d444d] rounded-t-lg"
+                        className="text-xl font-bold w-full text-left bg-[#151b23] hover:bg-[#212830] border-b border-[#3d444d] rounded-t-lg p-4"
                     >
                         Owned
                     </button>
@@ -89,8 +89,10 @@ export default function MyProjects() {
                                     key={project.id}
                                     className="border-b border-[#3d444d] p-4"
                                 >
-                                    <h3 className="text-lg font-semibold">
-                                        {project.title}
+                                    <h3 className="text-lg font-semibold hover:underline mb-1">
+                                        <Link to={`/projects/${project.id}`}>
+                                            {project.title}
+                                        </Link>
                                     </h3>
                                     <p className="text-[#9198a1]">
                                         {project.description}
@@ -105,7 +107,7 @@ export default function MyProjects() {
                 <div>
                     <button
                         onClick={() => toggleExpand("applied")}
-                        className="text-xl font-bold w-full text-left bg-[#151b23] p-3 hover:bg-[#212830] border-b border-[#3d444d]"
+                        className="text-xl font-bold w-full text-left bg-[#151b23] hover:bg-[#212830] border-b border-[#3d444d] p-4"
                     >
                         Applied
                     </button>
@@ -116,8 +118,10 @@ export default function MyProjects() {
                                     key={project.id}
                                     className="border-b border-[#3d444d] p-4"
                                 >
-                                    <h3 className="text-lg font-semibold">
-                                        {project.title}
+                                    <h3 className="text-lg font-semibold hover:underline mb-1">
+                                        <Link to={`/projects/${project.id}`}>
+                                            {project.title}
+                                        </Link>
                                     </h3>
                                     <p className="text-[#9198a1]">
                                         {project.description}
@@ -132,7 +136,7 @@ export default function MyProjects() {
                 <div>
                     <button
                         onClick={() => toggleExpand("collaborating")}
-                        className={`text-xl font-bold w-full text-left bg-[#151b23] p-3 hover:bg-[#212830] ${
+                        className={`text-xl font-bold w-full text-left bg-[#151b23] hover:bg-[#212830] p-4 ${
                             expandedSections.includes("collaborating")
                                 ? "rounded-none" // No border when expanded
                                 : "rounded-b-lg" // Otherwise, apply rounded bottom
@@ -147,8 +151,10 @@ export default function MyProjects() {
                                     key={project.id}
                                     className="border-t border-[#3d444d] p-4"
                                 >
-                                    <h3 className="text-lg font-semibold">
-                                        {project.title}
+                                    <h3 className="text-lg font-semibold hover:underline mb-1">
+                                        <Link to={`/projects/${project.id}`}>
+                                            {project.title}
+                                        </Link>
                                     </h3>
                                     <p className="text-[#9198a1]">
                                         {project.description}
