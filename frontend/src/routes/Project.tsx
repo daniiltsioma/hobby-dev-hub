@@ -119,7 +119,7 @@ export default function Project() {
                         Task Description
                     </h2>
                     <p className="text-lg text-[#9198a1]">
-                        {project.task
+                        {project.task && project.task.length > 0
                             ? project.task
                             : "Check out the GitHub repository for more details and to see how you can contribute!"}
                     </p>
