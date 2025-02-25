@@ -1,8 +1,71 @@
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getUser } from "../lib/user";
+import { useEffect, useState } from "react";
 
 export default function ActiveProjects() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState();
+  const [activeProjects, setActiveProjects] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchUsername() {
+      const user = await getUser();
+
+      if (!user || !user.login || user === null) {
+        console.error("Error: Username not found.");
+        setError("User not found");
+        return;
+      }
+      setUsername(user.login);
+      fetchProjects(user.login);
+    }
+
+    fetchUsername();
+  }, []);
+
+  async function fetchProjects(githubId: string) {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_EXPRESS_URL}/myProjects?githubId=${githubId}`
+      );
+      if (!response.ok) {
+        throw new Error("Error fetching projects.");
+      }
+      const data = await response.json();
+      setActiveProjects(data.activeProjects);
+    } catch (error) {
+      console.error(error);
+      setError("Error: could not load projects.");
+    }
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (!username) {
+    return null;
+  }
+
   return (
-    <div className="w-[400px] flex flex-col items-start px-8 mt-4">Hi Obi</div>
+    <div className="w-full max-w-4xl mx-auto p-4">
+      <h1 className="mt-4 text-3xl font-semibold text-center">
+        {username}'s Active Projects
+      </h1>
+      <ul>
+        {activeProjects.length > 0 ? (
+          activeProjects.map((project, index) => (
+            <li key={index} className="border p-2 mt-2">
+              {project.name}
+            </li>
+          ))
+        ) : (
+          <p className="text-2xl font-semibold text-center mt-20">
+            No active projects found...
+          </p>
+        )}
+      </ul>
+    </div>
   );
 }

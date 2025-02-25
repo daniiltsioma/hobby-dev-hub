@@ -10,33 +10,19 @@ myProjectRouter.get(
     try {
       await connectToDatabase();
 
-      const userId = req.query.userId as string;
       const githubId = req.query.githubId as string;
-
-      if (!userId) {
-        res.status(400).send("User ID is required for this request");
-        return;
-      }
 
       if (!githubId) {
         res.status(400).send("Github ID is required for this request");
         return;
       }
 
-      const user = await User.findOne({ userId, githubId })
+      const user = await User.findOne({ githubId })
         .populate("activeProjects")
         .populate("archivedProjects");
 
       if (!user) {
-        res
-          .status(400)
-          .send(
-            "User userId:" +
-              userId +
-              " githubId:" +
-              githubId +
-              " does not exist"
-          );
+        res.status(400).send("GithubId:" + githubId + " does not exist");
         return;
       } else {
         res.json({

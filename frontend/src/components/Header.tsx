@@ -34,7 +34,9 @@ export default function Header({
             Menu
           </button>
         )}
-        <div className="text-2xl font-bold px-6">Hobby Dev Hub</div>
+        <Link to="/" className="text-2xl font-bold px-6 cursor-pointer">
+          Hobby Dev Hub
+        </Link>
         {username && (
           <Link
             to="/projects/new"
