@@ -1,7 +1,7 @@
 import { TextEncoder, TextDecoder } from "util";
 Object.assign(global, { TextDecoder, TextEncoder });
 
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import ActiveProjects from "../ActiveProjects";
 import "@testing-library/jest-dom";
 import { getUser } from "../../lib/user";

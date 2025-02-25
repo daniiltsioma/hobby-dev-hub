@@ -13,7 +13,7 @@ describe("Sidebar component", () => {
       wrapper: MemoryRouter,
     });
 
-    expect(screen.getByText("View My Projects")).toBeInTheDocument();
+    expect(screen.getByText("Collaborations")).toBeInTheDocument();
   });
 
   it("Does not render the sidebar when isOpen is set to false", () => {
@@ -29,13 +29,13 @@ describe("Sidebar component", () => {
 
     expect(screen.queryByText("Active Projects")).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("View My Projects"));
+    fireEvent.click(screen.getByText("View Projects"));
 
     await waitFor(() => {
       expect(screen.getByText("Active Projects")).toBeInTheDocument();
       expect(screen.getByText("Archived Projects")).toBeInTheDocument();
     });
-    fireEvent.click(screen.getByText("View My Projects"));
+    fireEvent.click(screen.getByText("View Projects"));
 
     await waitFor(() => {
       expect(screen.queryByText("Active Projects")).not.toBeInTheDocument();
@@ -60,7 +60,7 @@ describe("Sidebar component", () => {
       wrapper: MemoryRouter,
     });
 
-    fireEvent.click(screen.getByText("View My Projects"));
+    fireEvent.click(screen.getByText("View Projects"));
 
     fireEvent.click(screen.getByText("Active Projects"));
 
@@ -72,7 +72,7 @@ describe("Sidebar component", () => {
       wrapper: MemoryRouter,
     });
 
-    fireEvent.click(screen.getByText("View My Projects"));
+    fireEvent.click(screen.getByText("View Projects"));
 
     fireEvent.click(screen.getByText("Archived Projects"));
 
