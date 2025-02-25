@@ -1,38 +1,96 @@
 import { Octokit } from "@octokit/core";
 import { Endpoints } from "@octokit/types";
+import { permission } from "process";
 
 export default class GithubAPI {
-    private clientId: string;
-    private clientSecret: string;
-    private octokit: any;
+    private octokit: any = null;
 
-    public constructor() {
-        if (
-            !process.env.GITHUB_APP_CLIENT_ID ||
-            !process.env.GITHUB_APP_CLIENT_SECRET
-        ) {
-            throw new Error("No GitHub credentials provided.");
+    public authenticate(accessToken: string, OctokitClient = Octokit): boolean {
+        try {
+            this.octokit = new OctokitClient({
+                auth: accessToken,
+            });
+        } catch {
+            return false;
         }
-
-        this.clientId = process.env.GITHUB_APP_CLIENT_ID;
-        this.clientSecret = process.env.GITHUB_APP_CLIENT_SECRET;
+        return true;
     }
 
-    public authenticate(accessToken: string): void {
-        this.octokit = new Octokit({
-            auth: accessToken,
-        });
+    public isAuthenticated(): boolean {
+        return this.octokit !== null;
     }
 
     public logout() {
         this.octokit = null;
     }
 
+    public async createRepo(options: {
+        name: string;
+        makePrivate?: boolean;
+        description?: string;
+    }) {
+        if (!this.isAuthenticated()) {
+            return null;
+        }
+        const response = await this.octokit.request(
+            "POST /user/posts",
+            options
+        );
+        if (response.status === 201) {
+            const repoData = response.data;
+
+            return repoData;
+        } else {
+            return null;
+        }
+    }
+
+    public async addCollaborator(repoName: string, collaborator: string) {
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return null;
+        }
+        const username = userResponse.login;
+        const response = await this.octokit.request(
+            `PUT /repos/${username}/${repoName}/collaborators/${collaborator}`,
+            {
+                owner: username,
+                repo: repoName,
+                username: collaborator,
+                permission: "triage",
+            }
+        );
+        return response.data;
+    }
+
+    public async createIssue(options: {
+        repoName: string;
+        title: string;
+        body?: string;
+    }) {
+        const { repoName, title, body } = options;
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return null;
+        }
+        const username = userResponse.login;
+        const response = await this.octokit.request(
+            `POST /repos/${username}/${repoName}/issues`,
+            {
+                owner: username,
+                repo: repoName,
+                title,
+                body,
+            }
+        );
+        return response.data;
+    }
+
     public async getUser(): Promise<
-        Endpoints["GET /user"]["response"]["data"]
+        Endpoints["GET /user"]["response"]["data"] | null
     > {
         if (!this.octokit) {
-            throw new Error("Not authenticated");
+            return null;
         }
         const response = await this.octokit.request("GET /user");
         const user = response.data;
