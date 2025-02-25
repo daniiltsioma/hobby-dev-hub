@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Project } from "../components/projects/ProjectCard";
+import { getUser } from "../lib/user";
 
 export default function MyProjects() {
-    const { username } = useParams<{ username: string }>();
+    const [username, setUsername] = useState();
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -16,6 +17,9 @@ export default function MyProjects() {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
+                const user = await getUser();
+                setUsername(user ? user.login : null);
+
                 const response = await fetch(
                     `${import.meta.env.VITE_EXPRESS_URL}/dummy-db`
                 );
@@ -69,6 +73,10 @@ export default function MyProjects() {
         return <div>{error}</div>;
     }
 
+    if (!username) {
+        return <div>You must be logged in to access your projects.</div>;
+    }
+
     return (
         <div className="max-w-5xl mx-auto p-8">
             <h1 className="text-3xl font-semibold mb-6">My Projects</h1>
@@ -89,7 +97,7 @@ export default function MyProjects() {
                                     key={project.id}
                                     className="border-b border-[#3d444d] p-4"
                                 >
-                                    <h3 className="text-lg font-semibold hover:underline mb-1">
+                                    <h3 className="text-lg font-semibold hover:opacity-80 mb-1">
                                         <Link to={`/projects/${project.id}`}>
                                             {project.title}
                                         </Link>
@@ -118,7 +126,7 @@ export default function MyProjects() {
                                     key={project.id}
                                     className="border-b border-[#3d444d] p-4"
                                 >
-                                    <h3 className="text-lg font-semibold hover:underline mb-1">
+                                    <h3 className="text-lg font-semibold hover:opacity-80 mb-1">
                                         <Link to={`/projects/${project.id}`}>
                                             {project.title}
                                         </Link>
@@ -151,7 +159,7 @@ export default function MyProjects() {
                                     key={project.id}
                                     className="border-t border-[#3d444d] p-4"
                                 >
-                                    <h3 className="text-lg font-semibold hover:underline mb-1">
+                                    <h3 className="text-lg font-semibold hover:opacity-80 mb-1">
                                         <Link to={`/projects/${project.id}`}>
                                             {project.title}
                                         </Link>
