@@ -16,28 +16,27 @@ applyingRouter.post(
       const { id } = req.params;
       const { applicantId } = req.body;
 
-      if (!id || !Types.ObjectId.isValid(applicantId)) {
-        res.status(400).send("Invalid applicant ID or applicant ID.");
+      if (!id || id === null || !Types.ObjectId.isValid(applicantId)) {
+        res.status(400).json("Invalid project ID or applicant ID.");
         return;
       }
 
       const project = await Project.findById(id);
       if (!project) {
-        res.status(404).send("Project not found.");
+        res.status(404).json("Project not found.");
         return;
       }
 
       const applicantObjectId = new Types.ObjectId(applicantId);
 
       if (project.applicants.some((applicant: any) => applicant.toString() === applicantObjectId.toString())) {
-        res.status(401).send("User has already applied.");
+        res.status(401).json("User has already applied.");
         return;
       }
 
       project.applicants.push(applicantObjectId);
       await project.save();
 
-      console.log("Applied successfully!");
       res.status(200).json({ message: "Application submitted successfully!", project });
     } catch (error) {
       console.error("Error applying to project:", error);

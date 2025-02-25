@@ -69,7 +69,7 @@ describe("POST /project/apply/:id", () => {
       .set("Accept", "application/json");
 
     expect(response.status).toBe(404);
-    expect(response.body.error).toBe("Project not found.");
+    expect(response.body).toEqual("Project not found.");
   });
 
   it("should return an error if user has already applied", async () => {
@@ -81,16 +81,16 @@ describe("POST /project/apply/:id", () => {
       .set("Accept", "application/json");
 
     expect(response.status).toBe(401);
-    expect(response.body.message).toBe("User has already applied.");
+    expect(response.body).toBe("User has already applied.");
   });
 
   it("should return an error if invalid project or applicant ID", async () => {
     const response = await request(app)
-      .post("/project/apply/")
+      .post("/project/apply/null")
       .send({ applicantId: "invalidId" })
       .set("Accept", "application/json");
 
     expect(response.status).toBe(400);
-    expect(response.body.error).toBe("Invalid project ID or applicant ID.");
+    expect(response.body).toBe("Invalid project ID or applicant ID.");
   });
 });
