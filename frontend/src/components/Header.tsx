@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUser } from "../lib/user";
 import { Link } from "react-router-dom";
-//import ProjectSearch from "./ProjectSearch"
 
 export default function Header() {
     const [username, setUsername] = useState();
@@ -17,17 +16,26 @@ export default function Header() {
     return (
         <div className="flex items-center justify-between bg-[#010409] border-b border-[#3d444d] px-8 py-4">
             <div className="flex items-center">
-                <div className="text-2xl font-bold">Hobby Dev Hub</div>
+                <Link to="/" className="text-2xl font-bold">
+                    Hobby Dev Hub
+                </Link>
                 {username && (
-                    <Link
-                        to="/projects/new"
-                        className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
-                    >
-                        Post a Project
-                    </Link>
+                    <>
+                        <Link
+                            to="/projects/new"
+                            className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
+                        >
+                            Post a Project
+                        </Link>
+                        <Link
+                            to={"/my-projects"}
+                            className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
+                        >
+                            My Projects
+                        </Link>
+                    </>
                 )}
             </div>
-            {/*<ProjectSearch/>*/}
             <div>
                 {username ? (
                     <div className="flex items-center">

@@ -4,8 +4,12 @@ export interface Project {
     id: number;
     title: string;
     description: string;
+    technologies: string[];
     githubRepoURL: string;
+    task: string;
+    owner: string;
     applicants: string[];
+    collaborators: string[];
 }
 
 export default function ProjectCard({ project }: { project: Project }) {
