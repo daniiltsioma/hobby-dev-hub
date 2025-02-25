@@ -8,6 +8,18 @@ jest.mock("../src/mongo/dbConnection", () => ({
   default: jest.fn(() => Promise.resolve()),
 }));
 
+jest.mock("../src/mongo/models/Projects");
+
+beforeEach(() => {
+    jest.resetAllMocks();
+    jest.clearAllMocks();
+    Project.findById = jest.fn();
+});
+
+afterAll(() => {
+    jest.restoreAllMocks();
+});
+
 const app = express();
 app.use(express.json());
 app.use(applyingRouter);
