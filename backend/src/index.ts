@@ -6,10 +6,11 @@ import GithubAPI from "./githubAPI";
 import connectToDatabase from "./mongo/dbConnection";
 import projects from "./mongo/projects";
 import User from "./mongo/models/Users";
-import myProjectRouter from "./routes/myProjects";
+import myProjectRouter from "./routes/myprojects";
 import userRouter from "./routes/users";
 import bodyParser from "body-parser";
 import projectRouter from "./routes/projects";
+import applyingRouter from "./routes/apply";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -127,6 +128,9 @@ app.use(userRouter);
 
 // Route to post a new project into the database
 app.use(projectRouter);
+
+//Route to post a new applicant into the database
+app.use(applyingRouter);
 
 app.get("/projects/:id", (req, res) => {
   const id = Number(req.params.id);
