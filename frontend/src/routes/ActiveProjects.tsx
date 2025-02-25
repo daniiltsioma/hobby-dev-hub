@@ -1,9 +1,7 @@
-import { useNavigate } from "react-router-dom";
 import { getUser } from "../lib/user";
 import { useEffect, useState } from "react";
 
 export default function ActiveProjects() {
-  const navigate = useNavigate();
   const [username, setUsername] = useState();
   const [activeProjects, setActiveProjects] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +39,11 @@ export default function ActiveProjects() {
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return (
+      <div className="flex justify-center items-start h-screen pt-20">
+        <div className="text-xl font-bold text-center">{error}</div>
+      </div>
+    );
   }
 
   if (!username) {

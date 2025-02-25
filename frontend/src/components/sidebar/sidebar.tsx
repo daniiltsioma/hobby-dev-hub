@@ -41,14 +41,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
       >
         {/* Sidebar Content */}
         <div className="p-4">
-          <h2 className="text-lg font-bold mb-4">My Projects</h2>
+          <h2 className="text-lg font-bold mb-4">Collaborations</h2>
           <ul className="space-y-2">
             <li>
               <button
                 onClick={() => setIsSubMenuOpen(!isSubMenuOpen)}
                 className="w-full text-left p-2 rounded hover:bg-[#1f2937] transition"
               >
-                View My Projects
+                View Projects
               </button>
               {isSubMenuOpen && (
                 <div className="ml-4 mt-2 bg-[#1f2937] rounded-lg shadow-lg">
