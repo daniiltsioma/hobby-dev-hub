@@ -1,35 +1,55 @@
-import { useState } from "react";
-//import { TextEncoder } from "util";
-//global.TextEncoder = TextEncoder;
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface SidebarProps {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  const [isButtonVisible, setIsButtonVisible] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      const timeoutId = setTimeout(() => {
+        setIsButtonVisible(true);
+      }, 100);
+      return () => clearTimeout(timeoutId);
+    } else {
+      setIsButtonVisible(false);
+    }
+  }, [isOpen]);
 
   return (
-    <div>
-      {/* Button to toggle the sidebar */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="bg-[#0d1117] text-white border border-[#3d444d] rounded-lg px-4 py-2"
-      >
-        {isOpen ? "Close Sidebar" : "View My Projects"}
-      </button>
+    <div className="relative">
+      {/* Menu Button inside Sidebar */}
+      {isOpen && isButtonVisible && (
+        <button
+          onClick={() => setIsOpen(false)}
+          className="absolute top-4 ght-3 z-50 left-45 bg-[#0d1117] text-white border border-[#3d444d] rounded-lg px-4 py-2 flex items-center gap-2"
+        >
+          <span style={{ fontSize: "10px" }}>❌</span>
+        </button>
+      )}
 
-      {/* Sidebar Menu */}
-      {isOpen && (
-        <div className="absolute left-0 mt-2 w-48 bg-[#161b22] text-white border border-[#3d444d] rounded-lg shadow-lg">
-          <ul className="p-2">
-            {/* Main Menu Button: View My Porjects */}
-            <li className="p-2 hover:bg-[#1f2937] rounded">
+      {/* Sidebar Container */}
+      <div
+        className={`fixed left-0 top-0 h-full w-60 bg-[#161b22] text-white border-r border-[#3d444d] transform ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out z-40`}
+      >
+        {/* Sidebar Content */}
+        <div className="p-4">
+          <h2 className="text-lg font-bold mb-4">My Projects</h2>
+          <ul className="space-y-2">
+            <li>
               <button
                 onClick={() => setIsSubMenuOpen(!isSubMenuOpen)}
-                className="w-full text-left"
+                className="w-full text-left p-2 rounded hover:bg-[#1f2937] transition"
               >
                 View My Projects
               </button>
-              {/* Submenu for Active and Archived Projects */}
               {isSubMenuOpen && (
                 <div className="ml-4 mt-2 bg-[#1f2937] rounded-lg shadow-lg">
                   <ul className="p-2">
@@ -55,7 +75,7 @@ const Sidebar = () => {
             </li>
           </ul>
         </div>
-      )}
+      </div>
     </div>
   );
 };
