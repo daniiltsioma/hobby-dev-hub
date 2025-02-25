@@ -32,5 +32,5 @@ describe("GET /dummy-db-search", () => {
         const response = await request(testApp).get("/dummy-db-search?search=Nonexistent");
         expect(response.status).toBe(200);
         expect(response.body.length).toBe(0);
-})
+    })
 });
