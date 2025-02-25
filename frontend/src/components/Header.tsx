@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUser } from "../lib/user";
 import { Link } from "react-router-dom";
-//import ProjectSearch from "./ProjectSearch"
-
 interface HeaderProps {
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isSidebarOpen: boolean;
@@ -38,16 +36,23 @@ export default function Header({
           Hobby Dev Hub
         </Link>
         {username && (
-          <Link
-            to="/projects/new"
-            className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
-          >
-            Post a Project
-          </Link>
+          <>
+            <Link
+              to="/projects/new"
+              className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
+            >
+              Post a Project
+            </Link>
+            <Link
+              to={"/my-projects"}
+              className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
+            >
+              My Projects
+            </Link>
+          </>
         )}
       </div>
 
-      {/*<ProjectSearch/>*/}
       <div>
         {username ? (
           <div className="flex items-center">

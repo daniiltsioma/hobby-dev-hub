@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Home from "./routes/Home";
 import Project from "./routes/Project";
 import NewProject from "./routes/NewProject";
+import MyProjects from "./routes/MyProjects";
 import ActiveProjects from "./routes/ActiveProjects";
 import ArchivedProjects from "./routes/ArchivedProjects";
 import Sidebar from "./components/sidebar/sidebar";
@@ -29,6 +30,7 @@ function App() {
           <Route path="/projects/:id" element={<Project />} />
           <Route path="/projects/active" element={<ActiveProjects />} />
           <Route path="/projects/archived" element={<ArchivedProjects />} />
+          <Route path="/my-projects" element={<MyProjects />} />
         </Routes>
       </div>
     </div>
