@@ -8,7 +8,13 @@ import { getUser } from "../../lib/user";
 import { useNavigate } from "react-router-dom";
 import { MemoryRouter } from "react-router-dom";
 
-//console.log(ActiveProjects);
+beforeEach(() => {
+  process.env.TEST_ENV = "true";
+});
+
+afterEach(() => {
+  process.env.TEST_ENV = "false";
+});
 
 jest.mock("../../lib/user", () => ({
   getUser: jest.fn(),
@@ -18,45 +24,40 @@ jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    status: 200,
-    json: () =>
-      Promise.resolve({
-        activeProjects: [{ name: "Active Project 1" }],
-        archivedProjects: [{ name: "Archived Project 1" }],
-      }),
-    headers: {
-      get: () => null,
-    },
-  } as unknown as Response)
-);
-
 describe("ActiveProjects Route", () => {
-  let mockNavigate: jest.Mock;
+  let mockNavigate;
 
   beforeEach(() => {
-    // Resetting mocks before each test
-    mockNavigate = useNavigate() as jest.Mock;
+    jest.resetAllMocks();
+    mockNavigate = jest.fn();
+    (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
+
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () =>
+          Promise.resolve({
+            activeProjects: [{ name: "Active Project 1" }],
+            archivedProjects: [{ name: "Archived Project 1" }],
+          }),
+      } as unknown as Response)
+    );
   });
 
-  it("", async () => {
+  it("renders user's active projects when user is found", async () => {
     (getUser as jest.Mock).mockResolvedValueOnce({ login: "obi" });
 
-    render(<ActiveProjects />, {
-      wrapper: MemoryRouter,
-    });
+    render(<ActiveProjects />, { wrapper: MemoryRouter });
 
-    await waitFor(() => screen.getByText("Hi Obi"));
-    expect(screen.getByText("Hi Obi")).toBeInTheDocument();
+    await waitFor(() => screen.getByText("obi's Active Projects"));
+    expect(screen.getByText("obi's Active Projects")).toBeInTheDocument();
   });
 
   it("handles errors when fetching projects", async () => {
-    // Mock an error response for fetch
     global.fetch = jest.fn(() =>
       Promise.resolve({
-        ok: false, // Simulating an error response
+        ok: false,
         status: 500,
         json: () => Promise.resolve({}),
       } as unknown as Response)
@@ -64,9 +65,7 @@ describe("ActiveProjects Route", () => {
 
     (getUser as jest.Mock).mockResolvedValueOnce({ login: "obi" });
 
-    render(<ActiveProjects />, {
-      wrapper: MemoryRouter,
-    });
+    render(<ActiveProjects />, { wrapper: MemoryRouter });
 
     await waitFor(() => screen.getByText("Error: could not load projects."));
     expect(
@@ -77,12 +76,9 @@ describe("ActiveProjects Route", () => {
   it("displays error message when user is not found", async () => {
     (getUser as jest.Mock).mockResolvedValueOnce(null);
 
-    render(<ActiveProjects />, {
-      wrapper: MemoryRouter,
-    });
+    render(<ActiveProjects />, { wrapper: MemoryRouter });
 
-    await waitFor(() =>
-      expect(screen.getByText("User not found")).toBeInTheDocument()
-    );
+    await waitFor(() => screen.getByText("User not found"));
+    expect(screen.getByText("User not found")).toBeInTheDocument();
   });
 });

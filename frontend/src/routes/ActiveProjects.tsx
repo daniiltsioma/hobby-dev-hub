@@ -25,7 +25,11 @@ export default function ActiveProjects() {
   async function fetchProjects(githubId: string) {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_EXPRESS_URL}/myProjects?githubId=${githubId}`
+        //`${import.meta.env.VITE_EXPRESS_URL}/myProjects?githubId=${githubId}`
+
+        // TODO: JUST FOR TESTING PURPOSES
+        // USE THE IMPORT.META FOR PRODUCTION
+        "http://localhost:8000/myProjects?githubId=" + githubId
       );
       if (!response.ok) {
         throw new Error("Error fetching projects.");
