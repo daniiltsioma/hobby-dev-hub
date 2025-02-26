@@ -16,6 +16,12 @@ afterEach(() => {
   process.env.TEST_ENV = "false";
 });
 
+beforeEach(() => {
+  jest.spyOn(console, "error").mockImplementation((message) => {
+    throw new Error(message);
+  });
+});
+
 jest.mock("../../lib/user", () => ({
   getUser: jest.fn(),
 }));
