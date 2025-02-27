@@ -57,7 +57,6 @@ export default class GithubAPI {
                 owner: username,
                 repo: repoName,
                 username: collaborator,
-                permission: "triage",
             }
         );
         return response.data;

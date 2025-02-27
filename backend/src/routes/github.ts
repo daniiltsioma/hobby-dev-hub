@@ -130,6 +130,35 @@ githubAPIRouter.patch(
         } catch (err) {
             res.status(400).send(err);
         }
+
+        githubAPI.logout();
+    }
+);
+
+githubAPIRouter.put(
+    "/github/repos/:repoName/collaborators",
+    async (req: Request, res: Response): Promise<void> => {
+        if (!req.headers.authorization) {
+            res.status(401).send("Not authorized");
+            return;
+        }
+
+        const authToken = getTokenFromHeader(req.headers.authorization);
+
+        if (!githubAPI.authenticate(authToken)) {
+            res.status(401).send("Failed to authenticate");
+            return;
+        }
+
+        try {
+            const collaboratorData = await githubAPI.addCollaborator(
+                req.params.repoName,
+                req.body.username
+            );
+            res.status(200).json(collaboratorData);
+        } catch (err) {
+            res.status(400).send(err);
+        }
     }
 );
 
