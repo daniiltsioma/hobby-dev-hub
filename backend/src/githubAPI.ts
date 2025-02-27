@@ -87,6 +87,22 @@ export default class GithubAPI {
         return response.data;
     }
 
+    public async getRepoIssues(repoName: string) {
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return null;
+        }
+        const username = userResponse.login;
+        const response = await this.octokit.request(
+            `GET /repos/${username}/${repoName}/issues`,
+            {
+                owner: username,
+                repo: repoName,
+            }
+        );
+        return response.data;
+    }
+
     public async getUser(): Promise<
         Endpoints["GET /user"]["response"]["data"] | null
     > {

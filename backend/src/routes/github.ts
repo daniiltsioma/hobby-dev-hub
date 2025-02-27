@@ -45,6 +45,33 @@ githubAPIRouter.post(
     }
 );
 
+githubAPIRouter.get(
+    "/github/repos/:repoName/issues",
+    async (req: Request, res: Response): Promise<void> => {
+        if (!req.headers.authorization) {
+            res.status(401).send("Not authorized");
+            return;
+        }
+
+        const authToken = getTokenFromHeader(req.headers.authorization);
+
+        if (!githubAPI.authenticate(authToken)) {
+            res.status(401).send("Failed to authenticate");
+        }
+
+        try {
+            const repoIssues = await githubAPI.getRepoIssues(
+                req.params.repoName
+            );
+            res.status(200).json(repoIssues);
+        } catch (err) {
+            res.status(400).send(err);
+        }
+
+        githubAPI.logout();
+    }
+);
+
 githubAPIRouter.post(
     "/github/repos/:repoName/issues",
     async (req: Request, res: Response): Promise<void> => {
@@ -74,6 +101,8 @@ githubAPIRouter.post(
         } catch (err) {
             res.status(400).send(err);
         }
+
+        githubAPI.logout();
     }
 );
 
