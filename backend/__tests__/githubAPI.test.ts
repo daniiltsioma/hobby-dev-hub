@@ -110,7 +110,7 @@ describe("GitHub API client", () => {
         githubAPI.authenticate("validToken", MockOctokit);
         expect(githubAPI.isAuthenticated()).toBe(true);
         expect(
-            await githubAPI.addCollaborator(
+            await githubAPI.inviteCollaborator(
                 "validRepoName",
                 "validCollaborator"
             )

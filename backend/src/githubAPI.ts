@@ -45,7 +45,7 @@ export default class GithubAPI {
         }
     }
 
-    public async addCollaborator(repoName: string, collaborator: string) {
+    public async inviteCollaborator(repoName: string, collaborator: string) {
         const userResponse = await this.getUser();
         if (!userResponse) {
             return null;
@@ -60,6 +60,26 @@ export default class GithubAPI {
             }
         );
         return response.data;
+    }
+
+    public async removeCollaborator(
+        repoName: string,
+        collaborator: string
+    ): Promise<boolean> {
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return false;
+        }
+        const username = userResponse.login;
+        const response = await this.octokit.request(
+            `DELETE /repos/${username}/${repoName}/collaborators/${collaborator}`,
+            {
+                owner: username,
+                repo: repoName,
+                username: collaborator,
+            }
+        );
+        return response.status === 204;
     }
 
     public async createIssue(options: {
