@@ -82,6 +82,38 @@ export default class GithubAPI {
         return response.status === 204;
     }
 
+    public async deleteInvitationtoCollaborate(
+        repoName: string,
+        invitee: string
+    ): Promise<boolean> {
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return false;
+        }
+        const username = userResponse.login;
+        const invitationsResponse = await this.octokit.request(
+            `GET /repos/${username}/${repoName}/invitations/`,
+            {
+                owner: username,
+                repo: repoName,
+            }
+        );
+        const invitations = invitationsResponse.data;
+        const invitationId = invitations.find(
+            (invitation: any) => invitation.invitee.login === invitee
+        ).id;
+        const deletionResponse = await this.octokit.request(
+            `DELETE /repos/${username}/${repoName}/invitations/${invitationId}`,
+            {
+                owner: username,
+                repo: repoName,
+                invitation_id: invitationId,
+            }
+        );
+
+        return deletionResponse.status === 204;
+    }
+
     public async createIssue(options: {
         repoName: string;
         title: string;
