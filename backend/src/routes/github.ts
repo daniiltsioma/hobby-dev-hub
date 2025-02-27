@@ -106,4 +106,31 @@ githubAPIRouter.post(
     }
 );
 
+githubAPIRouter.patch(
+    "/github/repos/:repoName/issues/:issueId",
+    async (req: Request, res: Response): Promise<void> => {
+        if (!req.headers.authorization) {
+            res.status(401).send("Not authorized");
+            return;
+        }
+
+        const authToken = getTokenFromHeader(req.headers.authorization);
+
+        if (!githubAPI.authenticate(authToken)) {
+            res.status(401).send("Failed to authenticate");
+        }
+
+        try {
+            const issueData = await githubAPI.updateIssue(
+                req.params.repoName,
+                req.params.issueId,
+                req.body
+            );
+            res.status(200).json(issueData);
+        } catch (err) {
+            res.status(400).send(err);
+        }
+    }
+);
+
 export default githubAPIRouter;

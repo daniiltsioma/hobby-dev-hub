@@ -1,6 +1,5 @@
 import { Octokit } from "@octokit/core";
 import { Endpoints } from "@octokit/types";
-import { permission } from "process";
 
 export default class GithubAPI {
     private octokit: any = null;
@@ -98,6 +97,28 @@ export default class GithubAPI {
             {
                 owner: username,
                 repo: repoName,
+            }
+        );
+        return response.data;
+    }
+
+    public async updateIssue(
+        repoName: string,
+        issueId: string,
+        payload: object
+    ) {
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return null;
+        }
+        const username = userResponse.login;
+        const response = await this.octokit.request(
+            `PATCH /repos/${username}/${repoName}/issues/${issueId}`,
+            {
+                owner: username,
+                repo: repoName,
+                issue_number: issueId,
+                ...payload,
             }
         );
         return response.data;
