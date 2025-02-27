@@ -32,10 +32,11 @@ export default class GithubAPI {
         if (!this.isAuthenticated()) {
             return null;
         }
-        const response = await this.octokit.request(
-            "POST /user/posts",
-            options
-        );
+        const response = await this.octokit.request("POST /user/repos", {
+            name: options.name,
+            private: options.makePrivate,
+            description: options.description,
+        });
         if (response.status === 201) {
             const repoData = response.data;
 
