@@ -128,8 +128,6 @@ export default class GithubAPI {
         const response = await this.octokit.request(
             `POST /repos/${username}/${repoName}/issues`,
             {
-                owner: username,
-                repo: repoName,
                 title,
                 body,
             }
