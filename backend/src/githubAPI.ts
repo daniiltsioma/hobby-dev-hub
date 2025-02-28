@@ -144,11 +144,7 @@ export default class GithubAPI {
         }
         const username = userResponse.login;
         const response = await this.octokit.request(
-            `GET /repos/${username}/${repoName}/issues`,
-            {
-                owner: username,
-                repo: repoName,
-            }
+            `GET /repos/${username}/${repoName}/issues`
         );
         return response.data;
     }
