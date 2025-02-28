@@ -52,12 +52,7 @@ export default class GithubAPI {
         }
         const username = userResponse.login;
         const response = await this.octokit.request(
-            `PUT /repos/${username}/${repoName}/collaborators/${invitee}`,
-            {
-                owner: username,
-                repo: repoName,
-                username: invitee,
-            }
+            `PUT /repos/${username}/${repoName}/collaborators/${invitee}`
         );
         return response.data;
     }
@@ -72,12 +67,7 @@ export default class GithubAPI {
         }
         const username = userResponse.login;
         const response = await this.octokit.request(
-            `DELETE /repos/${username}/${repoName}/collaborators/${collaborator}`,
-            {
-                owner: username,
-                repo: repoName,
-                username: collaborator,
-            }
+            `DELETE /repos/${username}/${repoName}/collaborators/${collaborator}`
         );
         return response.status === 204;
     }
@@ -92,23 +82,14 @@ export default class GithubAPI {
         }
         const username = userResponse.login;
         const invitationsResponse = await this.octokit.request(
-            `GET /repos/${username}/${repoName}/invitations/`,
-            {
-                owner: username,
-                repo: repoName,
-            }
+            `GET /repos/${username}/${repoName}/invitations/`
         );
         const invitations = invitationsResponse.data;
         const invitationId = invitations.find(
             (invitation: any) => invitation.invitee.login === invitee
         ).id;
         const deletionResponse = await this.octokit.request(
-            `DELETE /repos/${username}/${repoName}/invitations/${invitationId}`,
-            {
-                owner: username,
-                repo: repoName,
-                invitation_id: invitationId,
-            }
+            `DELETE /repos/${username}/${repoName}/invitations/${invitationId}`
         );
 
         return deletionResponse.status === 204;
