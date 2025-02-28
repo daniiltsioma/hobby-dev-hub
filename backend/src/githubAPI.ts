@@ -45,18 +45,18 @@ export default class GithubAPI {
         }
     }
 
-    public async inviteCollaborator(repoName: string, collaborator: string) {
+    public async inviteCollaborator(repoName: string, invitee: string) {
         const userResponse = await this.getUser();
         if (!userResponse) {
             return null;
         }
         const username = userResponse.login;
         const response = await this.octokit.request(
-            `PUT /repos/${username}/${repoName}/collaborators/${collaborator}`,
+            `PUT /repos/${username}/${repoName}/collaborators/${invitee}`,
             {
                 owner: username,
                 repo: repoName,
-                username: collaborator,
+                username: invitee,
             }
         );
         return response.data;

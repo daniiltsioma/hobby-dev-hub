@@ -136,7 +136,7 @@ githubAPIRouter.patch(
 );
 
 githubAPIRouter.put(
-    "/github/repos/:repoName/collaborators/:collaborator",
+    "/github/repos/:repoName/invitations/:invitee",
     async (req: Request, res: Response): Promise<void> => {
         if (!req.headers.authorization) {
             res.status(401).send("Not authorized");
@@ -151,43 +151,11 @@ githubAPIRouter.put(
         }
 
         try {
-            const collaboratorData = await githubAPI.inviteCollaborator(
+            const inviteeData = await githubAPI.inviteCollaborator(
                 req.params.repoName,
-                req.params.collaborator
+                req.params.invitee
             );
-            res.status(200).json(collaboratorData);
-        } catch (err) {
-            res.status(400).send(err);
-        }
-        githubAPI.logout();
-    }
-);
-
-githubAPIRouter.delete(
-    "/github/repos/:repoName/collaborators/:collaborator",
-    async (req: Request, res: Response): Promise<void> => {
-        if (!req.headers.authorization) {
-            res.status(401).send("Not authorized");
-            return;
-        }
-
-        const authToken = getTokenFromHeader(req.headers.authorization);
-
-        if (!githubAPI.authenticate(authToken)) {
-            res.status(401).send("Failed to authenticate");
-            return;
-        }
-
-        try {
-            const result = await githubAPI.removeCollaborator(
-                req.params.repoName,
-                req.params.collaborator
-            );
-            if (result) {
-                res.status(204).send(
-                    `${req.params.collaborator} removed from collaborators of ${req.params.repoName}`
-                );
-            }
+            res.status(200).json(inviteeData);
         } catch (err) {
             res.status(400).send(err);
         }
@@ -220,6 +188,38 @@ githubAPIRouter.delete(
         } catch (err) {
             res.status(400).send(err);
         }
+    }
+);
+
+githubAPIRouter.delete(
+    "/github/repos/:repoName/collaborators/:collaborator",
+    async (req: Request, res: Response): Promise<void> => {
+        if (!req.headers.authorization) {
+            res.status(401).send("Not authorized");
+            return;
+        }
+
+        const authToken = getTokenFromHeader(req.headers.authorization);
+
+        if (!githubAPI.authenticate(authToken)) {
+            res.status(401).send("Failed to authenticate");
+            return;
+        }
+
+        try {
+            const result = await githubAPI.removeCollaborator(
+                req.params.repoName,
+                req.params.collaborator
+            );
+            if (result) {
+                res.status(204).send(
+                    `${req.params.collaborator} removed from collaborators of ${req.params.repoName}`
+                );
+            }
+        } catch (err) {
+            res.status(400).send(err);
+        }
+        githubAPI.logout();
     }
 );
 
