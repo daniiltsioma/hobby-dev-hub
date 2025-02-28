@@ -160,9 +160,6 @@ export default class GithubAPI {
         const response = await this.octokit.request(
             `PATCH /repos/${username}/${repoName}/issues/${issueId}`,
             {
-                owner: username,
-                repo: repoName,
-                issue_number: issueId,
                 ...payload,
             }
         );
