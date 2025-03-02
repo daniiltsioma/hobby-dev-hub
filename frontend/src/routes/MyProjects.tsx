@@ -37,12 +37,26 @@ export default function MyProjects() {
         fetchProjects();
     }, []);
 
-    // Placeholder action for Inactivating a project
-    const handleInactivate = (projectId: number) => {
-        console.log(`Project with ID: ${projectId} has been inactivated.`);
+    // Placeholder action for archiving a project
+    const handleArchive = (projectId: number) => {
+        console.log(`Project with ID: ${projectId} has been archived.`);
     };
 
-    // Placeholder action for Deleting a project
+    // Placeholder action for withdrawing an application
+    const handleWithdraw = (projectId: number) => {
+        console.log(
+            `Application for project with ID: ${projectId} has been withdrawn.`
+        );
+    };
+
+    // Placeholder action for leaving a collaboration
+    const handleLeave = (projectId: number) => {
+        console.log(
+            `Collaboration on project with ID: ${projectId} has been left.`
+        );
+    };
+
+    // Placeholder action for deleting a project
     const handleDelete = (projectId: number) => {
         console.log(`Project with ID: ${projectId} has been deleted.`);
     };
@@ -154,7 +168,7 @@ export default function MyProjects() {
                                             {/* Archive Button */}
                                             <button
                                                 onClick={() =>
-                                                    handleInactivate(project.id)
+                                                    handleArchive(project.id)
                                                 }
                                                 className="text-sm text-[#e74c3c] hover:text-[#c0392b] cursor-pointer"
                                             >
@@ -210,7 +224,7 @@ export default function MyProjects() {
                                             {/* Withdraw Button */}
                                             <button
                                                 onClick={() =>
-                                                    handleInactivate(project.id)
+                                                    handleWithdraw(project.id)
                                                 }
                                                 className="text-sm text-[#e74c3c] hover:text-[#c0392b] cursor-pointer"
                                             >
@@ -268,9 +282,7 @@ export default function MyProjects() {
                                                 {/* Leave Button */}
                                                 <button
                                                     onClick={() =>
-                                                        handleInactivate(
-                                                            project.id
-                                                        )
+                                                        handleLeave(project.id)
                                                     }
                                                     className="text-sm text-[#e74c3c] hover:text-[#c0392b] cursor-pointer"
                                                 >
@@ -285,7 +297,7 @@ export default function MyProjects() {
                     )}
                 </div>
 
-                {/* Inactive */}
+                {/* Archived */}
                 <div>
                     <button
                         onClick={() => toggleExpand("archived")}
@@ -295,13 +307,13 @@ export default function MyProjects() {
                                 : "rounded-b-lg" // Otherwise, apply rounded bottom
                         }`}
                     >
-                        Inactive
+                        Archived
                     </button>
                     {expandedSections.includes("archived") && (
                         <div className="">
                             {filterProjects("archived").length === 0 ? (
                                 <p className="text-[#9198a1] border-t border-[#3d444d] p-4">
-                                    You don't have any inactive projects yet.
+                                    You don't have any archived projects yet.
                                 </p>
                             ) : (
                                 filterProjects("archived").map((project) => (
