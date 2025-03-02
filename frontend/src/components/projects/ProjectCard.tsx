@@ -10,6 +10,7 @@ export interface Project {
     owner: string;
     applicants: string[];
     collaborators: string[];
+    isArchived: boolean;
 }
 
 export default function ProjectCard({ project }: { project: Project }) {
