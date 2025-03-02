@@ -118,7 +118,13 @@ export default function MyProjects() {
     }
 
     if (!username) {
-        return <div>You must be logged in to access your projects.</div>;
+        return (
+            <div className="flex justify-center pt-20">
+                <p className="text-xl font-bold">
+                    You must be logged in to access your projects.
+                </p>
+            </div>
+        );
     }
 
     return (
