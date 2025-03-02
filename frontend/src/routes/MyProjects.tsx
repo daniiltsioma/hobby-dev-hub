@@ -54,18 +54,33 @@ export default function MyProjects() {
 
         switch (status) {
             case "owned":
-                return projects.filter((project) => project.owner === username);
-            case "applied":
                 return projects.filter(
-                    (project) => project.applicants?.includes(username) ?? false
+                    (project) =>
+                        project.owner === username && !project.isArchived
                 );
             case "collaborating":
                 return projects.filter(
                     (project) =>
-                        project.collaborators?.includes(username) ?? false
+                        !project.isArchived &&
+                        project.collaborators?.includes(username) && // Check if the user is a collaborator
+                        project.owner !== username // Exclude if the user is the owner
+                );
+            case "applied":
+                return projects.filter(
+                    (project) =>
+                        !project.isArchived &&
+                        project.applicants?.includes(username) && // Check if the user is an applicant
+                        !project.collaborators?.includes(username) && // Exclude if they are a collaborator
+                        project.owner !== username // Exclude if the user is the owner
                 );
             case "archived":
-                return projects.filter((project) => project.isArchived);
+                return projects.filter(
+                    (project) =>
+                        project.isArchived &&
+                        (project.owner === username ||
+                            project.applicants?.includes(username) ||
+                            project.collaborators?.includes(username))
+                );
             default:
                 return [];
         }
@@ -310,7 +325,17 @@ export default function MyProjects() {
                                         <div className="flex flex-col justify-between items-end ml-4">
                                             {/* Status Pill */}
                                             <span className="text-xs bg-[#2f3742] rounded-full py-1 px-2">
-                                                Owner/Applicant/Collaborator
+                                                {project.owner === username
+                                                    ? "Owner"
+                                                    : project.collaborators?.includes(
+                                                          username
+                                                      )
+                                                    ? "Collaborator"
+                                                    : project.applicants?.includes(
+                                                          username
+                                                      )
+                                                    ? "Applicant"
+                                                    : ""}
                                             </span>
 
                                             {/* Delete Button */}
