@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function Project() {
     const { id } = useParams();
-    const [isLoggedIn, setIsLoggedIn] = useState();
+    const [username, setUsername] = useState<string | null>(null);
     const [project, setProject] = useState({} as any);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -36,8 +36,8 @@ export default function Project() {
     useEffect(() => {
         const fetchProject = async () => {
             try {
-                const loggedInStatus = await getUser();
-                setIsLoggedIn(loggedInStatus);
+                const user = await getUser();
+                setUsername(user ? user.login : null);
 
                 const response = await fetch(
                     `${import.meta.env.VITE_EXPRESS_URL}/projects/${id}`
@@ -54,6 +54,19 @@ export default function Project() {
 
         fetchProject();
     }, []);
+
+    const approveApplicant = (applicant: string) => {
+        // Placeholder logic for approving an applicant
+        console.log(`Approving applicant: ${applicant}`);
+    };
+
+    // Function to mask the username except for the first character
+    const maskUsername = (username: string) => {
+        if (username.length > 1) {
+            return username[0] + "*".repeat(username.length - 1);
+        }
+        return username;
+    };
 
     if (loading) {
         return <div>Loading...</div>;
@@ -135,16 +148,30 @@ export default function Project() {
                     If you're interested in contributing to this project, please
                     apply below.
                 </p>
-                {isLoggedIn ? (
-                    <form action={applyToProject}>
-                        <input type="hidden" name="projectId" value={id} />
-                        <button
-                            type="submit"
-                            className="cursor-pointer bg-[#212830] hover:bg-[#2f3742] font-medium border border-[#3d444d] rounded-md px-6 py-2"
-                        >
-                            Apply
-                        </button>
-                    </form>
+                {username ? (
+                    project.owner === username ? (
+                        <p className="font-medium text-[#4CAF50]">
+                            You're the owner of this project!
+                        </p>
+                    ) : project.collaborators?.includes(username) ? (
+                        <p className="font-medium text-[#4CAF50]">
+                            You're already a collaborator on this project!
+                        </p>
+                    ) : project.applicants?.includes(username) ? (
+                        <p className="font-medium text-[#4CAF50]">
+                            You've applied to this project!
+                        </p>
+                    ) : (
+                        <form action={applyToProject}>
+                            <input type="hidden" name="projectId" value={id} />
+                            <button
+                                type="submit"
+                                className="cursor-pointer bg-[#212830] hover:bg-[#2f3742] font-medium border border-[#3d444d] rounded-md px-6 py-2"
+                            >
+                                Apply
+                            </button>
+                        </form>
+                    )
                 ) : (
                     <p className="font-medium">
                         You must be logged in to apply.
@@ -158,8 +185,25 @@ export default function Project() {
                 {project.applicants && project.applicants.length > 0 ? (
                     <ul>
                         {project.applicants.map((applicant: any, idx: any) => (
-                            <li key={idx} className="text-lg text-[#9198a1]">
-                                {applicant}
+                            <li
+                                key={idx}
+                                className="flex justify-between items-center text-lg text-[#9198a1] mb-1 hover:bg-[#2f3742] p-1.5 rounded-lg transition-all duration-200"
+                            >
+                                <span>
+                                    {project.owner === username
+                                        ? applicant
+                                        : maskUsername(applicant)}
+                                </span>
+                                {project.owner === username && (
+                                    <button
+                                        onClick={() =>
+                                            approveApplicant(applicant)
+                                        }
+                                        className="cursor-pointer bg-[#4CAF50] text-[#f0f6fc] text-sm px-3 py-1 rounded-md hover:bg-[#45a049] transition-all duration-200 ease-in-out"
+                                    >
+                                        Approve
+                                    </button>
+                                )}
                             </li>
                         ))}
                     </ul>
