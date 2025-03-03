@@ -36,7 +36,7 @@ export default class GithubAPI {
             private: options.makePrivate,
             description: options.description,
         });
-        if (response.status === 201) {
+        if (response && response.status === 201) {
             const repoData = response.data;
 
             return repoData;

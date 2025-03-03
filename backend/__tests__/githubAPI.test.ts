@@ -21,7 +21,7 @@ jest.mock("@octokit/core", () => {
                             },
                         };
                     }
-                    if (route === "POST /user/posts") {
+                    if (route === "POST /user/repos") {
                         // create a repository
                         if (parameters.name === "Existing repo") {
                             return {
