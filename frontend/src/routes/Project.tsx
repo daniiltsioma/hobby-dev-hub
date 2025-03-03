@@ -80,7 +80,15 @@ export default function Project() {
         <div className="container mx-auto p-8">
             {/* Title and Description Section */}
             <div className="border border-[#3d444d] rounded-lg p-6 mb-6">
-                <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
+                <div className="flex justify-between items-start">
+                    <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
+                    {/* Displayed Status if Archived */}
+                    {project.isArchived && (
+                        <span className="bg-[#d9534f] text-sm px-3 py-1 rounded-full ml-4">
+                            Archived
+                        </span>
+                    )}
+                </div>
                 <p className="text-lg text-[#9198a1]">{project.description}</p>
             </div>
 

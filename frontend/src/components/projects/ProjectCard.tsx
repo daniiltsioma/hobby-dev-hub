@@ -32,9 +32,12 @@ export default function ProjectCard({ project }: { project: Project }) {
                     </a>
                 </div>
                 <div className="flex justify-end bg-[#151b23] border-t border-[#3d444d] rounded-b-lg p-4">
-                    <button className="bg-[#212830] hover:bg-[#2f3742] font-medium border border-[#3d444d] rounded-md py-2 px-4">
+                    <Link
+                        to={`/projects/${project.id}`}
+                        className="bg-[#212830] hover:bg-[#2f3742] font-medium border border-[#3d444d] rounded-md py-2 px-4 block text-center"
+                    >
                         Apply
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>
