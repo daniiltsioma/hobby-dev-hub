@@ -1,6 +1,5 @@
 import { Octokit } from "@octokit/core";
 import { Endpoints } from "@octokit/types";
-import { permission } from "process";
 
 export default class GithubAPI {
     private octokit: any = null;
@@ -32,11 +31,12 @@ export default class GithubAPI {
         if (!this.isAuthenticated()) {
             return null;
         }
-        const response = await this.octokit.request(
-            "POST /user/posts",
-            options
-        );
-        if (response.status === 201) {
+        const response = await this.octokit.request("POST /user/repos", {
+            name: options.name,
+            private: options.makePrivate,
+            description: options.description,
+        });
+        if (response && response.status === 201) {
             const repoData = response.data;
 
             return repoData;
@@ -45,22 +45,54 @@ export default class GithubAPI {
         }
     }
 
-    public async addCollaborator(repoName: string, collaborator: string) {
+    public async inviteCollaborator(repoName: string, invitee: string) {
         const userResponse = await this.getUser();
         if (!userResponse) {
             return null;
         }
         const username = userResponse.login;
         const response = await this.octokit.request(
-            `PUT /repos/${username}/${repoName}/collaborators/${collaborator}`,
-            {
-                owner: username,
-                repo: repoName,
-                username: collaborator,
-                permission: "triage",
-            }
+            `PUT /repos/${username}/${repoName}/collaborators/${invitee}`
         );
         return response.data;
+    }
+
+    public async removeCollaborator(
+        repoName: string,
+        collaborator: string
+    ): Promise<boolean> {
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return false;
+        }
+        const username = userResponse.login;
+        const response = await this.octokit.request(
+            `DELETE /repos/${username}/${repoName}/collaborators/${collaborator}`
+        );
+        return response.status === 204;
+    }
+
+    public async deleteInvitationtoCollaborate(
+        repoName: string,
+        invitee: string
+    ): Promise<boolean> {
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return false;
+        }
+        const username = userResponse.login;
+        const invitationsResponse = await this.octokit.request(
+            `GET /repos/${username}/${repoName}/invitations/`
+        );
+        const invitations = invitationsResponse.data;
+        const invitationId = invitations.find(
+            (invitation: any) => invitation.invitee.login === invitee
+        ).id;
+        const deletionResponse = await this.octokit.request(
+            `DELETE /repos/${username}/${repoName}/invitations/${invitationId}`
+        );
+
+        return deletionResponse.status === 204;
     }
 
     public async createIssue(options: {
@@ -77,10 +109,39 @@ export default class GithubAPI {
         const response = await this.octokit.request(
             `POST /repos/${username}/${repoName}/issues`,
             {
-                owner: username,
-                repo: repoName,
                 title,
                 body,
+            }
+        );
+        return response.data;
+    }
+
+    public async getRepoIssues(repoName: string) {
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return null;
+        }
+        const username = userResponse.login;
+        const response = await this.octokit.request(
+            `GET /repos/${username}/${repoName}/issues`
+        );
+        return response.data;
+    }
+
+    public async updateIssue(
+        repoName: string,
+        issueId: string,
+        payload: object
+    ) {
+        const userResponse = await this.getUser();
+        if (!userResponse) {
+            return null;
+        }
+        const username = userResponse.login;
+        const response = await this.octokit.request(
+            `PATCH /repos/${username}/${repoName}/issues/${issueId}`,
+            {
+                ...payload,
             }
         );
         return response.data;

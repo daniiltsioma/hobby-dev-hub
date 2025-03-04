@@ -21,7 +21,7 @@ jest.mock("@octokit/core", () => {
                             },
                         };
                     }
-                    if (route === "POST /user/posts") {
+                    if (route === "POST /user/repos") {
                         // create a repository
                         if (parameters.name === "Existing repo") {
                             return {
@@ -110,7 +110,7 @@ describe("GitHub API client", () => {
         githubAPI.authenticate("validToken", MockOctokit);
         expect(githubAPI.isAuthenticated()).toBe(true);
         expect(
-            await githubAPI.addCollaborator(
+            await githubAPI.inviteCollaborator(
                 "validRepoName",
                 "validCollaborator"
             )
