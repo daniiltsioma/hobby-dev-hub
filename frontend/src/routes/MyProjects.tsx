@@ -4,7 +4,7 @@ import { Project } from "../components/projects/ProjectCard";
 import { getUser } from "../lib/user";
 
 export default function MyProjects() {
-    const [username, setUsername] = useState();
+    const [username, setUsername] = useState<string | null>(null);
     const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -40,20 +40,6 @@ export default function MyProjects() {
     // Placeholder action for archiving a project
     const handleArchive = (projectId: number) => {
         console.log(`Project with ID: ${projectId} has been archived.`);
-    };
-
-    // Placeholder action for withdrawing an application
-    const handleWithdraw = (projectId: number) => {
-        console.log(
-            `Application for project with ID: ${projectId} has been withdrawn.`
-        );
-    };
-
-    // Placeholder action for leaving a collaboration
-    const handleLeave = (projectId: number) => {
-        console.log(
-            `Collaboration on project with ID: ${projectId} has been left.`
-        );
     };
 
     // Placeholder action for deleting a project
@@ -136,7 +122,7 @@ export default function MyProjects() {
                 <div>
                     <button
                         onClick={() => toggleExpand("owned")}
-                        className="text-xl font-bold w-full text-left bg-[#151b23] hover:bg-[#212830] border-b border-[#3d444d] rounded-t-lg p-4"
+                        className="text-xl font-bold w-full text-left bg-[#18222c] hover:bg-[#1e2b37] border-b border-[#3d444d] rounded-t-lg p-4"
                     >
                         Owned
                     </button>
@@ -192,7 +178,7 @@ export default function MyProjects() {
                 <div>
                     <button
                         onClick={() => toggleExpand("applied")}
-                        className="text-xl font-bold w-full text-left bg-[#151b23] hover:bg-[#212830] border-b border-[#3d444d] p-4"
+                        className="text-xl font-bold w-full text-left bg-[#18222c] hover:bg-[#1e2b37] border-b border-[#3d444d] p-4"
                     >
                         Applied
                     </button>
@@ -221,21 +207,11 @@ export default function MyProjects() {
                                             </p>
                                         </div>
 
-                                        <div className="flex flex-col justify-between items-end ml-4">
+                                        <div className="ml-4">
                                             {/* Status Pill */}
                                             <span className="text-xs bg-[#2f3742] rounded-full py-1 px-2">
                                                 Applicant
                                             </span>
-
-                                            {/* Withdraw Button */}
-                                            <button
-                                                onClick={() =>
-                                                    handleWithdraw(project.id)
-                                                }
-                                                className="text-sm text-[#e74c3c] hover:text-[#c0392b] cursor-pointer"
-                                            >
-                                                Withdraw
-                                            </button>
                                         </div>
                                     </div>
                                 ))
@@ -248,7 +224,7 @@ export default function MyProjects() {
                 <div>
                     <button
                         onClick={() => toggleExpand("collaborating")}
-                        className={`text-xl font-bold w-full text-left bg-[#151b23] hover:bg-[#212830] border-b border-[#3d444d] p-4`}
+                        className={`text-xl font-bold w-full text-left bg-[#18222c] hover:bg-[#1e2b37] border-b border-[#3d444d] p-4`}
                     >
                         Collaborating
                     </button>
@@ -279,21 +255,11 @@ export default function MyProjects() {
                                                 </p>
                                             </div>
 
-                                            <div className="flex flex-col justify-between items-end ml-4">
+                                            <div className="ml-4">
                                                 {/* Status Pill */}
                                                 <span className="text-xs bg-[#2f3742] rounded-full py-1 px-2">
                                                     Collaborator
                                                 </span>
-
-                                                {/* Leave Button */}
-                                                <button
-                                                    onClick={() =>
-                                                        handleLeave(project.id)
-                                                    }
-                                                    className="text-sm text-[#e74c3c] hover:text-[#c0392b] cursor-pointer"
-                                                >
-                                                    Leave
-                                                </button>
                                             </div>
                                         </div>
                                     )
@@ -307,7 +273,7 @@ export default function MyProjects() {
                 <div>
                     <button
                         onClick={() => toggleExpand("archived")}
-                        className={`text-xl font-bold w-full text-left bg-[#151b23] hover:bg-[#212830] p-4 ${
+                        className={`text-xl font-bold w-full text-left bg-[#18222c] hover:bg-[#1e2b37] p-4 ${
                             expandedSections.includes("archived")
                                 ? "rounded-none" // Not rounded when expanded
                                 : "rounded-b-lg" // Otherwise, apply rounded bottom

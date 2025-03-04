@@ -60,6 +60,16 @@ export default function Project() {
         console.log(`Approving applicant: ${applicant}`);
     };
 
+    const withdrawApplication = () => {
+        // Placeholder logic for withdrawing application
+        console.log("Withdrawing application...");
+    };
+
+    const leaveProject = () => {
+        // Placeholder logic for leaving the project
+        console.log("Leaving project...");
+    };
+
     // Function to mask the username except for the first character
     const maskUsername = (username: string) => {
         if (username.length > 1) {
@@ -162,13 +172,29 @@ export default function Project() {
                             You're the owner of this project!
                         </p>
                     ) : project.collaborators?.includes(username) ? (
-                        <p className="font-medium text-[#4CAF50]">
-                            You're already a collaborator on this project!
-                        </p>
+                        <div className="flex justify-between items-end">
+                            <p className="font-medium text-[#4CAF50]">
+                                You're already a collaborator on this project!
+                            </p>
+                            <button
+                                onClick={leaveProject}
+                                className="cursor-pointer bg-[#c9302c] text-sm px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                            >
+                                Leave Project
+                            </button>
+                        </div>
                     ) : project.applicants?.includes(username) ? (
-                        <p className="font-medium text-[#4CAF50]">
-                            You've applied to this project!
-                        </p>
+                        <div className="flex justify-between items-end">
+                            <p className="font-medium text-[#4CAF50]">
+                                You've applied to this project!
+                            </p>
+                            <button
+                                onClick={withdrawApplication}
+                                className="cursor-pointer bg-[#c9302c] text-sm px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                            >
+                                Withdraw Application
+                            </button>
+                        </div>
                     ) : (
                         <form action={applyToProject}>
                             <input type="hidden" name="projectId" value={id} />
