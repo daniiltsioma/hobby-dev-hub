@@ -37,11 +37,6 @@ export default function MyProjects() {
         fetchProjects();
     }, []);
 
-    // Placeholder action for archiving a project
-    const handleArchive = (projectId: number) => {
-        console.log(`Project with ID: ${projectId} has been archived.`);
-    };
-
     // Placeholder action for deleting a project
     const handleDelete = (projectId: number) => {
         console.log(`Project with ID: ${projectId} has been deleted.`);
@@ -296,7 +291,7 @@ export default function MyProjects() {
                                             </p>
                                         </div>
 
-                                        <div className="flex flex-col justify-between items-end ml-4">
+                                        <div className="ml-4">
                                             {/* Status Pill */}
                                             <span className="text-xs bg-[#2f3742] rounded-full py-1 px-2">
                                                 {project.owner === username
@@ -311,16 +306,6 @@ export default function MyProjects() {
                                                     ? "Applicant"
                                                     : ""}
                                             </span>
-
-                                            {/* Delete Button */}
-                                            <button
-                                                onClick={() =>
-                                                    handleDelete(project.id)
-                                                }
-                                                className="text-sm text-[#e74c3c] hover:text-[#c0392b] cursor-pointer"
-                                            >
-                                                Delete
-                                            </button>
                                         </div>
                                     </div>
                                 ))

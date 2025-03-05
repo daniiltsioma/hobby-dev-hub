@@ -75,6 +75,11 @@ export default function Project() {
         console.log("Archiving project...");
     };
 
+    const deleteProject = () => {
+        // Placeholder logic for deleting the project
+        console.log("Deleting project...");
+    };
+
     // Function to mask the username except for the first character
     const maskUsername = (username: string) => {
         if (username.length > 1) {
@@ -97,9 +102,9 @@ export default function Project() {
             <div className="border border-[#3d444d] rounded-lg p-6 mb-6">
                 <div className="flex justify-between items-start">
                     <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
-                    {/* Displayed Status if Archived */}
+                    {/* Display Status Pill if Archived */}
                     {project.isArchived && (
-                        <span className="bg-[#d9534f] text-sm px-3 py-1 rounded-full ml-4">
+                        <span className="bg-[#d9534f] text-sm font-medium px-3 py-1 rounded-full ml-4">
                             Archived
                         </span>
                     )}
@@ -175,23 +180,42 @@ export default function Project() {
                     project.owner === username ? (
                         <div className="flex justify-between items-end">
                             <p className="font-medium text-[#4CAF50]">
-                                You're the owner of this project!
+                                You're the{" "}
+                                <span className="font-bold text-[#61d27e]">
+                                    owner
+                                </span>{" "}
+                                of this project!
                             </p>
-                            <button
-                                onClick={archiveProject}
-                                className="cursor-pointer bg-[#c9302c] text-sm px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
-                            >
-                                Archive Project
-                            </button>
+                            {project.isArchived ? (
+                                // Show 'Delete Project' button when archived
+                                <button
+                                    onClick={deleteProject}
+                                    className="cursor-pointer bg-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                                >
+                                    Delete Project
+                                </button>
+                            ) : (
+                                // Otherwise, show 'Archive Project' button
+                                <button
+                                    onClick={archiveProject}
+                                    className="cursor-pointer bg-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                                >
+                                    Archive Project
+                                </button>
+                            )}
                         </div>
                     ) : project.collaborators?.includes(username) ? (
                         <div className="flex justify-between items-end">
                             <p className="font-medium text-[#4CAF50]">
-                                You're already a collaborator on this project!
+                                You're already a{" "}
+                                <span className="font-bold text-[#61d27e]">
+                                    collaborator
+                                </span>{" "}
+                                on this project!
                             </p>
                             <button
                                 onClick={leaveProject}
-                                className="cursor-pointer bg-[#c9302c] text-sm px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                                className="cursor-pointer bg-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
                             >
                                 Leave Project
                             </button>
@@ -199,15 +223,27 @@ export default function Project() {
                     ) : project.applicants?.includes(username) ? (
                         <div className="flex justify-between items-end">
                             <p className="font-medium text-[#4CAF50]">
-                                You've applied to this project!
+                                You've{" "}
+                                <span className="font-bold text-[#61d27e]">
+                                    applied
+                                </span>{" "}
+                                to this project!
                             </p>
                             <button
                                 onClick={withdrawApplication}
-                                className="cursor-pointer bg-[#c9302c] text-sm px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                                className="cursor-pointer bg-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
                             >
                                 Withdraw Application
                             </button>
                         </div>
+                    ) : project.isArchived ? (
+                        <p className="font-medium text-[#e74c3c]">
+                            This project has been{" "}
+                            <span className="font-bold text-[#d9534f]">
+                                archived
+                            </span>{" "}
+                            and is no longer active.
+                        </p>
                     ) : (
                         <form action={applyToProject}>
                             <input type="hidden" name="projectId" value={id} />
