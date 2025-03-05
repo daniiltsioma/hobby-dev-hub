@@ -70,6 +70,11 @@ export default function Project() {
         console.log("Leaving project...");
     };
 
+    const archiveProject = () => {
+        // Placeholder logic for archiving the project
+        console.log("Archiving project...");
+    };
+
     // Function to mask the username except for the first character
     const maskUsername = (username: string) => {
         if (username.length > 1) {
@@ -168,9 +173,17 @@ export default function Project() {
                 </p>
                 {username ? (
                     project.owner === username ? (
-                        <p className="font-medium text-[#4CAF50]">
-                            You're the owner of this project!
-                        </p>
+                        <div className="flex justify-between items-end">
+                            <p className="font-medium text-[#4CAF50]">
+                                You're the owner of this project!
+                            </p>
+                            <button
+                                onClick={archiveProject}
+                                className="cursor-pointer bg-[#c9302c] text-sm px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                            >
+                                Archive Project
+                            </button>
+                        </div>
                     ) : project.collaborators?.includes(username) ? (
                         <div className="flex justify-between items-end">
                             <p className="font-medium text-[#4CAF50]">

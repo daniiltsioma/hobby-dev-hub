@@ -151,21 +151,11 @@ export default function MyProjects() {
                                             </p>
                                         </div>
 
-                                        <div className="flex flex-col justify-between items-end ml-4">
+                                        <div className="ml-4">
                                             {/* Status Pill */}
                                             <span className="text-xs bg-[#2f3742] rounded-full py-1 px-2">
                                                 Owner
                                             </span>
-
-                                            {/* Archive Button */}
-                                            <button
-                                                onClick={() =>
-                                                    handleArchive(project.id)
-                                                }
-                                                className="text-sm text-[#e74c3c] hover:text-[#c0392b] cursor-pointer"
-                                            >
-                                                Archive
-                                            </button>
                                         </div>
                                     </div>
                                 ))
