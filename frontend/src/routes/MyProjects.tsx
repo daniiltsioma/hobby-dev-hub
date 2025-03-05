@@ -37,11 +37,6 @@ export default function MyProjects() {
         fetchProjects();
     }, []);
 
-    // Placeholder action for deleting a project
-    const handleDelete = (projectId: number) => {
-        console.log(`Project with ID: ${projectId} has been deleted.`);
-    };
-
     const filterProjects = (
         status: "owned" | "applied" | "collaborating" | "archived"
     ) => {
