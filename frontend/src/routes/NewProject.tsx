@@ -14,7 +14,7 @@ export default function NewProject() {
             githubRepoURL: formData.get("githubRepoURL"),
             technologies: tags,
             applicants: [],
-            task: []
+            task: formData.get("task")
         };
 
         console.log(JSON.stringify(rawFormData));
@@ -39,20 +39,23 @@ export default function NewProject() {
     return (
         <form
             action={createProject}
-            className="w-[400px] flex flex-col items-start px-8 mt-4"
+            className="w-[625px] flex flex-col items-start px-8 mt-4"
         >
-            <label className="w-full mb-2">
+            <div className="font-semibold text-4xl mb-2">
+                Post a Project
+            </div>
+            <label className="w-full mb-2 text-xl">
                 <input
                     name="title"
                     placeholder="Project name"
-                    className="w-full bg-[#0d1117] border border-[#3d444d] placeholder-[#9198a1] focus:outline-[#0969da] focus:outline-offset-0 focus:outline-none px-2 py-1 rounded w-full mb-4"
+                    className="w-full bg-[#0d1117] border border-[#3d444d] placeholder-[#9198a1] focus:outline-[#0969da] focus:outline-offset-0 focus:outline-none px-2 py-1 rounded w-full"
                 />
             </label>
             <label className="w-full mb-2">
                 <textarea
                     name="description"
                     placeholder="Project description"
-                    className="w-full bg-[#0d1117] border border-[#3d444d] placeholder-[#9198a1] focus:outline-[#0969da] focus:outline-offset-0 focus:outline-none px-2 py-1 rounded w-full mb-4"
+                    className="w-full bg-[#0d1117] border border-[#3d444d] placeholder-[#9198a1] focus:outline-[#0969da] focus:outline-offset-0 focus:outline-none px-2 py-1 rounded w-full resize-none"
                     rows={6}
                 ></textarea>
             </label>
@@ -60,8 +63,15 @@ export default function NewProject() {
                 <input
                     name="githubRepoURL"
                     placeholder="Github repo URL"
-                    className="w-full bg-[#0d1117] border border-[#3d444d] placeholder-[#9198a1] focus:outline-[#0969da] focus:outline-offset-0 focus:outline-none px-2 py-1 rounded w-full mb-4"
+                    className="w-full bg-[#0d1117] border border-[#3d444d] placeholder-[#9198a1] focus:outline-[#0969da] focus:outline-offset-0 focus:outline-none px-2 py-1 rounded w-full"
                 ></input>
+            </label>
+            <label className="w-full mb-2">
+                <textarea
+                    name="task"
+                    placeholder="Project Task"
+                    className="w-full bg-[#0d1117] border border-[#3d444d] placeholder-[#9198a1] focus:outline-[#0969da] focus:outline-offset-0 focus:outline-none px-2 py-1 rounded w-full resize-none"
+                ></textarea>
             </label>
 
             <div className="mb-4">
@@ -70,7 +80,7 @@ export default function NewProject() {
                     {availableTags.map((tag) => (
                         <button
                             key={tag}
-                            className={`px-3 py-1 rounded border-[#3d444d] ${tags.includes(tag) ? "bg-white text-[#151b23]" : "bg-[#151b23]"}`}
+                            className={`px-3 py-1 cursor-pointer rounded border-[#3d444d] ${tags.includes(tag) ? "bg-white text-[#151b23]" : "bg-[#151b23]"}`}
                             onClick={(e) => {
                                 e.preventDefault();
                                 setTags(tags.includes(tag) ? tags.filter(t => t !== tag) : [...tags, tag])
