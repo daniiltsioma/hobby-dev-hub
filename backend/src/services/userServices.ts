@@ -1,8 +1,8 @@
 import User from "../mongo/models/Users";
 import connectToDatabase from "../mongo/dbConnection";
-import { error } from "console";
 
-class UserService {
+// TODO: IGNORE CASE OF NAME
+export default class UserService {
   // Create a new user and save them in the db
   async createUser(userData: {
     email: string;
@@ -68,6 +68,7 @@ class UserService {
         "activeProjects",
         "archivedProjects",
       ];
+
       for (const key in updateData) {
         if (!validFields.includes(key)) {
           throw new Error(`Invalid field: ${key}`);
@@ -86,7 +87,7 @@ class UserService {
 
       return updatedUser;
     } catch (error) {
-      console.error("Error updating user: ", error);
+      console.error("Error updating user", error);
       throw error;
     }
   }
@@ -95,6 +96,10 @@ class UserService {
     try {
       await connectToDatabase();
 
+      if (!githubId) {
+        throw new Error("Required githubId parameter not provided");
+      }
+
       const deletedUser = await User.findOneAndDelete({ githubId });
 
       if (!deletedUser) {
@@ -102,7 +107,7 @@ class UserService {
       }
 
       return {
-        message: `User with githubId '${githubId}' deleted successfully`,
+        message: `User with githubId '${githubId}' has been successfully deleted`,
       };
     } catch (error) {
       console.error("Error: could not delete user '" + githubId + "'", error);
