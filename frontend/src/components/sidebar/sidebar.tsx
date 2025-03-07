@@ -73,6 +73,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
                 </div>
               )}
             </li>
+            <li className="rounded hover:bg-[#1f2937]">
+              <Link
+                to="/my-projects"
+                onClick={() => setIsOpen(false)}
+                className="block p-2"
+              >
+                My Projects
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
