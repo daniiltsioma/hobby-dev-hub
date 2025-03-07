@@ -8,6 +8,7 @@ export interface Project {
     owner: string;
     applicants: string[];
     collaborators: string[];
+    isArchived: boolean;
 }
 
 const projects: Project[] = [
@@ -19,8 +20,9 @@ const projects: Project[] = [
         githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
         task: "I'm looking for somebody to help implement MongoDB into my project!",
         owner: "daniiltsioma",
-        applicants: [],
+        applicants: ["bobby", "adam", "tony"],
         collaborators: ["lbrescia", "andrespdx"],
+        isArchived: false,
     },
     {
         id: 2,
@@ -30,8 +32,9 @@ const projects: Project[] = [
         githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
         task: "I'm looking for someone to assist with data analytics using Python.",
         owner: "andrespdx",
-        applicants: [],
+        applicants: ["adam", "tony", "bobby"],
         collaborators: ["nvenetucci", "daniiltsioma"],
+        isArchived: false,
     },
     {
         id: 3,
@@ -41,8 +44,9 @@ const projects: Project[] = [
         githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
         task: "I'm looking for someone with SFML experience to assist in creating a GUI for my app.",
         owner: "lbrescia",
-        applicants: [],
+        applicants: ["tony", "bobby", "adam"],
         collaborators: ["andrespdx", "nvenetucci"],
+        isArchived: false,
     },
     {
         id: 4,
@@ -52,8 +56,21 @@ const projects: Project[] = [
         githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
         task: "I’m looking for someone to help me complete my calculator app!",
         owner: "nvenetucci",
-        applicants: [],
+        applicants: ["bobby", "tony"],
         collaborators: ["daniiltsioma", "lbrescia"],
+        isArchived: false,
+    },
+    {
+        id: 5,
+        title: "Project 5",
+        description: "Description of project 5",
+        technologies: ["C++"],
+        githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
+        task: "I'm looking for a developer to help me create a Tetris game in C++!",
+        owner: "bobby",
+        applicants: ["tony"],
+        collaborators: ["andrespdx", "daniiltsioma", "lbrescia", "nvenetucci"],
+        isArchived: true,
     },
 ];
 
