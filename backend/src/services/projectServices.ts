@@ -1,16 +1,14 @@
 import Project from "../mongo/models/Projects";
 import User from "../mongo/models/Users";
 import connectToDatabase from "../mongo/dbConnection";
-import { ObjectId } from "mongoose";
-import { IUser } from "../mongo/models/Users";
+import { isValidObjectId } from "mongoose";
 
-// TODO: IGNORE CASE OF NAME
 export default class projectServices {
   async createProject(projectData: {
     title: string;
     githubRepoURL: string;
     description?: string;
-    technologies: string[];
+    technologies?: string[];
     owner: string;
     applicants?: string[];
     collaborators?: string;
@@ -25,7 +23,6 @@ export default class projectServices {
       if (
         !projectData.title ||
         !projectData.githubRepoURL ||
-        !projectData.technologies ||
         !projectData.owner
       ) {
         throw new Error("Some required fields are missing");
@@ -64,9 +61,9 @@ export default class projectServices {
 
       const projects = await Project.find({
         $or: [
-          { owner: username },
-          { collaborators: username },
-          { applicants: username },
+          { owner: { $regex: new RegExp(`^${username}$`, "i") } },
+          { collaborators: { $regex: new RegExp(`^${username}$`, "i") } },
+          { applicants: { $regex: new RegExp(`^${username}$`, "i") } },
         ],
       });
 
@@ -96,7 +93,7 @@ export default class projectServices {
         case "collaborating":
           query = {
             collaborators: { $regex: new RegExp(`^${username}$`, "i") },
-            owner: { $ne: { $regex: new RegExp(`^${username}$`, "i") } },
+            owner: { $ne: username },
             isArchived: false,
           };
           break;
@@ -113,7 +110,11 @@ export default class projectServices {
           throw new Error("Invalid role specified.");
       }
 
-      const projects = await Project.find(query);
+      const projects = await Project.find(query)
+        .populate("technologies")
+        .populate("applicants")
+        .populate("collaborators")
+        .populate("tasks");
       return projects;
     } catch (error) {
       console.error(`Error fetching projects for role '${role}'`, error);
@@ -121,78 +122,91 @@ export default class projectServices {
     }
   }
 
-  // get a single project
-  async getProject(name: string) {
+  // return all projects
+  async returnAllProjects() {
     try {
       await connectToDatabase();
-
-      if (!name) {
-        throw new Error("Missing project name in the search");
-      }
-
-      const project = Project.find({ name })
-        .populate("tags")
-        .populate("approvedUsers")
-        .populate("applicants")
-        .populate("tasks");
-
-      if (!project) {
-        throw new Error(`No project matches the name '${name}'`);
-      }
-
-      return project;
+      const projects = await Project.find({});
+      return projects;
     } catch (error) {
-      console.error("Error fetching project '" + name + "'", error);
+      console.error("Error fetching all projects", error);
       throw error;
     }
   }
 
-  async addCollaborator(
-    title: string,
-    owner: string,
-    userToAddAsCollaborator: string
-  ) {
+  // get a single project
+  async getOneProject(title: string, owner: string) {
     try {
       await connectToDatabase();
 
-      if (!title || !owner || !userToAddAsCollaborator) {
+      if (!title || !owner) {
+        throw new Error("Missing project name in the search");
+      }
+
+      const project = await Project.findOne({
+        title: { $regex: new RegExp(`^${title}$`, "i") },
+        owner: { $regex: new RegExp(`^${owner}$`, "i") },
+      })
+        .populate("technologies")
+        .populate("applicants")
+        .populate("collaborators")
+        .populate("tasks");
+
+      if (!project) {
+        throw new Error(`No project matches the name '${title}'`);
+      }
+
+      return project;
+    } catch (error) {
+      console.error("Error fetching project '" + title + "'", error);
+      throw error;
+    }
+  }
+
+  async addCollaborator(projectId: string, userToAddAsCollaborator: string) {
+    try {
+      await connectToDatabase();
+
+      if (!isValidObjectId(projectId)) {
+        throw new Error("Invalid project ID.");
+      }
+
+      if (!projectId || !userToAddAsCollaborator) {
         throw new Error("One or more required arguments is empty");
       }
-      const project = await Project.findOne(
-        { $regex: new RegExp(`^${title}$`, "i") },
-        { $regex: new RegExp(`^${owner}$`, "i") }
-      );
+      const project = await Project.findById(projectId);
       if (!project) {
         throw new Error("Project not found.");
       }
 
-      if (!project.applicants.includes(userToAddAsCollaborator)) {
-        project.applicants.push(userToAddAsCollaborator);
+      if (!project.collaborators.includes(userToAddAsCollaborator)) {
+        project.collaborators.push(userToAddAsCollaborator);
         await project.save();
       }
 
       return project;
     } catch (error) {
       console.error(
-        "Error adding applicant '" + userToAddAsCollaborator + "'",
+        "Error adding collaborator '" + userToAddAsCollaborator + "'",
         error
       );
       throw error;
     }
   }
 
-  async removeCollaborator(title: string, owner: string, userToRemove: string) {
+  async removeCollaborator(projectId: string, userToRemove: string) {
     try {
       await connectToDatabase();
 
-      if (!title || !owner || !userToRemove) {
+      if (!isValidObjectId(projectId)) {
+        throw new Error("Invalid project ID.");
+      }
+
+      if (!projectId || !userToRemove) {
         throw new Error("One or more required arguments is empty");
       }
 
-      const project = await Project.findOne(
-        { $regex: new RegExp(`^${title}$`, "i") },
-        { $regex: new RegExp(`^${owner}$`, "i") }
-      );
+      const project = await Project.findById(projectId);
 
       if (!project) {
         throw new Error("Project not found");
@@ -205,25 +219,150 @@ export default class projectServices {
       await project.save();
 
       return project;
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error removing collaborator", error);
+      throw error;
+    }
   }
 
-  async updateProject(name: string, updateData: Partial<typeof Project>) {
+  async addApplicant(projectId: string, username: string) {
     try {
       await connectToDatabase();
 
+      if (!isValidObjectId(projectId)) {
+        throw new Error("Invalid project ID.");
+      }
+
+      const project = await Project.findById(projectId);
+      if (!project) {
+        throw new Error("Project not found.");
+      }
+
+      if (!project.applicants.includes(username)) {
+        project.applicants.push(username);
+        await project.save();
+      }
+
+      return project;
+    } catch (error) {
+      console.error("Error adding applicant", error);
+      throw error;
+    }
+  }
+
+  async removeApplicant(projectId: string, username: string) {
+    try {
+      await connectToDatabase();
+
+      if (!isValidObjectId(projectId)) {
+        throw new Error("Invalid project ID.");
+      }
+
+      const project = await Project.findById(projectId);
+      if (!project) {
+        throw new Error("Project not found.");
+      }
+
+      project.applicants = project.applicants.filter(
+        (applicant) => applicant.toLowerCase() !== username.toLowerCase()
+      );
+      await project.save();
+
+      return project;
+    } catch (error) {
+      console.error("Error removing applicant", error);
+      throw error;
+    }
+  }
+
+  async archiveProject(projectId: string) {
+    try {
+      await connectToDatabase();
+
+      if (!isValidObjectId(projectId)) {
+        throw new Error("Invalid project ID.");
+      }
+
+      if (!projectId) {
+        throw new Error("No project provided to archive");
+      }
+
+      const project = await Project.findById(projectId);
+      if (!project) {
+        throw new Error("Project not found.");
+      }
+
+      project.isArchived = true;
+      await project.save();
+
+      return project;
+    } catch (error) {
+      console.error("Error archiving project", error);
+      throw error;
+    }
+  }
+
+  async unarchiveProject(projectId: string) {
+    try {
+      await connectToDatabase();
+
+      if (!isValidObjectId(projectId)) {
+        throw new Error("Invalid project ID.");
+      }
+
+      const project = await Project.findById(projectId);
+      if (!project) {
+        throw new Error("Project not found.");
+      }
+
+      project.isArchived = false;
+      await project.save();
+
+      return project;
+    } catch (error) {
+      console.error("Error unarchiving project", error);
+      throw error;
+    }
+  }
+
+  async searchProjects(query: string) {
+    try {
+      await connectToDatabase();
+
+      const projects = await Project.find({
+        $or: [
+          { title: { $regex: query, $options: "i" } },
+          { description: { $regex: query, $options: "i" } },
+          { technologies: { $in: [new RegExp(query, "i")] } },
+        ],
+      });
+
+      return projects;
+    } catch (error) {
+      console.error("Error searching projects", error);
+      throw error;
+    }
+  }
+
+  async updateProject(projectId: string, updateData: Partial<typeof Project>) {
+    try {
+      await connectToDatabase();
+
+      if (!isValidObjectId(projectId)) {
+        throw new Error("Invalid project ID.");
+      }
+
       const validFields = [
-        "name",
-        "repoURL",
+        "title",
         "description",
-        "tags",
-        "owner",
-        "sprintStatus",
-        "approvedUsers",
+        "githubRepoURL",
+        "technologies",
         "applicants",
+        "collaborators",
         "tasks",
         "startDate",
         "endDate",
+        "isArchived",
       ];
 
       for (const key in updateData) {
@@ -233,13 +372,13 @@ export default class projectServices {
       }
 
       const updatedProject = await Project.findOneAndUpdate(
-        { name },
+        { _id: projectId },
         updateData,
         { new: true }
       );
 
       if (!updatedProject) {
-        throw new Error(`No project exists under the name '${name}'`);
+        throw new Error(`No project exists with ID '${projectId}'`);
       }
 
       return updatedProject;
@@ -252,28 +391,33 @@ export default class projectServices {
   // Since no user can have multiple projects with the same name,
   // and only a user can delete their own projects, we only need
   // to search by name
-  async deleteProject(name: string) {
+  async deleteProject(projectId: string) {
     try {
       await connectToDatabase();
 
-      if (!name) {
+      if (!isValidObjectId(projectId)) {
+        throw new Error("Invalid project ID.");
+      }
+
+      if (!projectId) {
         throw new Error(
           "Required parameter not provided. Please provide the project name and URL."
         );
       }
 
-      const deletedProject = await User.findOneAndDelete({ name });
+      const deletedProject = await Project.findByIdAndDelete(projectId);
       if (!deletedProject) {
-        throw new Error(
-          `Could not find the project '${name}' paired with the given ID`
-        );
+        throw new Error(`Could not find the project with ID '${projectId}'`);
       }
 
       return {
-        message: `Project with name '${name}' has been successfully deleted`,
+        message: `Project with title '${deletedProject.title}' has been successfully deleted`,
       };
     } catch (error) {
-      console.error("Error: could not delete project '" + name + "'", error);
+      console.error(
+        "Error: could not delete project '" + projectId + "'",
+        error
+      );
       throw error;
     }
   }

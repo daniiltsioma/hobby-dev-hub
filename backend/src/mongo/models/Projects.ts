@@ -4,7 +4,7 @@ const ProjectSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: false },
   githubRepoURL: { type: String, required: true },
-  technologies: { type: [String], required: true },
+  technologies: { type: [String], default: [] },
   owner: { type: String, required: true },
   applicants: { type: [String], default: [] },
   collaborators: { type: [String], default: [] },
