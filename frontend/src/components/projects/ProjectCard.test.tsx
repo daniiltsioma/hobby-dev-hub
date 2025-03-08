@@ -16,6 +16,7 @@ const mockProject = {
     owner: "testUser",
     applicants: [],
     collaborators: [],
+    isArchived: false,
 };
 
 describe("ProjectCard", () => {
@@ -92,7 +93,7 @@ describe("ProjectCard", () => {
             </MemoryRouter>
         );
 
-        const applyButton = screen.getByRole("button", { name: "Apply" });
+        const applyButton = screen.getByRole("link", { name: "Apply" });
 
         expect(applyButton).toBeInTheDocument();
     });

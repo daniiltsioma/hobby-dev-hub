@@ -21,35 +21,31 @@ export default function Header({
     fetchUsername();
   }, [[]]);
   return (
-    <div className="flex items-center justify-between bg-[#010409] border-b border-[#3d444d] px-8 py-4">
+    <div className="flex items-center justify-between bg-[#010409] border-b border-[#3d444d] px-8 py-4 h-[72px]">
       <div className="flex items-center">
-        {!isSidebarOpen && (
-          <button
-            onClick={() => setIsSidebarOpen(true)}
-            className="z-50 bg-[#0d1117] text-white border border-[#3d444d] rounded-lg px-4 py-2 flex items-center gap-2"
-          >
-            <span style={{ fontSize: "20px" }}>☰</span>
-            Menu
-          </button>
-        )}
-        <Link to="/" className="text-2xl font-bold px-6 cursor-pointer">
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          className={`bg-[#0d1117] border border-[#3d444d] rounded-lg px-3 py-3 mr-8 ${
+            isSidebarOpen ? "hidden" : ""
+          }`}
+        >
+          {/* Hamburger icon */}
+          <div className="flex flex-col justify-center items-center">
+            <span className="block w-6 h-0.5 bg-white mb-1"></span>
+            <span className="block w-6 h-0.5 bg-white mb-1"></span>
+            <span className="block w-6 h-0.5 bg-white"></span>
+          </div>
+        </button>
+        <Link to="/" className="text-2xl font-bold cursor-pointer">
           Hobby Dev Hub
         </Link>
         {username && (
-          <>
-            <Link
-              to="/projects/new"
-              className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
-            >
-              Post a Project
-            </Link>
-            <Link
-              to={"/my-projects"}
-              className="bg-blue-600 hover:bg-blue-700 rounded-md ml-4 py-1 px-4"
-            >
-              My Projects
-            </Link>
-          </>
+          <Link
+            to="/projects/new"
+            className="bg-blue-600 hover:bg-blue-700 rounded-md ml-8 py-1 px-4"
+          >
+            Post a Project
+          </Link>
         )}
       </div>
 

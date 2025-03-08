@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function Project() {
     const { id } = useParams();
-    const [isLoggedIn, setIsLoggedIn] = useState();
+    const [username, setUsername] = useState<string | null>(null);
     const [project, setProject] = useState({} as any);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -36,8 +36,8 @@ export default function Project() {
     useEffect(() => {
         const fetchProject = async () => {
             try {
-                const loggedInStatus = await getUser();
-                setIsLoggedIn(loggedInStatus);
+                const user = await getUser();
+                setUsername(user ? user.login : null);
 
                 const response = await fetch(
                     `${import.meta.env.VITE_EXPRESS_URL}/projects/${id}`
@@ -55,6 +55,39 @@ export default function Project() {
         fetchProject();
     }, []);
 
+    const approveApplicant = (applicant: string) => {
+        // Placeholder logic for approving an applicant
+        console.log(`Approving applicant: ${applicant}`);
+    };
+
+    const withdrawApplication = () => {
+        // Placeholder logic for withdrawing application
+        console.log("Withdrawing application...");
+    };
+
+    const leaveProject = () => {
+        // Placeholder logic for leaving the project
+        console.log("Leaving project...");
+    };
+
+    const archiveProject = () => {
+        // Placeholder logic for archiving the project
+        console.log("Archiving project...");
+    };
+
+    const deleteProject = () => {
+        // Placeholder logic for deleting the project
+        console.log("Deleting project...");
+    };
+
+    // Function to mask the username except for the first character
+    const maskUsername = (username: string) => {
+        if (username.length > 1) {
+            return username[0] + "*".repeat(username.length - 1);
+        }
+        return username;
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -67,7 +100,15 @@ export default function Project() {
         <div className="container mx-auto p-8">
             {/* Title and Description Section */}
             <div className="border border-[#3d444d] rounded-lg p-6 mb-6">
-                <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
+                <div className="flex justify-between items-start">
+                    <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
+                    {/* Display Status Pill if Archived */}
+                    {project.isArchived && (
+                        <span className="bg-[#d9534f] text-sm font-medium px-3 py-1 rounded-full ml-4">
+                            Archived
+                        </span>
+                    )}
+                </div>
                 <p className="text-lg text-[#9198a1]">{project.description}</p>
             </div>
 
@@ -135,16 +176,85 @@ export default function Project() {
                     If you're interested in contributing to this project, please
                     apply below.
                 </p>
-                {isLoggedIn ? (
-                    <form action={applyToProject}>
-                        <input type="hidden" name="projectId" value={id} />
-                        <button
-                            type="submit"
-                            className="cursor-pointer bg-[#212830] hover:bg-[#2f3742] font-medium border border-[#3d444d] rounded-md px-6 py-2"
-                        >
-                            Apply
-                        </button>
-                    </form>
+                {username ? (
+                    project.owner === username ? (
+                        <div className="flex justify-between items-end">
+                            <p className="font-medium text-[#4CAF50]">
+                                You're the{" "}
+                                <span className="font-bold text-[#61d27e]">
+                                    owner
+                                </span>{" "}
+                                of this project!
+                            </p>
+                            {project.isArchived ? (
+                                // Show 'Delete Project' button when archived
+                                <button
+                                    onClick={deleteProject}
+                                    className="cursor-pointer bg-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                                >
+                                    Delete Project
+                                </button>
+                            ) : (
+                                // Otherwise, show 'Archive Project' button
+                                <button
+                                    onClick={archiveProject}
+                                    className="cursor-pointer bg-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                                >
+                                    Archive Project
+                                </button>
+                            )}
+                        </div>
+                    ) : project.collaborators?.includes(username) ? (
+                        <div className="flex justify-between items-end">
+                            <p className="font-medium text-[#4CAF50]">
+                                You're already a{" "}
+                                <span className="font-bold text-[#61d27e]">
+                                    collaborator
+                                </span>{" "}
+                                on this project!
+                            </p>
+                            <button
+                                onClick={leaveProject}
+                                className="cursor-pointer bg-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                            >
+                                Leave Project
+                            </button>
+                        </div>
+                    ) : project.applicants?.includes(username) ? (
+                        <div className="flex justify-between items-end">
+                            <p className="font-medium text-[#4CAF50]">
+                                You've{" "}
+                                <span className="font-bold text-[#61d27e]">
+                                    applied
+                                </span>{" "}
+                                to this project!
+                            </p>
+                            <button
+                                onClick={withdrawApplication}
+                                className="cursor-pointer bg-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                            >
+                                Withdraw Application
+                            </button>
+                        </div>
+                    ) : project.isArchived ? (
+                        <p className="font-medium text-[#e74c3c]">
+                            This project has been{" "}
+                            <span className="font-bold text-[#d9534f]">
+                                archived
+                            </span>{" "}
+                            and is no longer active.
+                        </p>
+                    ) : (
+                        <form action={applyToProject}>
+                            <input type="hidden" name="projectId" value={id} />
+                            <button
+                                type="submit"
+                                className="cursor-pointer bg-[#212830] hover:bg-[#2f3742] font-medium border border-[#3d444d] rounded-md px-6 py-2"
+                            >
+                                Apply
+                            </button>
+                        </form>
+                    )
                 ) : (
                     <p className="font-medium">
                         You must be logged in to apply.
@@ -158,8 +268,25 @@ export default function Project() {
                 {project.applicants && project.applicants.length > 0 ? (
                     <ul>
                         {project.applicants.map((applicant: any, idx: any) => (
-                            <li key={idx} className="text-lg text-[#9198a1]">
-                                {applicant}
+                            <li
+                                key={idx}
+                                className="flex justify-between items-center text-lg text-[#9198a1] mb-1 hover:bg-[#2f3742] p-1.5 rounded-lg transition-all duration-200"
+                            >
+                                <span>
+                                    {project.owner === username
+                                        ? applicant
+                                        : maskUsername(applicant)}
+                                </span>
+                                {project.owner === username && (
+                                    <button
+                                        onClick={() =>
+                                            approveApplicant(applicant)
+                                        }
+                                        className="cursor-pointer bg-[#4CAF50] text-[#f0f6fc] text-sm px-3 py-1 rounded-md hover:bg-[#45a049] transition-all duration-200 ease-in-out"
+                                    >
+                                        Approve
+                                    </button>
+                                )}
                             </li>
                         ))}
                     </ul>
