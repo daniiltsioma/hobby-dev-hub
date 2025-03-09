@@ -167,8 +167,6 @@ app.post("/projects/:id", async (req, res) => {
 
     const applicant = await github.getUser();
 
-    console.log({ applicant });
-
     if (!applicant || !applicant.login) {
         res.status(401).send("User not authenticated");
         return;
