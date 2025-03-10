@@ -159,8 +159,8 @@ export default function Project() {
                     <h2 className="text-2xl font-semibold mb-4">
                         Task Description
                     </h2>
-                    <p className="text-lg text-[#9198a1]">
-                        {project.task && project.task.length > 0
+                    <div className="text-lg text-[#9198a1]">
+                        {Array.isArray(project.task) && project.task.length > 0
                             ? (
                                 <ul className="list-disc list-inside text-lg text-[#9198a1]">
                                     {project.task.map((task: string, index: number) => (
@@ -169,7 +169,7 @@ export default function Project() {
                                 </ul>
                             )
                             : "Check out the GitHub repository for more details and to see how you can contribute!"}
-                    </p>
+                    </div>
                 </div>
             </div>
 
