@@ -7,7 +7,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
-  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
+  //const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const [isButtonVisible, setIsButtonVisible] = useState(false);
 
   useEffect(() => {
@@ -43,36 +43,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         <div className="p-4">
           <h2 className="text-lg font-bold mb-4">Collaborations</h2>
           <ul className="space-y-2">
-            <li>
-              <button
-                onClick={() => setIsSubMenuOpen(!isSubMenuOpen)}
-                className="w-full text-left p-2 rounded hover:bg-[#1f2937] transition"
-              >
-                View Projects
-              </button>
-              {isSubMenuOpen && (
-                <div className="ml-4 mt-2 bg-[#1f2937] rounded-lg shadow-lg">
-                  <ul className="p-2">
-                    <li className="p-2 hover:bg-[#2a3842] rounded">
-                      <Link
-                        to="/projects/active"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        Active Projects
-                      </Link>
-                    </li>
-                    <li className="p-2 hover:bg-[#2a3842] rounded">
-                      <Link
-                        to="/projects/archived"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        Archived Projects
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </li>
             <li className="rounded hover:bg-[#1f2937]">
               <Link
                 to="/my-projects"

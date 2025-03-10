@@ -4,8 +4,6 @@ import Home from "./routes/Home";
 import Project from "./routes/Project";
 import NewProject from "./routes/NewProject";
 import MyProjects from "./routes/MyProjects";
-import ActiveProjects from "./routes/ActiveProjects";
-import ArchivedProjects from "./routes/ArchivedProjects";
 import Sidebar from "./components/sidebar/sidebar";
 import { useState } from "react";
 
@@ -28,8 +26,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/projects/new" element={<NewProject />} />
           <Route path="/projects/:id" element={<Project />} />
-          <Route path="/projects/active" element={<ActiveProjects />} />
-          <Route path="/projects/archived" element={<ArchivedProjects />} />
           <Route path="/my-projects" element={<MyProjects />} />
         </Routes>
       </div>
