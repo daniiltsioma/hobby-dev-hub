@@ -9,7 +9,7 @@ import User from "./mongo/models/Users";
 import myProjectRouter from "./routes/myprojects";
 import userRouter from "./routes/newUser";
 import bodyParser from "body-parser";
-import projectRouter from "./routes/projects";
+import projectRouter from "./routes/newProject";
 import applyingRouter from "./routes/apply";
 import githubAPIRouter from "./routes/github";
 
