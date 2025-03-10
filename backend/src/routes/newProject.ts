@@ -3,23 +3,28 @@ import Project from "../mongo/models/Projects";
 import connectToDatabase from "../mongo/dbConnection";
 import { Types } from "mongoose";
 import User from "../mongo/models/Users";
+import projectServices from "../services/projectServices";
 
 const projectRouter = Router();
 
 interface ICreateProjectRequest {
-  name: string;
-  repoURL: string;
+  title: string;
+  githubRepoURL: string;
   description?: string;
-  tags: string[];
-  owner: Types.ObjectId;
-  sprintStatus?: string;
+  technologies?: string[];
+  owner: string;
+  applicants?: string[];
+  collaborators?: string;
   tasks?: string[];
   startDate?: Date;
   endDate?: Date;
+  isArchived?: boolean;
 }
 
+const projectService = new projectServices();
+
 projectRouter.post(
-  "/projects",
+  "/newProject",
   async (
     req: Request<{}, {}, ICreateProjectRequest>,
     res: Response
@@ -28,18 +33,20 @@ projectRouter.post(
       await connectToDatabase();
 
       const {
-        name,
-        repoURL,
+        title,
+        githubRepoURL,
         description,
-        tags,
+        technologies,
         owner,
-        sprintStatus,
+        applicants,
+        collaborators,
         tasks,
         startDate,
         endDate,
+        isArchived,
       } = req.body;
 
-      if (!name || !repoURL || !owner) {
+      if (!title || !githubRepoURL || !owner) {
         res.status(400).send("Project name, repoURL, and owner are required.");
         return;
       }
@@ -55,22 +62,28 @@ projectRouter.post(
         return;
       }
 
-      const newProject = new Project({
-        name,
-        repoURL,
+      const newProject = await projectService.createProject({
+        title,
+        githubRepoURL,
         description,
-        tags,
+        technologies,
         owner,
-        sprintStatus: sprintStatus || "Active",
-        approvedUsers: [],
-        applicants: [],
-        tasks: tasks || [],
-        startDate: startDate || Date.now,
+        applicants,
+        collaborators,
+        tasks,
+        startDate,
         endDate,
+        isArchived,
       });
 
-      await newProject.save();
-      console.log("Project ");
+      if (!newProject) {
+        res
+          .status(500)
+          .send(
+            "An internal server error occurred, the new project could not be saved"
+          );
+        return;
+      }
 
       res.status(201).json(newProject);
       return;

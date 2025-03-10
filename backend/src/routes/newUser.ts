@@ -1,11 +1,13 @@
 import { Request, Response, Router } from "express";
 import User from "../mongo/models/Users";
 import connectToDatabase from "../mongo/dbConnection";
+import UserService from "../services/userServices";
 
 const userRouter = Router();
+const userService = new UserService();
 
 userRouter.post(
-  "/users",
+  "/newUser",
   async (req: Request, res: Response): Promise<void> => {
     try {
       await connectToDatabase();
@@ -16,15 +18,19 @@ userRouter.post(
         return;
       }
 
-      const newUser = new User({
+      const newUser = await userService.createUser({
         email,
         githubId,
         userId,
-        activeProjects: [],
-        archivedProjects: [],
       });
 
-      await newUser.save();
+      if (!newUser) {
+        res
+          .status(500)
+          .json({ error: "User could not be created due to a server error" });
+        return;
+      }
+
       console.log("User " + userId + " saved successfully!");
 
       res.status(201).json(newUser);
