@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Project } from "../../../../backend/src/mongo/projects";
-import ProjectCard from "./ProjectCard";
 import ProjectGrid from "./ProjectGrid";
 
 export default function ProjectFilter() {
@@ -44,7 +43,7 @@ export default function ProjectFilter() {
                     {availableTags.map((tag) => (
                         <button
                             key={tag}
-                            className={`px-3 py-1 rounded border-[#3d444d] ${tags.includes(tag) ? "bg-white text-[#151b23]" : "bg-[#151b23]"}`}
+                            className={`px-3 py-1 cursor-pointer rounded border-[#3d444d] ${tags.includes(tag) ? "bg-white text-[#151b23]" : "bg-[#151b23]"}`}
                             onClick={() =>
                                 setTags(tags.includes(tag) ? tags.filter(t => t !== tag) : [...tags, tag])
                             }
