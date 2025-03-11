@@ -21,6 +21,8 @@ import newApplicantRouter from "./routes/postApplicant";
 import removeApplicantRouter from "./routes/deleteAnApplicant";
 import archiveProjectRouter from "./routes/archiveProject";
 import unarchiveProjectRouter from "./routes/unarchiveProject";
+import searchProjectRouter from "./routes/searchProjects";
+import updateProjectRouter from "./routes/updateProject";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -169,6 +171,12 @@ app.use(archiveProjectRouter);
 
 // Route to unarchive a project
 app.use(unarchiveProjectRouter);
+
+// Route to search for projects with given parameters
+app.use(searchProjectRouter);
+
+// Route to update a project
+app.use(updateProjectRouter);
 
 app.use(githubAPIRouter);
 

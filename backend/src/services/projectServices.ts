@@ -355,8 +355,6 @@ export default class projectServices {
 
   async updateProject(projectId: string, updateData: Partial<typeof Project>) {
     try {
-      await connectToDatabase();
-
       if (!isValidObjectId(projectId)) {
         throw new Error("Invalid project ID.");
       }
@@ -374,15 +372,17 @@ export default class projectServices {
         "isArchived",
       ];
 
-      for (const key in updateData) {
-        if (!validFields.includes(key)) {
-          throw new Error(`Invalid field: ${key}`);
-        }
+      const filteredUpdateData = Object.fromEntries(
+        Object.entries(updateData).filter(([key]) => validFields.includes(key))
+      );
+
+      if (Object.keys(filteredUpdateData).length === 0) {
+        throw new Error("No valid fields provided for update.");
       }
 
       const updatedProject = await Project.findOneAndUpdate(
         { _id: projectId },
-        updateData,
+        { $set: filteredUpdateData },
         { new: true }
       );
 

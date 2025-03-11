@@ -19,9 +19,15 @@ searchProjectRouter.get(
         return;
       }
 
-      const projects = await projectService.searchProjects(query, tags);
+      try {
+        const projects = await projectService.searchProjects(query, tags);
 
-      res.status(200).json({ success: true, projects });
+        res.status(200).json({ success: true, projects });
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error occurred";
+        res.status(400).json({ error: errorMessage });
+      }
     } catch (error) {
       console.error("Error searching projects:", error);
       res.status(500).json({ error: "Internal server error" });
