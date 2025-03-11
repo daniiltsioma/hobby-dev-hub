@@ -24,7 +24,7 @@ archiveProjectRouter.post(
 
         res.status(200).json({
           success: true,
-          message: `Project '${updatedProj}' has been archived successfully!`,
+          message: `Project '${updatedProj.title}' has been archived successfully!`,
           title: updatedProj,
         });
       } catch (error) {

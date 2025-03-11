@@ -310,8 +310,6 @@ export default class projectServices {
 
   async unarchiveProject(projectId: string) {
     try {
-      await connectToDatabase();
-
       if (!isValidObjectId(projectId)) {
         throw new Error("Invalid project ID.");
       }
@@ -331,18 +329,23 @@ export default class projectServices {
     }
   }
 
-  async searchProjects(query: string) {
+  async searchProjects(query: string, tags?: string[]) {
     try {
-      await connectToDatabase();
+      let filter: any = {};
 
-      const projects = await Project.find({
-        $or: [
+      if (query) {
+        filter.$or = [
           { title: { $regex: query, $options: "i" } },
           { description: { $regex: query, $options: "i" } },
           { technologies: { $in: [new RegExp(query, "i")] } },
-        ],
-      });
+        ];
+      }
 
+      if (tags && tags.length) {
+        filter.technologies = { $all: tags };
+      }
+
+      const projects = await Project.find(filter);
       return projects;
     } catch (error) {
       console.error("Error searching projects", error);

@@ -19,7 +19,8 @@ import newCollaboratorRouter from "./routes/postNewCollaborator";
 import removeCollaboratorRouter from "./routes/deleteACollaborator";
 import newApplicantRouter from "./routes/postApplicant";
 import removeApplicantRouter from "./routes/deleteAnApplicant";
-import archiveProjectRouter from "./routes/updateProjectToArchive";
+import archiveProjectRouter from "./routes/archiveProject";
+import unarchiveProjectRouter from "./routes/unarchiveProject";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -165,6 +166,9 @@ app.use(removeApplicantRouter);
 
 // Route to archive a project
 app.use(archiveProjectRouter);
+
+// Route to unarchive a project
+app.use(unarchiveProjectRouter);
 
 app.use(githubAPIRouter);
 
