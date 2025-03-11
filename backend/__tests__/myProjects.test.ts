@@ -1,6 +1,6 @@
 import request from "supertest";
 import express from "express";
-import myProjectRouter from "../src/routes/myprojects";
+import ownerProjectRouter from "../src/routes/getProjectsForOwner";
 import User from "../src/mongo/models/Users";
 
 jest.mock("../src/mongo/dbConnection", () => ({
@@ -13,7 +13,7 @@ jest.mock("../src/mongo/models/Projects");
 
 const app = express();
 app.use(express.json());
-app.use(myProjectRouter);
+app.use(ownerProjectRouter);
 
 const mockProjects = [
   {

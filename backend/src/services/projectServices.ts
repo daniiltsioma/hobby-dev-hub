@@ -1,5 +1,4 @@
 import Project from "../mongo/models/Projects";
-import User from "../mongo/models/Users";
 import connectToDatabase from "../mongo/dbConnection";
 import { isValidObjectId } from "mongoose";
 

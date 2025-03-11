@@ -6,12 +6,13 @@ import GithubAPI from "./githubAPI";
 import connectToDatabase from "./mongo/dbConnection";
 import projects from "./mongo/projects";
 import User from "./mongo/models/Users";
-import myProjectRouter from "./routes/myprojects";
+import ownerProjectRouter from "./routes/getProjectsForOwner";
 import userRouter from "./routes/newUser";
 import bodyParser from "body-parser";
 import projectRouter from "./routes/newProject";
 import applyingRouter from "./routes/apply";
 import githubAPIRouter from "./routes/github";
+import getProjByUserRoleRouter from "./routes/getProjByUserRole";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -121,14 +122,17 @@ app.get("/dummy-db/:id", async (req, res) => {
   res.json(project);
 });
 
-// Route to get active and archived projects of a specific user if found
-app.use(myProjectRouter);
+// Route to get all of the projects for a particular user
+app.use(ownerProjectRouter);
 
 // Route to post a new user into the database
 app.use(userRouter);
 
 // Route to post a new project into the database
 app.use(projectRouter);
+
+// Get projects by user role
+app.use(getProjByUserRoleRouter);
 
 //Route to post a new applicant into the database
 app.use(applyingRouter);

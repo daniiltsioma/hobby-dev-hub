@@ -1,11 +1,12 @@
 import { Request, Response, Router } from "express";
-import User from "../mongo/models/Users";
 import connectToDatabase from "../mongo/dbConnection";
+import projectServices from "../services/projectServices";
 
-const myProjectRouter = Router();
+const ownerProjectRouter = Router();
+const projectService = new projectServices();
 
-myProjectRouter.get(
-  "/myProjects",
+ownerProjectRouter.get(
+  "/getProjectsForOwner",
   async (req: Request, res: Response): Promise<void> => {
     try {
       await connectToDatabase();
@@ -17,19 +18,16 @@ myProjectRouter.get(
         return;
       }
 
-      const user = await User.findOne({ githubId })
-        .populate("activeProjects")
-        .populate("archivedProjects");
+      const projects = await projectService.returnAllProjectsForAnOwner(
+        githubId
+      );
 
-      if (!user) {
-        res.status(400).send("GithubId:" + githubId + " does not exist");
+      if (!projects || projects.length === 0) {
+        res.status(404).send("No projects found for user '" + githubId + "'");
         return;
-      } else {
-        res.json({
-          activeProjects: user.activeProjects,
-          archivedProjects: user.archivedProjects,
-        });
       }
+
+      res.json({ projects });
     } catch (error) {
       console.error("Error fetching projects: ", error);
       res.status(500).send("Internal server error");
@@ -38,4 +36,4 @@ myProjectRouter.get(
   }
 );
 
-export default myProjectRouter;
+export default ownerProjectRouter;
