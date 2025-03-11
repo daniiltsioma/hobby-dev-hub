@@ -10,11 +10,9 @@ userRouter.post(
   "/newUser",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      await connectToDatabase();
-
       const { email, githubId, userId } = req.body;
       if (!email || !githubId || !userId) {
-        res.status(400).send("Missing fields, could not save user");
+        res.status(400).json({ error: "Missing fields, could not save user" });
         return;
       }
 
@@ -31,13 +29,14 @@ userRouter.post(
         return;
       }
 
-      console.log("User " + userId + " saved successfully!");
-
-      res.status(201).json(newUser);
-      return;
+      res.status(201).json({
+        success: true,
+        message: "User created successfully!",
+        user: newUser,
+      });
     } catch (error) {
       console.error("Error saving user: ", error);
-      res.status(500).send("Internal server error");
+      res.status(500).json({ error: "Internal server error" });
     }
   }
 );

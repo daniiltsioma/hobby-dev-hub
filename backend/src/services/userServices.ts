@@ -19,7 +19,7 @@ export default class UserService {
         $or: [
           { userId: { $regex: new RegExp(`^${userData.userId}$`, "i") } },
           { email: { $regex: new RegExp(`^${userData.email}$`, "i") } },
-          { githubId: userData.githubId },
+          { githubId: { $regex: new RegExp(`^${userData.githubId}$`, "i") } },
         ],
       });
 

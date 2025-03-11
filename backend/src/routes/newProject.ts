@@ -1,7 +1,5 @@
 import { Request, Response, Router } from "express";
-import Project from "../mongo/models/Projects";
 import connectToDatabase from "../mongo/dbConnection";
-import { Types } from "mongoose";
 import User from "../mongo/models/Users";
 import projectServices from "../services/projectServices";
 
@@ -47,18 +45,15 @@ projectRouter.post(
       } = req.body;
 
       if (!title || !githubRepoURL || !owner) {
-        res.status(400).send("Project name, repoURL, and owner are required.");
+        res
+          .status(400)
+          .json({ error: "Project name, repoURL, and owner are required." });
         return;
       }
 
-      if (!Types.ObjectId.isValid(owner)) {
-        res.status(400).send("Invalid owner ID format.");
-        return;
-      }
-
-      const existingUser = await User.findById(owner);
+      const existingUser = await User.findOne({ githubID: owner });
       if (!existingUser) {
-        res.status(404).send("Owner not found.");
+        res.status(404).json({ error: "Owner not found." });
         return;
       }
 
@@ -77,19 +72,21 @@ projectRouter.post(
       });
 
       if (!newProject) {
-        res
-          .status(500)
-          .send(
-            "An internal server error occurred, the new project could not be saved"
-          );
+        res.status(500).json({
+          error:
+            "An internal server error occurred, the new project could not be saved",
+        });
         return;
       }
 
-      res.status(201).json(newProject);
-      return;
+      res.status(201).json({
+        success: true,
+        message: "Project created successfully",
+        project: newProject,
+      });
     } catch (error) {
       console.error("Error creating project: ", error);
-      res.status(500).send("Internal server error");
+      res.status(500).json({ error: "Internal server error" });
     }
   }
 );

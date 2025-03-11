@@ -9,12 +9,12 @@ ownerProjectRouter.get(
   "/getProjectsForOwner",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      await connectToDatabase();
-
-      const githubId = req.query.githubId as string;
+      const githubId = req.query.githubId?.toString().trim();
 
       if (!githubId) {
-        res.status(400).send("Github ID is required for this request");
+        res
+          .status(400)
+          .json({ error: "Github ID is required for this request" });
         return;
       }
 
@@ -23,14 +23,20 @@ ownerProjectRouter.get(
       );
 
       if (!projects || projects.length === 0) {
-        res.status(404).send("No projects found for user '" + githubId + "'");
+        res
+          .status(404)
+          .json({ error: `No projects found for user '${githubId}'` });
         return;
       }
 
-      res.json({ projects });
+      res.json({
+        success: true,
+        message: "Project(s) found!",
+        projects: projects,
+      });
     } catch (error) {
       console.error("Error fetching projects: ", error);
-      res.status(500).send("Internal server error");
+      res.status(500).json({ error: "Internal server error" });
       return;
     }
   }

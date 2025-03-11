@@ -1,5 +1,4 @@
 import { Request, Response, Router } from "express";
-import connectToDatabase from "../mongo/dbConnection";
 import projectServices from "../services/projectServices";
 
 const getProjByUserRoleRouter = Router();
@@ -9,14 +8,15 @@ getProjByUserRoleRouter.get(
   "/getProjectsByRole",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      await connectToDatabase();
+      const username = req.query.username?.toString().trim();
+      let role = req.query.role?.toString().trim().toLowerCase();
 
-      const username = req.query.username as string;
-      let role = req.query.role as string;
-      role = role.toLowerCase();
-
-      if (!username || !role) {
-        res.status(400).send("Missing required parameters.");
+      if (!username) {
+        res.status(400).json({ error: "Username is required." });
+        return;
+      }
+      if (!role) {
+        res.status(400).json({ error: "Role is required." });
         return;
       }
 
@@ -29,7 +29,11 @@ getProjByUserRoleRouter.get(
       type Role = (typeof validRoles)[number];
 
       if (!validRoles.includes(role as Role)) {
-        res.status(400).json({ error: "Invalid role specified" });
+        res.status(400).json({
+          error: `Invalid role specified. Must be one of: ${validRoles.join(
+            ", "
+          )}`,
+        });
         return;
       }
 
@@ -43,11 +47,18 @@ getProjByUserRoleRouter.get(
         return;
       }
 
-      res.json({ projects });
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: "Project(s) found!",
+          projects: projects,
+        });
     } catch (error) {
-      console.error("Error fetching projects: ", error);
-      res.status(500).send("Internal server error");
-      return;
+      console.error("Error fetching projects:", error);
+      res
+        .status(500)
+        .json({ error: "Internal server error. Please try again later." });
     }
   }
 );
