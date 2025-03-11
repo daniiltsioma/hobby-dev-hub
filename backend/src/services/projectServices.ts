@@ -397,9 +397,6 @@ export default class projectServices {
     }
   }
 
-  // Since no user can have multiple projects with the same name,
-  // and only a user can delete their own projects, we only need
-  // to search by name
   async deleteProject(projectId: string) {
     try {
       await connectToDatabase();
@@ -420,6 +417,7 @@ export default class projectServices {
       }
 
       return {
+        success: true,
         message: `Project with title '${deletedProject.title}' has been successfully deleted`,
       };
     } catch (error) {
