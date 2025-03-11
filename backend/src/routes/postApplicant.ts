@@ -8,12 +8,13 @@ const newApplicantRouter = Router();
 const projectService = new projectServices();
 
 newApplicantRouter.post(
-  "/newApplicant",
+  "/projects/:projectId/applicants",
   async (req: Request, res: Response): Promise<void> => {
     try {
       await connectToDatabase();
 
-      const { projectId, userToApply } = req.body;
+      const { projectId } = req.params;
+      const { userToApply } = req.body;
 
       if (!projectId || !isValidObjectId(projectId)) {
         res.status(400).json({ error: "Invalid projectId" });
@@ -53,3 +54,5 @@ newApplicantRouter.post(
     }
   }
 );
+
+export default newApplicantRouter;

@@ -261,8 +261,6 @@ export default class projectServices {
 
   async removeApplicant(projectId: string, username: string) {
     try {
-      await connectToDatabase();
-
       if (!isValidObjectId(projectId)) {
         throw new Error("Invalid project ID.");
       }
@@ -272,11 +270,16 @@ export default class projectServices {
         throw new Error("Project not found.");
       }
 
-      project.applicants = project.applicants.filter(
-        (applicant) => applicant.toLowerCase() !== username.toLowerCase()
+      const applicantIndex = project.applicants.findIndex(
+        (applicant) => applicant.toLowerCase() === username.toLowerCase()
       );
-      await project.save();
 
+      if (applicantIndex === -1) {
+        throw new Error(`User '${username}' is not an applicant.`);
+      }
+
+      project.applicants.splice(applicantIndex, 1);
+      await project.save();
       return project;
     } catch (error) {
       console.error("Error removing applicant", error);

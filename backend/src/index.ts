@@ -17,6 +17,7 @@ import getAllProjectsRouter from "./routes/getAllProjects";
 import getOneProjectRouter from "./routes/getAProject";
 import newCollaboratorRouter from "./routes/postNewCollaborator";
 import removeCollaboratorRouter from "./routes/deleteACollaborator";
+import newApplicantRouter from "./routes/postApplicant";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -149,8 +150,13 @@ app.use(userRouter);
 // Route to post a new project into the database
 app.use(projectRouter);
 
+// This is the old one
 //Route to post a new applicant into the database
 app.use(applyingRouter);
+
+//TODO: Decide which one of these to keep
+//Route to post a new applicant into the database
+app.use(newApplicantRouter);
 
 app.use(githubAPIRouter);
 
