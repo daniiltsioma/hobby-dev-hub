@@ -1,48 +1,44 @@
 import { Request, Response, Router } from "express";
-import connectToDatabase from "../mongo/dbConnection";
-import Project from "../mongo/models/Projects";
 import projectServices from "../services/projectServices";
+import connectToDatabase from "../mongo/dbConnection";
 import { isValidObjectId } from "mongoose";
+import Project from "../mongo/models/Projects";
 
-const newCollaboratorRouter = Router();
+const newApplicantRouter = Router();
 const projectService = new projectServices();
 
-newCollaboratorRouter.post(
-  "/newCollaborator",
+newApplicantRouter.post(
+  "/newApplicant",
   async (req: Request, res: Response): Promise<void> => {
     try {
       await connectToDatabase();
 
-      const { projectId, userToAddAsCollaborator } = req.body;
+      const { projectId, userToApply } = req.body;
 
-      if (!userToAddAsCollaborator) {
-        res
-          .status(400)
-          .json({ error: "The new collaborator's name is required" });
+      if (!projectId || !isValidObjectId(projectId)) {
+        res.status(400).json({ error: "Invalid projectId" });
         return;
       }
 
-      if (!isValidObjectId(projectId)) {
-        res.status(400).json({ error: "Invalid formatting for projectId" });
+      if (!userToApply) {
+        res.status(400).json({ error: "Username is required" });
         return;
       }
 
-      const project = await Project.findById({ projectId });
-
+      const project = await Project.findById(projectId);
       if (!project) {
-        res.status(404).json({ error: "Project not found" });
-        return;
+        throw new Error("Project not found.");
       }
 
       try {
-        const updatedProject = await projectService.addCollaborator(
+        const updatedProject = await projectService.addApplicant(
           project,
-          userToAddAsCollaborator
+          userToApply
         );
 
         res.status(200).json({
           success: true,
-          message: `Collaborator '${userToAddAsCollaborator}' added successfully to project`,
+          message: `Applicant '${userToApply}' added to the project successfully!`,
           project: updatedProject,
         });
       } catch (error) {
@@ -57,5 +53,3 @@ newCollaboratorRouter.post(
     }
   }
 );
-
-export default newCollaboratorRouter;

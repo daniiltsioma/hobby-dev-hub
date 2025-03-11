@@ -1,4 +1,4 @@
-import Project from "../mongo/models/Projects";
+import Project, { IProject } from "../mongo/models/Projects";
 import connectToDatabase from "../mongo/dbConnection";
 import { isValidObjectId } from "mongoose";
 
@@ -162,20 +162,12 @@ export default class projectServices {
     }
   }
 
-  async addCollaborator(projectId: string, userToAddAsCollaborator: string) {
+  async addCollaborator(project: any, userToAddAsCollaborator: string) {
     try {
       await connectToDatabase();
 
-      if (!isValidObjectId(projectId)) {
-        throw new Error("Invalid project ID.");
-      }
-
-      if (!projectId || !userToAddAsCollaborator) {
-        throw new Error("One or more required arguments is empty");
-      }
-      const project = await Project.findById(projectId);
-      if (!project) {
-        throw new Error("Project not found.");
+      if (!userToAddAsCollaborator) {
+        throw new Error("Collaborator name is required");
       }
 
       if (project.collaborators.includes(userToAddAsCollaborator)) {
@@ -242,23 +234,23 @@ export default class projectServices {
     }
   }
 
-  async addApplicant(projectId: string, username: string) {
+  async addApplicant(project: any, userToApply: string) {
     try {
-      await connectToDatabase();
-
-      if (!isValidObjectId(projectId)) {
-        throw new Error("Invalid project ID.");
+      if (!userToApply) {
+        throw new Error("Username required");
       }
 
-      const project = await Project.findById(projectId);
-      if (!project) {
-        throw new Error("Project not found.");
+      if (
+        project.applicants.some(
+          (applicant: string) =>
+            applicant.toLowerCase() === userToApply.toLowerCase()
+        )
+      ) {
+        throw new Error(`User '${userToApply}' has already applied`);
       }
 
-      if (!project.applicants.includes(username)) {
-        project.applicants.push(username);
-        await project.save();
-      }
+      project.applicants.push(userToApply);
+      await project.save();
 
       return project;
     } catch (error) {
