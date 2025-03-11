@@ -18,6 +18,8 @@ import getOneProjectRouter from "./routes/getAProject";
 import newCollaboratorRouter from "./routes/postNewCollaborator";
 import removeCollaboratorRouter from "./routes/deleteACollaborator";
 import newApplicantRouter from "./routes/postApplicant";
+import removeApplicantRouter from "./routes/deleteAnApplicant";
+import archiveProjectRouter from "./routes/updateProjectToArchive";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -154,9 +156,15 @@ app.use(projectRouter);
 //Route to post a new applicant into the database
 app.use(applyingRouter);
 
-//TODO: Decide which one of these to keep
+//TODO: Keep this
 //Route to post a new applicant into the database
 app.use(newApplicantRouter);
+
+// Route to delete and applicant
+app.use(removeApplicantRouter);
+
+// Route to archive a project
+app.use(archiveProjectRouter);
 
 app.use(githubAPIRouter);
 

@@ -1,6 +1,5 @@
 import { Request, Response, Router } from "express";
 import projectServices from "../services/projectServices";
-import { isValidObjectId } from "mongoose";
 import connectToDatabase from "../mongo/dbConnection";
 
 const removeApplicantRouter = Router();
@@ -43,3 +42,5 @@ removeApplicantRouter.delete(
     }
   }
 );
+
+export default removeApplicantRouter;

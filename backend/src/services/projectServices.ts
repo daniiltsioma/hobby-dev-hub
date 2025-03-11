@@ -289,12 +289,6 @@ export default class projectServices {
 
   async archiveProject(projectId: string) {
     try {
-      await connectToDatabase();
-
-      if (!isValidObjectId(projectId)) {
-        throw new Error("Invalid project ID.");
-      }
-
       if (!projectId) {
         throw new Error("No project provided to archive");
       }
