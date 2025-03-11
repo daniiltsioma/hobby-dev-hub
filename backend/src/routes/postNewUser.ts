@@ -1,6 +1,4 @@
 import { Request, Response, Router } from "express";
-import User from "../mongo/models/Users";
-import connectToDatabase from "../mongo/dbConnection";
 import UserService from "../services/userServices";
 
 const userRouter = Router();

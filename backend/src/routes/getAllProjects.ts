@@ -16,7 +16,13 @@ getAllProjectsRouter.get(
           .json({ error: "There are no current projects in the database" });
         return;
       }
-      res.status(200).json({ projects });
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: "Returning all projects!",
+          projects: projects,
+        });
     } catch (error) {
       console.error("Error fetching all projects:", error);
       res.status(500).json({ error: "Internal server error" });

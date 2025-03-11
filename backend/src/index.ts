@@ -7,14 +7,16 @@ import connectToDatabase from "./mongo/dbConnection";
 import projects from "./mongo/projects";
 import User from "./mongo/models/Users";
 import ownerProjectRouter from "./routes/getProjectsForOwner";
-import userRouter from "./routes/newUser";
+import userRouter from "./routes/postNewUser";
 import bodyParser from "body-parser";
-import projectRouter from "./routes/newProject";
+import projectRouter from "./routes/postNewProject";
 import applyingRouter from "./routes/apply";
 import githubAPIRouter from "./routes/github";
 import getProjByUserRoleRouter from "./routes/getProjByUserRole";
 import getAllProjectsRouter from "./routes/getAllProjects";
 import getOneProjectRouter from "./routes/getAProject";
+import newCollaboratorRouter from "./routes/postNewCollaborator";
+import removeCollaboratorRouter from "./routes/deleteACollaborator";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -134,6 +136,12 @@ app.use(getOneProjectRouter);
 
 // Route to Get projects by user role
 app.use(getProjByUserRoleRouter);
+
+// Route to Post a new collaborator
+app.use(newCollaboratorRouter);
+
+// Route to remove a collaborator from a project
+app.use(removeCollaboratorRouter);
 
 // Route to post a new user into the database
 app.use(userRouter);

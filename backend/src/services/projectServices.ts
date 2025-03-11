@@ -178,10 +178,14 @@ export default class projectServices {
         throw new Error("Project not found.");
       }
 
-      if (!project.collaborators.includes(userToAddAsCollaborator)) {
-        project.collaborators.push(userToAddAsCollaborator);
-        await project.save();
+      if (project.collaborators.includes(userToAddAsCollaborator)) {
+        throw new Error(
+          `User '${userToAddAsCollaborator}' is already a collaborator.`
+        );
       }
+
+      project.collaborators.push(userToAddAsCollaborator);
+      await project.save();
 
       return project;
     } catch (error) {
@@ -209,6 +213,20 @@ export default class projectServices {
 
       if (!project) {
         throw new Error("Project not found");
+      }
+
+      if (project.owner.toLowerCase() === userToRemove.toLowerCase()) {
+        throw new Error("Cannot remove the project owner.");
+      }
+
+      if (
+        !project.collaborators.some(
+          (collab) => collab.toLowerCase() === userToRemove.toLowerCase()
+        )
+      ) {
+        throw new Error(
+          `User '${userToRemove}' is not a collaborator on this project.`
+        );
       }
 
       project.collaborators = project.collaborators.filter(
