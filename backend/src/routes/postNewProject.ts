@@ -42,7 +42,7 @@ projectRouter.post(
         startDate,
         endDate,
         isArchived,
-      } = req.body;
+      } = req.body as ICreateProjectRequest;
 
       if (!title || !githubRepoURL || !owner) {
         res
