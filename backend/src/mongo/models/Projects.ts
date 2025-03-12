@@ -14,6 +14,8 @@ const ProjectSchema = new Schema({
   isArchived: { type: Boolean, default: false },
 });
 
+ProjectSchema.index({ title: 1, owner: 1 }, { unique: true });
+
 type IProject = InferSchemaType<typeof ProjectSchema>;
 
 const Project = model<IProject>("Project", ProjectSchema);

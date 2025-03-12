@@ -25,7 +25,7 @@ export default class projectServices {
         throw new Error("Some required fields are missing");
       }
 
-      const existingProject = await Project.findOne({
+      /*const existingProject = await Project.findOne({
         title: { $regex: new RegExp(`^${projectData.title}$`, "i") },
         owner: projectData.owner,
       });
@@ -34,7 +34,7 @@ export default class projectServices {
         throw new Error(
           `A project for user '${projectData.owner}' with the title '${projectData.title}' already exists.`
         );
-      }
+      }*/
 
       const newProject = new Project(projectData);
       return await newProject.save();

@@ -38,6 +38,10 @@ app.use(express.json());
 const github = new GithubAPI();
 const auth = new Auth();
 
+app.get("/", (req, res) => {
+  res.send("Server is running!");
+});
+
 app.get("/api/login/", async (req, res) => {
   const githubCode = req.query.code as string;
 

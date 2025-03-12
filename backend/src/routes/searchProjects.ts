@@ -12,11 +12,6 @@ searchProjectRouter.get(
       const query = req.query.search as string;
       const tags = req.query.tags ? (req.query.tags as string).split(",") : [];
 
-      if (!query) {
-        res.status(400).json({ error: "Search query is required." });
-        return;
-      }
-
       try {
         const projects = await projectService.searchProjects(query, tags);
 

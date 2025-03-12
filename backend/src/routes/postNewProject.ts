@@ -51,11 +51,11 @@ projectRouter.post(
         return;
       }
 
-      const existingUser = await User.findOne({ githubID: owner });
+      /*const existingUser = await User.findOne({ githubID: owner });
       if (!existingUser) {
         res.status(404).json({ error: "Owner not found." });
         return;
-      }
+      }*/
 
       const newProject = await projectService.createProject({
         title,
