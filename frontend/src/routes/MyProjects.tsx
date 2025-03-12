@@ -22,7 +22,8 @@ export default function MyProjects() {
         setUsername(user ? user.login : null);
 
         const response = await fetch(
-          `${import.meta.env.VITE_EXPRESS_URL}/dummy-db`
+          //`${import.meta.env.VITE_EXPRESS_URL}/dummy-db`
+          `${import.meta.env.VITE_EXPRESS_URL}/projects`
         );
         const data = await response.json();
         setProjects(data);

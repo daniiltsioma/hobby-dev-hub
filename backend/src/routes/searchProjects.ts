@@ -9,7 +9,7 @@ searchProjectRouter.get(
   "/projects/search",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const query = req.query.q as string;
+      const query = req.query.search as string;
       const tags = req.query.tags ? (req.query.tags as string).split(",") : [];
 
       if (!query) {
