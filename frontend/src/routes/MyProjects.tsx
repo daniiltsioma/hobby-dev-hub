@@ -255,12 +255,12 @@ export default function MyProjects() {
               ) : (
                 filterProjects("archived").map((project) => (
                   <div
-                    key={project.id}
+                    key={project._id}
                     className="border-t border-[#3d444d] p-4 flex"
                   >
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold hover:opacity-80 mb-1">
-                        <Link to={`/projects/${project.id}`}>
+                        <Link to={`/projects/${project._id}`}>
                           {project.title}
                         </Link>
                       </h3>

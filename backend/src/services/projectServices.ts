@@ -229,10 +229,12 @@ export default class projectServices {
 
   async addApplicant(project: any, userToApply: string) {
     try {
-      await connectToDatabase();
-
       if (!userToApply) {
         throw new Error("Username required");
+      }
+
+      if (!project || !project.applicants) {
+        throw new Error("Invalid project data");
       }
 
       if (

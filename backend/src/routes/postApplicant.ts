@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import projectServices from "../services/projectServices";
 import { isValidObjectId } from "mongoose";
 import Project from "../mongo/models/Projects";
+import connectToDatabase from "../mongo/dbConnection";
 
 const newApplicantRouter = Router();
 const projectService = new projectServices();
@@ -10,6 +11,7 @@ newApplicantRouter.post(
   "/projects/:projectId/applicants",
   async (req: Request, res: Response): Promise<void> => {
     try {
+      await connectToDatabase();
       const { projectId } = req.params;
       const { userToApply } = req.body;
 

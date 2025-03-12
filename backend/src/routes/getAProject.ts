@@ -33,7 +33,7 @@ getOneProjectRouter.get(
         .status(200)
         .json({ success: true, message: "Project found!", project: project });
     } catch (error) {
-      console.error("Error fetching all projects:", error);
+      console.error("Error fetching project:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   }

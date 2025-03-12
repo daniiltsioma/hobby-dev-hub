@@ -195,7 +195,7 @@ app.get("/projects/:id", (req, res) => {
   res.send(project);
 });
 
-app.post("/projects/:id", async (req, res) => {
+/*app.post("/projects/:id", async (req, res) => {
   const projectId = Number(req.params.id);
   const project = projects.find((p) => p.id === projectId);
 
@@ -260,7 +260,7 @@ app.get("/user/:id/projects", async (req, res) => {
   } catch (error) {
     console.error("Error fetching projects:", error);
   }
-});
+});*/
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
