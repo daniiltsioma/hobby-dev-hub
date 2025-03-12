@@ -7,94 +7,85 @@ import ProjectCard from "./ProjectCard";
 import "@testing-library/jest-dom";
 
 const mockProject = {
-    id: 1,
-    title: "Test Project",
-    description: "This is a test project description.",
-    technologies: [],
-    githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
-    task: "This is a test task description.",
-    owner: "testUser",
-    applicants: [],
-    collaborators: [],
-    isArchived: false,
+  _id: "1",
+  title: "Test Project",
+  description: "This is a test project description.",
+  technologies: [],
+  githubRepoURL: "https://github.com/daniiltsioma/pizzashop",
+  task: "This is a test task description.",
+  owner: "testUser",
+  applicants: [],
+  collaborators: [],
+  isArchived: false,
 };
 
 describe("ProjectCard", () => {
-    it("should render project title with link", () => {
-        render(
-            <MemoryRouter>
-                <ProjectCard project={mockProject} />
-            </MemoryRouter>
-        );
+  it("should render project title with link", () => {
+    render(
+      <MemoryRouter>
+        <ProjectCard project={mockProject} />
+      </MemoryRouter>
+    );
 
-        const titleLink = screen.getByRole("link", { name: mockProject.title });
+    const titleLink = screen.getByRole("link", { name: mockProject.title });
 
-        expect(titleLink).toBeInTheDocument();
-        expect(titleLink).toHaveAttribute(
-            "href",
-            `/projects/${mockProject.id}`
-        );
+    expect(titleLink).toBeInTheDocument();
+    expect(titleLink).toHaveAttribute("href", `/projects/${mockProject._id}`);
+  });
+
+  it("should render project description", () => {
+    render(
+      <MemoryRouter>
+        <ProjectCard project={mockProject} />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText(mockProject.description)).toBeInTheDocument();
+  });
+
+  it("should render GitHub link to project repository", () => {
+    render(
+      <MemoryRouter>
+        <ProjectCard project={mockProject} />
+      </MemoryRouter>
+    );
+
+    const githubLink = screen.getByRole("link", { name: "View on GitHub" });
+
+    expect(githubLink).toBeInTheDocument();
+    expect(githubLink).toHaveAttribute("href", mockProject.githubRepoURL);
+  });
+
+  it("should navigate to project page when title is clicked", () => {
+    render(
+      <MemoryRouter>
+        <Routes>
+          <Route path="/" element={<ProjectCard project={mockProject} />} />
+          <Route path="/projects/:id" element={<div>Project Details</div>} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    const titleLink = screen.getByRole("link", {
+      name: mockProject.title,
     });
 
-    it("should render project description", () => {
-        render(
-            <MemoryRouter>
-                <ProjectCard project={mockProject} />
-            </MemoryRouter>
-        );
+    expect(screen.getByText(mockProject.description)).toBeInTheDocument(); // before click
 
-        expect(screen.getByText(mockProject.description)).toBeInTheDocument();
-    });
+    fireEvent.click(titleLink);
 
-    it("should render GitHub link to project repository", () => {
-        render(
-            <MemoryRouter>
-                <ProjectCard project={mockProject} />
-            </MemoryRouter>
-        );
+    expect(screen.getByText("Project Details")).toBeInTheDocument(); // after click
+  });
 
-        const githubLink = screen.getByRole("link", { name: "View on GitHub" });
+  it("should render Apply button", () => {
+    render(
+      <MemoryRouter>
+        <ProjectCard project={mockProject} />
+      </MemoryRouter>
+    );
 
-        expect(githubLink).toBeInTheDocument();
-        expect(githubLink).toHaveAttribute("href", mockProject.githubRepoURL);
-    });
+    const applyButton = screen.getByRole("link", { name: "Apply" });
 
-    it("should navigate to project page when title is clicked", () => {
-        render(
-            <MemoryRouter>
-                <Routes>
-                    <Route
-                        path="/"
-                        element={<ProjectCard project={mockProject} />}
-                    />
-                    <Route
-                        path="/projects/:id"
-                        element={<div>Project Details</div>}
-                    />
-                </Routes>
-            </MemoryRouter>
-        );
-
-        const titleLink = screen.getByRole("link", {
-            name: mockProject.title,
-        });
-
-        expect(screen.getByText(mockProject.description)).toBeInTheDocument(); // before click
-
-        fireEvent.click(titleLink);
-
-        expect(screen.getByText("Project Details")).toBeInTheDocument(); // after click
-    });
-
-    it("should render Apply button", () => {
-        render(
-            <MemoryRouter>
-                <ProjectCard project={mockProject} />
-            </MemoryRouter>
-        );
-
-        const applyButton = screen.getByRole("link", { name: "Apply" });
-
-        expect(applyButton).toBeInTheDocument();
-    });
+    expect(applyButton).toBeInTheDocument();
+  });
 });

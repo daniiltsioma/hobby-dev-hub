@@ -348,8 +348,10 @@ export default class projectServices {
         filter.technologies = { $all: tags };
       }
 
-      const projects = await Project.find(filter);
-      return projects;
+      // const projects = await Project.find(filter);
+      const projects = await Project.find(filter).lean();
+
+      return projects.map((proj) => ({ ...proj, _id: proj._id.toString() }));
     } catch (error) {
       console.error("Error searching projects", error);
       throw error;

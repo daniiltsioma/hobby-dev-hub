@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Project } from "../../../../backend/src/mongo/projects";
+//import { Project } from "../../../../backend/src/mongo/projects";
+import { Project } from "./ProjectCard";
 import ProjectGrid from "./ProjectGrid";
 
 export default function ProjectFilter() {

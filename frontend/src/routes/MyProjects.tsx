@@ -26,7 +26,7 @@ export default function MyProjects() {
           `${import.meta.env.VITE_EXPRESS_URL}/projects`
         );
         const data = await response.json();
-        setProjects(data);
+        setProjects(data.projects);
       } catch (err) {
         console.error(err);
         setError("Error fetching projects.");
@@ -125,12 +125,12 @@ export default function MyProjects() {
               ) : (
                 filterProjects("owned").map((project) => (
                   <div
-                    key={project.id}
+                    key={project._id}
                     className="border-b border-[#3d444d] p-4 flex"
                   >
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold hover:opacity-80 mb-1">
-                        <Link to={`/projects/${project.id}`}>
+                        <Link to={`/projects/${project._id}`}>
                           {project.title}
                         </Link>
                       </h3>
@@ -167,12 +167,12 @@ export default function MyProjects() {
               ) : (
                 filterProjects("applied").map((project) => (
                   <div
-                    key={project.id}
+                    key={project._id}
                     className="border-b border-[#3d444d] p-4 flex"
                   >
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold hover:opacity-80 mb-1">
-                        <Link to={`/projects/${project.id}`}>
+                        <Link to={`/projects/${project._id}`}>
                           {project.title}
                         </Link>
                       </h3>
@@ -209,12 +209,12 @@ export default function MyProjects() {
               ) : (
                 filterProjects("collaborating").map((project) => (
                   <div
-                    key={project.id}
+                    key={project._id}
                     className="border-b border-[#3d444d] p-4 flex"
                   >
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold hover:opacity-80 mb-1">
-                        <Link to={`/projects/${project.id}`}>
+                        <Link to={`/projects/${project._id}`}>
                           {project.title}
                         </Link>
                       </h3>
