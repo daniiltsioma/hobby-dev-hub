@@ -188,12 +188,12 @@ app.use(deleteProjectRouter);
 
 app.use(githubAPIRouter);
 
-app.get("/projects/:id", (req, res) => {
+/*app.get("/projects/:id", (req, res) => {
   const id = Number(req.params.id);
   const project = projects.find((proj) => proj.id === id);
 
   res.send(project);
-});
+});*/
 
 /*app.post("/projects/:id", async (req, res) => {
   const projectId = Number(req.params.id);

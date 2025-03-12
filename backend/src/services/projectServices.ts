@@ -127,30 +127,31 @@ export default class projectServices {
   }
 
   // get a single project
-  async getOneProject(title: string, owner: string) {
+  async getOneProject(id: string) {
     try {
       await connectToDatabase();
 
-      if (!title || !owner) {
+      if (!id) {
         throw new Error("Missing project name in the search");
       }
 
-      const project = await Project.findOne({
+      /*const project = await Project.findOne({
         title: { $regex: new RegExp(`^${title}$`, "i") },
         owner: { $regex: new RegExp(`^${owner}$`, "i") },
-      })
+      })*/
+      const project = await Project.findById({ _id: id })
         .populate("technologies")
         .populate("applicants")
         .populate("collaborators")
         .populate("tasks");
 
       if (!project) {
-        throw new Error(`No project matches the name '${title}'`);
+        throw new Error(`No project matches the id '${id}'`);
       }
 
       return project;
     } catch (error) {
-      console.error("Error fetching project '" + title + "'", error);
+      console.error("Error fetching project '" + id + "'", error);
       throw error;
     }
   }

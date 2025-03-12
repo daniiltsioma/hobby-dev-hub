@@ -5,27 +5,25 @@ const getOneProjectRouter = Router();
 const projectService = new projectServices();
 
 getOneProjectRouter.get(
-  "/projects/:title/:owner",
+  "/projects/:id/getOne",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const { title, owner } = req.params;
+      const { id } = req.params;
 
-      if (!title) {
-        res.status(400).json({ error: "Project title is required" });
+      if (!id) {
+        res.status(400).json({ error: "Project ID is required" });
         return;
       }
 
-      if (!owner) {
+      /*if (!owner) {
         res.status(400).json({ error: "Owner is required" });
         return;
-      }
+      }*/
 
-      const project = await projectService.getOneProject(title, owner);
+      const project = await projectService.getOneProject(id);
 
       if (!project) {
-        res
-          .status(404)
-          .json({ error: `No project named '${title}' found for '${owner}'` });
+        res.status(404).json({ error: `No project with ID '${id}' found` });
         return;
       }
 

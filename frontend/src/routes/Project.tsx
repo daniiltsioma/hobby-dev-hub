@@ -13,7 +13,7 @@ export default function Project() {
     const projectId = formData.get("projectId");
 
     const response = await fetch(
-      `${import.meta.env.VITE_EXPRESS_URL}/projects/${projectId}`,
+      `${import.meta.env.VITE_EXPRESS_URL}/projects/${projectId}/getOne`,
       {
         method: "POST",
       }
@@ -30,7 +30,7 @@ export default function Project() {
     }
 
     const data = await response.json();
-    setProject(data);
+    setProject(data.project);
   }
 
   useEffect(() => {
@@ -40,10 +40,10 @@ export default function Project() {
         setUsername(user ? user.login : null);
 
         const response = await fetch(
-          `${import.meta.env.VITE_EXPRESS_URL}/projects/${id}`
+          `${import.meta.env.VITE_EXPRESS_URL}/projects/${id}/getOne`
         );
         const data = await response.json();
-        setProject(data);
+        setProject(data.project);
       } catch (err) {
         console.error(err);
         setError("Error fetching project details.");
