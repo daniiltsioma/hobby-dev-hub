@@ -23,6 +23,7 @@ import archiveProjectRouter from "./routes/archiveProject";
 import unarchiveProjectRouter from "./routes/unarchiveProject";
 import searchProjectRouter from "./routes/searchProjects";
 import updateProjectRouter from "./routes/updateProject";
+import deleteProjectRouter from "./routes/deleteProject";
 
 const port = process.env.PORT || 8000;
 const frontendUrl = process.env.FRONTEND_HOST_URL || "/";
@@ -177,6 +178,9 @@ app.use(searchProjectRouter);
 
 // Route to update a project
 app.use(updateProjectRouter);
+
+// Route to delete a project
+app.use(deleteProjectRouter);
 
 app.use(githubAPIRouter);
 
