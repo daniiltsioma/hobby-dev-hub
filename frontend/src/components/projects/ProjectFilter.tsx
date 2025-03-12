@@ -5,7 +5,8 @@ import ProjectGrid from "./ProjectGrid";
 export default function ProjectFilter() {
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [projects, setProjects] = useState({} as Project[]);
+  //const [projects, setProjects] = useState({} as Project[]);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   const availableTags = [
     "React",
@@ -31,7 +32,8 @@ export default function ProjectFilter() {
         }/projects/search?${queryParams.toString()}`
       );
       const data = await response.json();
-      setProjects(data);
+      //setProjects(data);
+      setProjects(data.projects || []);
     };
 
     fetchProjects();

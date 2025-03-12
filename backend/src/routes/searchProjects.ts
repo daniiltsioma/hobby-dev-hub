@@ -13,7 +13,7 @@ searchProjectRouter.get(
       const tags = req.query.tags ? (req.query.tags as string).split(",") : [];
 
       try {
-        const projects = await projectService.searchProjects(query, tags);
+        const projects = await projectService.searchProjects(query || "", tags);
 
         res.status(200).json({ success: true, projects });
       } catch (error) {
