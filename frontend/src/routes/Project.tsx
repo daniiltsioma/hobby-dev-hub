@@ -12,10 +12,19 @@ export default function Project() {
   async function applyToProject(formData: FormData) {
     const projectId = formData.get("projectId");
 
+    if (!username) {
+      console.error("User is not logged in");
+      return;
+    }
+
     const response = await fetch(
-      `${import.meta.env.VITE_EXPRESS_URL}/projects/${projectId}/getOne`,
+      `${import.meta.env.VITE_EXPRESS_URL}/projects/${projectId}/applicants`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userToApply: username }),
       }
     );
 

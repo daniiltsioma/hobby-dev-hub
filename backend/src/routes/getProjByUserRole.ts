@@ -6,7 +6,7 @@ const getProjByUserRoleRouter = Router();
 const projectService = new projectServices();
 
 getProjByUserRoleRouter.get(
-  "/projects/:username/:role/",
+  "/projects/roles/:username/:role/",
   async (req: Request, res: Response): Promise<void> => {
     try {
       await connectToDatabase();
