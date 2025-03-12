@@ -17,8 +17,6 @@ export default class projectServices {
     isArchived?: boolean;
   }) {
     try {
-      await connectToDatabase();
-
       if (
         !projectData.title ||
         !projectData.githubRepoURL ||
@@ -52,8 +50,6 @@ export default class projectServices {
   // return all projects for a specific owner
   async returnAllProjectsForAnOwner(username: string) {
     try {
-      await connectToDatabase();
-
       if (!username) {
         throw new Error("No username provided, cannot fetch the projects");
       }
@@ -79,8 +75,6 @@ export default class projectServices {
     role: "owned" | "applied" | "collaborating" | "archived"
   ) {
     try {
-      await connectToDatabase();
-
       let query = {};
       switch (role) {
         case "owned":
@@ -124,7 +118,6 @@ export default class projectServices {
   // return all projects
   async returnAllProjects() {
     try {
-      await connectToDatabase();
       const projects = await Project.find({});
       return projects;
     } catch (error) {
@@ -236,6 +229,8 @@ export default class projectServices {
 
   async addApplicant(project: any, userToApply: string) {
     try {
+      await connectToDatabase();
+
       if (!userToApply) {
         throw new Error("Username required");
       }
@@ -261,6 +256,8 @@ export default class projectServices {
 
   async removeApplicant(projectId: string, username: string) {
     try {
+      await connectToDatabase();
+
       if (!isValidObjectId(projectId)) {
         throw new Error("Invalid project ID.");
       }
@@ -289,6 +286,8 @@ export default class projectServices {
 
   async archiveProject(projectId: string) {
     try {
+      await connectToDatabase();
+
       if (!projectId) {
         throw new Error("No project provided to archive");
       }
@@ -310,6 +309,8 @@ export default class projectServices {
 
   async unarchiveProject(projectId: string) {
     try {
+      await connectToDatabase();
+
       if (!isValidObjectId(projectId)) {
         throw new Error("Invalid project ID.");
       }
@@ -331,6 +332,8 @@ export default class projectServices {
 
   async searchProjects(query: string, tags?: string[]) {
     try {
+      await connectToDatabase();
+
       let filter: any = {};
 
       if (query) {
@@ -355,6 +358,8 @@ export default class projectServices {
 
   async updateProject(projectId: string, updateData: Partial<typeof Project>) {
     try {
+      await connectToDatabase();
+
       if (!isValidObjectId(projectId)) {
         throw new Error("Invalid project ID.");
       }

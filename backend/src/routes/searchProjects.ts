@@ -9,8 +9,6 @@ searchProjectRouter.get(
   "/projects/search",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      await connectToDatabase();
-
       const query = req.query.q as string;
       const tags = req.query.tags ? (req.query.tags as string).split(",") : [];
 

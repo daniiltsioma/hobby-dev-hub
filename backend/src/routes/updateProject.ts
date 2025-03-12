@@ -9,8 +9,6 @@ updateProjectRouter.put(
   "/projects/:projectId/update",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      await connectToDatabase();
-
       const { projectId } = req.params;
       const updateData = req.body;
 

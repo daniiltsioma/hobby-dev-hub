@@ -8,14 +8,12 @@ const newCollaboratorRouter = Router();
 const projectService = new projectServices();
 
 newCollaboratorRouter.post(
-  "/newCollaborator",
+  "/projects/:projectId/:userToAdd/newCollaborator",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      await connectToDatabase();
+      const { projectId, userToAddAsCollaborator: userToAdd } = req.body;
 
-      const { projectId, userToAddAsCollaborator } = req.body;
-
-      if (!userToAddAsCollaborator) {
+      if (!userToAdd) {
         res
           .status(400)
           .json({ error: "The new collaborator's name is required" });
@@ -37,12 +35,12 @@ newCollaboratorRouter.post(
       try {
         const updatedProject = await projectService.addCollaborator(
           project,
-          userToAddAsCollaborator
+          userToAdd
         );
 
         res.status(200).json({
           success: true,
-          message: `Collaborator '${userToAddAsCollaborator}' added successfully to project`,
+          message: `Collaborator '${userToAdd}' added successfully to project`,
           project: updatedProject,
         });
       } catch (error) {

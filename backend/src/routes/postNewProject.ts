@@ -22,7 +22,7 @@ interface ICreateProjectRequest {
 const projectService = new projectServices();
 
 projectRouter.post(
-  "/newProject",
+  "/projects/newProject",
   async (
     req: Request<{}, {}, ICreateProjectRequest>,
     res: Response

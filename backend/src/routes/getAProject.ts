@@ -5,11 +5,10 @@ const getOneProjectRouter = Router();
 const projectService = new projectServices();
 
 getOneProjectRouter.get(
-  "/getAllProjects",
+  "/projects/:title/:owner",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const title = req.query.title?.toString().trim();
-      const owner = req.query.owner?.toString().trim();
+      const { title, owner } = req.params;
 
       if (!title) {
         res.status(400).json({ error: "Project title is required" });

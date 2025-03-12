@@ -9,8 +9,6 @@ removeApplicantRouter.delete(
   "/projects/:projectId/applicants/:userToRemove",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      await connectToDatabase();
-
       const { projectId, userToRemove } = req.params;
 
       if (!projectId || !userToRemove) {

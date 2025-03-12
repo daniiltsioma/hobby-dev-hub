@@ -6,10 +6,11 @@ const ownerProjectRouter = Router();
 const projectService = new projectServices();
 
 ownerProjectRouter.get(
-  "/getProjectsForOwner",
+  "/project/:githubId/forOwner",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const githubId = req.query.githubId?.toString().trim();
+      await connectToDatabase();
+      const { githubId } = req.params;
 
       if (!githubId) {
         res

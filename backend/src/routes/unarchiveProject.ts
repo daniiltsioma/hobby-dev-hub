@@ -10,8 +10,6 @@ unarchiveProjectRouter.post(
   "/projects/:projectId/unarchive",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      await connectToDatabase();
-
       const { projectId } = req.params;
 
       if (!projectId || !isValidObjectId(projectId)) {

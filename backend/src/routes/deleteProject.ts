@@ -6,11 +6,9 @@ const deleteProjectRouter = Router();
 const projectService = new projectServices();
 
 deleteProjectRouter.delete(
-  "/projects/:projectId",
+  "/projects/:projectId/delete",
   async (req: Request, res: Response): Promise<void> => {
     try {
-      await connectToDatabase();
-
       const { projectId } = req.params;
 
       if (!projectId) {
