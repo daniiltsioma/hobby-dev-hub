@@ -1,6 +1,6 @@
 import request from "supertest";
 import express from "express";
-import userRouter from "../src/routes/users";
+import userRouter from "../src/routes/postNewUser";
 import User from "../src/mongo/models/Users";
 
 jest.mock("../src/mongo/dbConnection", () => ({

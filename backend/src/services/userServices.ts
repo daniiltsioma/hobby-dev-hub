@@ -1,7 +1,6 @@
 import User from "../mongo/models/Users";
 import connectToDatabase from "../mongo/dbConnection";
 
-// TODO: IGNORE CASE OF NAME
 export default class UserService {
   // Create a new user and save them in the db
   async createUser(userData: {
@@ -18,9 +17,9 @@ export default class UserService {
 
       const existingUser = await User.findOne({
         $or: [
-          { userId: userData.userId },
-          { email: userData.email },
-          { githubId: userData.githubId },
+          { userId: { $regex: new RegExp(`^${userData.userId}$`, "i") } },
+          { email: { $regex: new RegExp(`^${userData.email}$`, "i") } },
+          { githubId: { $regex: new RegExp(`^${userData.githubId}$`, "i") } },
         ],
       });
 
@@ -41,7 +40,9 @@ export default class UserService {
     try {
       await connectToDatabase();
 
-      const user = await User.findOne({ githubId })
+      const user = await User.findOne({
+        githubId: { $regex: new RegExp(`^${githubId}$`, "i") },
+      })
         .populate("activeProjects")
         .populate("archivedProjects");
 
@@ -76,7 +77,7 @@ export default class UserService {
       }
 
       const updatedUser = await User.findOneAndUpdate(
-        { githubId },
+        { githubId: { $regex: new RegExp(`^${githubId}$`, "i") } },
         updateData,
         { new: true }
       );
@@ -100,7 +101,9 @@ export default class UserService {
         throw new Error("Required githubId parameter not provided");
       }
 
-      const deletedUser = await User.findOneAndDelete({ githubId });
+      const deletedUser = await User.findOneAndDelete({
+        githubId: { $regex: new RegExp(`^${githubId}$`, "i") },
+      });
 
       if (!deletedUser) {
         throw new Error(`User with githubId '${githubId}' not found`);

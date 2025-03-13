@@ -1,5 +1,4 @@
-import Project from "../mongo/models/Projects";
-import User from "../mongo/models/Users";
+import Project, { IProject } from "../mongo/models/Projects";
 import connectToDatabase from "../mongo/dbConnection";
 import { isValidObjectId } from "mongoose";
 
@@ -18,8 +17,6 @@ export default class projectServices {
     isArchived?: boolean;
   }) {
     try {
-      await connectToDatabase();
-
       if (
         !projectData.title ||
         !projectData.githubRepoURL ||
@@ -28,7 +25,7 @@ export default class projectServices {
         throw new Error("Some required fields are missing");
       }
 
-      const existingProject = await Project.findOne({
+      /*const existingProject = await Project.findOne({
         title: { $regex: new RegExp(`^${projectData.title}$`, "i") },
         owner: projectData.owner,
       });
@@ -37,7 +34,7 @@ export default class projectServices {
         throw new Error(
           `A project for user '${projectData.owner}' with the title '${projectData.title}' already exists.`
         );
-      }
+      }*/
 
       const newProject = new Project(projectData);
       return await newProject.save();
@@ -53,8 +50,6 @@ export default class projectServices {
   // return all projects for a specific owner
   async returnAllProjectsForAnOwner(username: string) {
     try {
-      await connectToDatabase();
-
       if (!username) {
         throw new Error("No username provided, cannot fetch the projects");
       }
@@ -80,8 +75,6 @@ export default class projectServices {
     role: "owned" | "applied" | "collaborating" | "archived"
   ) {
     try {
-      await connectToDatabase();
-
       let query = {};
       switch (role) {
         case "owned":
@@ -125,7 +118,6 @@ export default class projectServices {
   // return all projects
   async returnAllProjects() {
     try {
-      await connectToDatabase();
       const projects = await Project.find({});
       return projects;
     } catch (error) {
@@ -135,54 +127,51 @@ export default class projectServices {
   }
 
   // get a single project
-  async getOneProject(title: string, owner: string) {
+  async getOneProject(id: string) {
     try {
       await connectToDatabase();
 
-      if (!title || !owner) {
+      if (!id) {
         throw new Error("Missing project name in the search");
       }
 
-      const project = await Project.findOne({
+      /*const project = await Project.findOne({
         title: { $regex: new RegExp(`^${title}$`, "i") },
         owner: { $regex: new RegExp(`^${owner}$`, "i") },
-      })
+      })*/
+      const project = await Project.findById({ _id: id })
         .populate("technologies")
         .populate("applicants")
         .populate("collaborators")
         .populate("tasks");
 
       if (!project) {
-        throw new Error(`No project matches the name '${title}'`);
+        throw new Error(`No project matches the id '${id}'`);
       }
 
       return project;
     } catch (error) {
-      console.error("Error fetching project '" + title + "'", error);
+      console.error("Error fetching project '" + id + "'", error);
       throw error;
     }
   }
 
-  async addCollaborator(projectId: string, userToAddAsCollaborator: string) {
+  async addCollaborator(project: any, userToAddAsCollaborator: string) {
     try {
       await connectToDatabase();
 
-      if (!isValidObjectId(projectId)) {
-        throw new Error("Invalid project ID.");
+      if (!userToAddAsCollaborator) {
+        throw new Error("Collaborator name is required");
       }
 
-      if (!projectId || !userToAddAsCollaborator) {
-        throw new Error("One or more required arguments is empty");
-      }
-      const project = await Project.findById(projectId);
-      if (!project) {
-        throw new Error("Project not found.");
+      if (project.collaborators.includes(userToAddAsCollaborator)) {
+        throw new Error(
+          `User '${userToAddAsCollaborator}' is already a collaborator.`
+        );
       }
 
-      if (!project.collaborators.includes(userToAddAsCollaborator)) {
-        project.collaborators.push(userToAddAsCollaborator);
-        await project.save();
-      }
+      project.collaborators.push(userToAddAsCollaborator);
+      await project.save();
 
       return project;
     } catch (error) {
@@ -212,6 +201,20 @@ export default class projectServices {
         throw new Error("Project not found");
       }
 
+      if (project.owner.toLowerCase() === userToRemove.toLowerCase()) {
+        throw new Error("Cannot remove the project owner.");
+      }
+
+      if (
+        !project.collaborators.some(
+          (collab) => collab.toLowerCase() === userToRemove.toLowerCase()
+        )
+      ) {
+        throw new Error(
+          `User '${userToRemove}' is not a collaborator on this project.`
+        );
+      }
+
       project.collaborators = project.collaborators.filter(
         (collab) => collab.toLowerCase() !== userToRemove.toLowerCase()
       );
@@ -225,23 +228,27 @@ export default class projectServices {
     }
   }
 
-  async addApplicant(projectId: string, username: string) {
+  async addApplicant(project: any, userToApply: string) {
     try {
-      await connectToDatabase();
-
-      if (!isValidObjectId(projectId)) {
-        throw new Error("Invalid project ID.");
+      if (!userToApply) {
+        throw new Error("Username required");
       }
 
-      const project = await Project.findById(projectId);
-      if (!project) {
-        throw new Error("Project not found.");
+      if (!project || !project.applicants) {
+        throw new Error("Invalid project data");
       }
 
-      if (!project.applicants.includes(username)) {
-        project.applicants.push(username);
-        await project.save();
+      if (
+        project.applicants.some(
+          (applicant: string) =>
+            applicant.toLowerCase() === userToApply.toLowerCase()
+        )
+      ) {
+        throw new Error(`User '${userToApply}' has already applied`);
       }
+
+      project.applicants.push(userToApply);
+      await project.save();
 
       return project;
     } catch (error) {
@@ -263,11 +270,16 @@ export default class projectServices {
         throw new Error("Project not found.");
       }
 
-      project.applicants = project.applicants.filter(
-        (applicant) => applicant.toLowerCase() !== username.toLowerCase()
+      const applicantIndex = project.applicants.findIndex(
+        (applicant) => applicant.toLowerCase() === username.toLowerCase()
       );
-      await project.save();
 
+      if (applicantIndex === -1) {
+        throw new Error(`User '${username}' is not an applicant.`);
+      }
+
+      project.applicants.splice(applicantIndex, 1);
+      await project.save();
       return project;
     } catch (error) {
       console.error("Error removing applicant", error);
@@ -278,10 +290,6 @@ export default class projectServices {
   async archiveProject(projectId: string) {
     try {
       await connectToDatabase();
-
-      if (!isValidObjectId(projectId)) {
-        throw new Error("Invalid project ID.");
-      }
 
       if (!projectId) {
         throw new Error("No project provided to archive");
@@ -325,19 +333,28 @@ export default class projectServices {
     }
   }
 
-  async searchProjects(query: string) {
+  async searchProjects(query: string, tags?: string[]) {
     try {
       await connectToDatabase();
 
-      const projects = await Project.find({
-        $or: [
+      let filter: any = {};
+
+      if (query) {
+        filter.$or = [
           { title: { $regex: query, $options: "i" } },
           { description: { $regex: query, $options: "i" } },
           { technologies: { $in: [new RegExp(query, "i")] } },
-        ],
-      });
+        ];
+      }
 
-      return projects;
+      if (tags && tags.length) {
+        filter.technologies = { $all: tags };
+      }
+
+      // const projects = await Project.find(filter);
+      const projects = await Project.find(filter).lean();
+
+      return projects.map((proj) => ({ ...proj, _id: proj._id.toString() }));
     } catch (error) {
       console.error("Error searching projects", error);
       throw error;
@@ -365,15 +382,17 @@ export default class projectServices {
         "isArchived",
       ];
 
-      for (const key in updateData) {
-        if (!validFields.includes(key)) {
-          throw new Error(`Invalid field: ${key}`);
-        }
+      const filteredUpdateData = Object.fromEntries(
+        Object.entries(updateData).filter(([key]) => validFields.includes(key))
+      );
+
+      if (Object.keys(filteredUpdateData).length === 0) {
+        throw new Error("No valid fields provided for update.");
       }
 
       const updatedProject = await Project.findOneAndUpdate(
         { _id: projectId },
-        updateData,
+        { $set: filteredUpdateData },
         { new: true }
       );
 
@@ -388,9 +407,6 @@ export default class projectServices {
     }
   }
 
-  // Since no user can have multiple projects with the same name,
-  // and only a user can delete their own projects, we only need
-  // to search by name
   async deleteProject(projectId: string) {
     try {
       await connectToDatabase();
@@ -411,6 +427,7 @@ export default class projectServices {
       }
 
       return {
+        success: true,
         message: `Project with title '${deletedProject.title}' has been successfully deleted`,
       };
     } catch (error) {

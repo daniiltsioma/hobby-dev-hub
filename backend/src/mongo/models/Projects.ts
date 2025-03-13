@@ -1,4 +1,4 @@
-import mongoose, { model, Schema, InferSchemaType } from "mongoose";
+import mongoose, { model, Schema, InferSchemaType, Types } from "mongoose";
 
 const ProjectSchema = new Schema({
   title: { type: String, required: true },
@@ -13,6 +13,8 @@ const ProjectSchema = new Schema({
   endDate: { type: Date },
   isArchived: { type: Boolean, default: false },
 });
+
+ProjectSchema.index({ title: 1, owner: 1 }, { unique: true });
 
 type IProject = InferSchemaType<typeof ProjectSchema>;
 
