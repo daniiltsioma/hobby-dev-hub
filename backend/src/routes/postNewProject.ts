@@ -36,7 +36,6 @@ projectRouter.post(
                 title,
                 description,
                 technologies,
-                owner,
                 applicants,
                 collaborators,
                 startDate,
@@ -72,8 +71,10 @@ projectRouter.post(
                 return;
             }
 
+            let githubResponse;
+
             try {
-                await githubAPI.createRepo({
+                githubResponse = await githubAPI.createRepo({
                     name: title,
                     makePrivate: false,
                     description,
@@ -85,14 +86,14 @@ projectRouter.post(
                 return;
             }
 
-            const githubRepoURL = title.trim().replace(" ", "-");
+            const owner = user.login;
 
             const newProject = await projectService.createProject({
                 title,
-                githubRepoURL,
+                githubRepoURL: githubResponse.html_url,
                 description,
                 technologies,
-                owner: user.login,
+                owner,
                 applicants,
                 collaborators,
                 startDate,
