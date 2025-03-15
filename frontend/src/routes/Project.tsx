@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getUser } from "../lib/user";
 import { useEffect, useState } from "react";
 
@@ -8,6 +8,8 @@ export default function Project() {
     const [project, setProject] = useState({} as any);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [deleteIntended, setDeleteIntended] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     async function applyToProject(formData: FormData) {
         const projectId = formData.get("projectId");
@@ -97,9 +99,31 @@ export default function Project() {
         }
     };
 
-    const deleteProject = () => {
-        // Placeholder logic for deleting the project
-        console.log("Deleting project...");
+    const unarchiveProject = async () => {
+        const response = await fetch(
+            `${import.meta.env.VITE_EXPRESS_URL}/projects/${id}/unarchive`,
+            {
+                method: "POST",
+            }
+        );
+        if (response.status === 200) {
+            setProject((project: any) => ({
+                ...project,
+                isArchived: false,
+            }));
+        }
+    };
+
+    const deleteProject = async () => {
+        const response = await fetch(
+            `${import.meta.env.VITE_EXPRESS_URL}/projects/${id}/delete`,
+            {
+                method: "DELETE",
+            }
+        );
+        if (response.status === 200) {
+            navigate("/");
+        }
     };
 
     // Function to mask the username except for the first character
@@ -223,13 +247,50 @@ export default function Project() {
                                 of this project!
                             </p>
                             {project.isArchived ? (
-                                // Show 'Delete Project' button when archived
-                                <button
-                                    onClick={deleteProject}
-                                    className="cursor-pointer bg-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
-                                >
-                                    Delete Project
-                                </button>
+                                <>
+                                    {deleteIntended ? (
+                                        <div className="flex items-center justify-end">
+                                            <span className="inline-block text-[#c9302c] font-semibold">
+                                                Are you sure you want to delete{" "}
+                                                {project.title}? This cannot be
+                                                reversed.
+                                            </span>
+                                            <button
+                                                onClick={() => {
+                                                    setDeleteIntended(false);
+                                                }}
+                                                className="cursor-pointer border-1 border-gray-800 bg-gray-800 hover:border-gray-900 hover:bg-gray-900 text-white text-sm font-semibold px-4 py-2 rounded-md transition-all duration-200 ease-in-out ml-3"
+                                            >
+                                                No, cancel
+                                            </button>
+                                            <button
+                                                onClick={deleteProject}
+                                                className="cursor-pointer border-1 border-[#c9302c] text-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md transition-all duration-200 ease-in-out ml-3"
+                                            >
+                                                Yes, delete forever
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            {/* Show 'Delete Project' button when archived */}
+                                            <button
+                                                onClick={() => {
+                                                    setDeleteIntended(true);
+                                                }}
+                                                className="cursor-pointer border-1 border-[#c9302c] hover:border-red-500 text-[#c9302c] hover:text-red-500 text-sm font-semibold px-4 py-2 rounded-md transition-all duration-200 ease-in-out ml-auto"
+                                            >
+                                                Delete Project
+                                            </button>
+                                            {/* // Show 'Unarchive project' button when archived */}
+                                            <button
+                                                onClick={unarchiveProject}
+                                                className="cursor-pointer bg-green-600 hover:bg-green-700 border-1 border-green-600 hover:border-green-700 text-sm font-semibold px-4 py-2 rounded-md color-white transition-all duration-200 ease-in-out ml-3"
+                                            >
+                                                Unarchive Project
+                                            </button>
+                                        </>
+                                    )}
+                                </>
                             ) : (
                                 // Otherwise, show 'Archive Project' button
                                 <button
