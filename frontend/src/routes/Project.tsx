@@ -295,7 +295,7 @@ export default function Project() {
                                 // Otherwise, show 'Archive Project' button
                                 <button
                                     onClick={archiveProject}
-                                    className="cursor-pointer bg-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
+                                    className="cursor-pointer border-1 border-[#c9302c] bg-[#c9302c] text-sm font-semibold px-4 py-2 rounded-md hover:bg-[#9f2a2f] transition-all duration-200 ease-in-out"
                                 >
                                     Archive Project
                                 </button>
