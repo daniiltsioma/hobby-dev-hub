@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { getUser } from "../lib/user";
 import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
 export default function Project() {
     const { id } = useParams();
@@ -9,6 +10,7 @@ export default function Project() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [deleteIntended, setDeleteIntended] = useState<boolean>(false);
+    const [cookies] = useCookies(["accessToken"]);
     const navigate = useNavigate();
 
     async function applyToProject(formData: FormData) {
@@ -68,19 +70,59 @@ export default function Project() {
         fetchProject();
     }, []);
 
-    const approveApplicant = (applicant: string) => {
+    const approveApplicant = async (applicant: string) => {
         // Placeholder logic for approving an applicant
-        console.log(`Approving applicant: ${applicant}`);
+        const response = await fetch(
+            `${
+                import.meta.env.VITE_EXPRESS_URL
+            }/projects/${id}/${applicant}/newCollaborator`,
+            {
+                method: "POST",
+                headers: {
+                    authorization: cookies["accessToken"],
+                },
+            }
+        );
+        if (response.status === 200) {
+            const data = await response.json();
+            setProject(data.project);
+        }
     };
 
-    const withdrawApplication = () => {
+    const withdrawApplication = async () => {
         // Placeholder logic for withdrawing application
         console.log("Withdrawing application...");
+        const response = await fetch(
+            `${
+                import.meta.env.VITE_EXPRESS_URL
+            }/projects/${id}/applicants/${username}`,
+            {
+                method: "DELETE",
+            }
+        );
+        if (response.status === 200) {
+            const data = await response.json();
+            setProject(data.project);
+        }
     };
 
-    const leaveProject = () => {
+    const leaveProject = async () => {
         // Placeholder logic for leaving the project
-        console.log("Leaving project...");
+        const response = await fetch(
+            `${
+                import.meta.env.VITE_EXPRESS_URL
+            }/removeCollaborator/${id}/${username}`,
+            {
+                method: "DELETE",
+                headers: {
+                    authorization: cookies["accessToken"],
+                },
+            }
+        );
+        if (response.status === 200) {
+            const data = await response.json();
+            setProject(data.project);
+        }
     };
 
     const archiveProject = async () => {
@@ -359,6 +401,33 @@ export default function Project() {
                 )}
             </div>
 
+            {/* Collaborators section */}
+            {project.owner === username && (
+                <div className="border border-[#3d444d] rounded-lg p-6 mb-6">
+                    <h2 className="text-2xl font-semibold mb-4">
+                        Collaborators
+                    </h2>
+                    {project.collaborators &&
+                    project.collaborators.length > 0 ? (
+                        <ul>
+                            {project.collaborators.map(
+                                (collaborator: any, idx: any) => (
+                                    <li
+                                        key={idx}
+                                        className="flex justify-between items-center text-lg text-[#9198a1] mb-1 hover:bg-[#2f3742] p-1.5 rounded-lg transition-all duration-200"
+                                    >
+                                        <span>{collaborator}</span>
+                                    </li>
+                                )
+                            )}
+                        </ul>
+                    ) : (
+                        <p className="font-medium text-[#9198a1]">
+                            No collaborators yet.
+                        </p>
+                    )}
+                </div>
+            )}
             {/* Applicants Section */}
             <div className="border border-[#3d444d] rounded-lg p-6">
                 <h2 className="text-2xl font-semibold mb-4">Applicants</h2>
