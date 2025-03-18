@@ -39,102 +39,104 @@ const github = new GithubAPI();
 const auth = new Auth();
 
 app.get("/", (req, res) => {
-  res.send("Server is running!");
+    res.send("Server is running!");
 });
 
 app.get("/api/login/", async (req, res) => {
-  const githubCode = req.query.code as string;
+    const githubCode = req.query.code as string;
 
-  if (!githubCode) {
-    res.status(401).send("No Github App code provided.");
-  }
+    if (!githubCode) {
+        res.status(401).send("No Github App code provided.");
+    }
 
-  const tokenData: any = await auth.generateGithubTokensAndData(githubCode);
+    const tokenData: any = await auth.generateGithubTokensAndData(githubCode);
 
-  github.authenticate(tokenData.access_token);
+    github.authenticate(tokenData.access_token);
 
-  res.cookie("accessToken", tokenData.access_token, {
-    maxAge: Number(tokenData.expires_in) * 1000,
-    httpOnly: true,
-  });
+    res.cookie("accessToken", tokenData.access_token, {
+        maxAge: Number(tokenData.expires_in) * 1000,
+        // httpOnly: true,
+    });
 
-  res.cookie("refreshToken", tokenData.refresh_token, {
-    maxAge: Number(tokenData.refresh_token_expires_in) * 1000,
-    httpOnly: true,
-  });
+    res.cookie("refreshToken", tokenData.refresh_token, {
+        maxAge: Number(tokenData.refresh_token_expires_in) * 1000,
+        // httpOnly: true,
+    });
 
-  res.redirect(frontendUrl);
+    res.redirect(frontendUrl);
 });
 
 app.get("/user", async (req, res) => {
-  try {
-    const user = await github.getUser();
-    res.send(user);
-  } catch (err) {
-    res.send("Not authorized");
-  }
+    try {
+        const user = await github.getUser();
+        res.send(user);
+    } catch (err) {
+        res.send("Not authorized");
+    }
 });
 
 app.get("/logout", (req, res) => {
-  res.clearCookie("accessToken", { path: "/", httpOnly: true });
-  res.clearCookie("refreshToken", { path: "/" });
-  github.logout();
-  res.redirect(frontendUrl);
+    res.clearCookie("accessToken", { path: "/", httpOnly: true });
+    res.clearCookie("refreshToken", { path: "/" });
+    github.logout();
+    res.redirect(frontendUrl);
 });
 
 app.get("/test-db", async (req, res) => {
-  try {
-    await connectToDatabase();
-    res.status(200).send("Connected to MongoDB!");
-  } catch (err) {
-    res.status(400).send("Error connecting to MongoDB");
-  }
+    try {
+        await connectToDatabase();
+        res.status(200).send("Connected to MongoDB!");
+    } catch (err) {
+        res.status(400).send("Error connecting to MongoDB");
+    }
 });
 
 app.get("/dummy-db", (req, res) => {
-  res.json(projects);
+    res.json(projects);
 });
 
 app.get("/dummy-db-search", (req, res) => {
-  let filteredProjects = projects;
+    let filteredProjects = projects;
 
-  const search =
-    typeof req.query.search === "string" ? req.query.search.toLowerCase() : "";
-  const tags =
-    typeof req.query.tags === "string" ? req.query.tags.split(",") : [];
+    const search =
+        typeof req.query.search === "string"
+            ? req.query.search.toLowerCase()
+            : "";
+    const tags =
+        typeof req.query.tags === "string" ? req.query.tags.split(",") : [];
 
-  if (search) {
-    filteredProjects = filteredProjects.filter((project) =>
-      project.title.toLowerCase().includes(search)
-    );
-  }
+    if (search) {
+        filteredProjects = filteredProjects.filter((project) =>
+            project.title.toLowerCase().includes(search)
+        );
+    }
 
-  if (tags.length > 0) {
-    filteredProjects = filteredProjects.filter((project) =>
-      tags.some((tag) => project.technologies.includes(tag))
-    );
-  }
+    if (tags.length > 0) {
+        filteredProjects = filteredProjects.filter((project) =>
+            tags.some((tag) => project.technologies.includes(tag))
+        );
+    }
 
-  res.json(filteredProjects);
+    res.json(filteredProjects);
 });
 
 app.post("/dummy-db", (req, res) => {
-  const data = req.body;
+    const data = req.body;
 
-  const project = {
-    id: projects.length + 1,
-    ...data,
-  };
+    const project = {
+        id: projects.length + 1,
+        ...data,
+    };
 
-  projects.push(project);
+    projects.push(project);
 
-  res.json(project);
+    res.json(project);
 });
 
 app.get("/dummy-db/:id", async (req, res) => {
-  const id = Number(req.params.id);
-  const project = projects.find((proj) => proj.id === id);
-  res.json(project);
+    const id = Number(req.params.id);
+    const project = projects.find((proj) => proj.id === id);
+    res.json(project);
 });
 // Route to get all of the projects from the database
 app.use(getAllProjectsRouter);
@@ -263,7 +265,7 @@ app.get("/user/:id/projects", async (req, res) => {
 });*/
 
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+    console.log(`Server listening on port ${port}`);
 });
 
 module.exports = app;
