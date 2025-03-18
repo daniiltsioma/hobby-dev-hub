@@ -73,9 +73,21 @@ export default function Project() {
         console.log(`Approving applicant: ${applicant}`);
     };
 
-    const withdrawApplication = () => {
+    const withdrawApplication = async () => {
         // Placeholder logic for withdrawing application
         console.log("Withdrawing application...");
+        const response = await fetch(
+            `${
+                import.meta.env.VITE_EXPRESS_URL
+            }/projects/${id}/applicants/${username}`,
+            {
+                method: "DELETE",
+            }
+        );
+        const data = await response.json();
+        if (response.status === 200) {
+            setProject(data.project);
+        }
     };
 
     const leaveProject = () => {
