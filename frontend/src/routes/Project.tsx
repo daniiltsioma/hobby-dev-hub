@@ -106,9 +106,23 @@ export default function Project() {
         }
     };
 
-    const leaveProject = () => {
+    const leaveProject = async () => {
         // Placeholder logic for leaving the project
-        console.log("Leaving project...");
+        const response = await fetch(
+            `${
+                import.meta.env.VITE_EXPRESS_URL
+            }/removeCollaborator/${id}/${username}`,
+            {
+                method: "DELETE",
+                headers: {
+                    authorization: cookies["accessToken"],
+                },
+            }
+        );
+        if (response.status === 200) {
+            const data = await response.json();
+            setProject(data.project);
+        }
     };
 
     const archiveProject = async () => {
